@@ -1,7 +1,8 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import './Footer.scss';
-import { PHONE_VIEW, EMAIL_VIEW } from '../../common_constants/business';
+import { PHONE_VIEW, EMAIL_VIEW, COMPANY_NAME, WORKING_HOURS, WORKING_DAYS } from '../../common_constants/business';
+import icon_payment_group from '../../images/icon_payment_group.png';
 
 // const Footer = () => {
 //   return (
@@ -36,13 +37,16 @@ const Footer = () => {
         <div className="footer__section">
           <h3>Про нас</h3>
           <p>
-            Purple Lama - ваш партнер у світі стильного та якісного одягу. Наші вироби поєднують унікальний дизайн з високою якістю матеріалів. З
-            Purple Lama ви будете завжди виглядати стильно та впевнено.
+            {COMPANY_NAME} - ваш партнер у світі стильного та якісного одягу. Наші вироби поєднують унікальний дизайн з високою якістю матеріалів.
+            З&nbsp;
+            {COMPANY_NAME} ви будете завжди виглядати стильно та впевнено.
           </p>
         </div>
         <div className="footer__section">
           <h3>Час роботи</h3>
-          <p>Понеділок - Неділя 11:00 до 22:00</p>
+          <p>
+            {WORKING_DAYS.START_WEEK} - {WORKING_DAYS.END_WEEK} {WORKING_HOURS.START_DAY} до {WORKING_HOURS.END_DAY}
+          </p>
         </div>
         <div className="footer__section">
           <h3>Інформація</h3>
@@ -95,7 +99,10 @@ const Footer = () => {
         <a href="#">TELEGRAM</a>
       </div>
       <div className="footer__copyright">
-        <p>© {currentYear} Усі права захищені.</p>
+        <p>
+          © {currentYear} {COMPANY_NAME} | Створено роботом з любов'ю❤️
+        </p>
+        <img src={icon_payment_group} alt="Payment group" />
       </div>
     </footer>
   );
