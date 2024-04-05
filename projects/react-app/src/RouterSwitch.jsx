@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 // import Auth from './pages/Auth';
 import HomeDashboard from './pages/HomeDashboard';
+import Shop from './pages/Shop';
 
 export default function RouterSwitch() {
   return (
@@ -14,6 +15,9 @@ export default function RouterSwitch() {
       <>
         <Route exact path={ROUTES.HOME_DASHBOARD}>
           <HomeDashboard />
+        </Route>
+        <Route exact path={ROUTES.SHOP}>
+          <Shop />
         </Route>
       </>
     </Switch>
