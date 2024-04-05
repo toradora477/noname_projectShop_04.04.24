@@ -13,7 +13,7 @@ const Product = ({ name, price, imageUrl }) => {
 };
 
 // Компонент странички магазина
-const ShopPage = () => {
+const HomeDashboard = () => {
   // Пример данных о товарах (обычно данные будут приходить из API или хранилища состояния)
   const products = [
     { id: 1, name: 'Product 1', price: 10, imageUrl: 'https://via.placeholder.com/150' },
@@ -33,4 +33,4 @@ const ShopPage = () => {
   );
 };
 
-export default ShopPage;
+export default HomeDashboard;

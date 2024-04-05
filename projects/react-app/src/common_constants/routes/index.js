@@ -1,5 +1,5 @@
 const ROUTES = {
-  HOME: '/',
+  HOME_DASHBOARD: '/',
   AUTH: '/auth',
 };
 
