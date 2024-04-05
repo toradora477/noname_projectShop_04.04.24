@@ -1,23 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import icon_logo_1 from '../../images/icon_logo_1.svg';
+import icon_loupe from '../../images/icon_loupe.svg';
 
 import './MenuMain.scss';
 
 const MenuMain = () => {
   return (
     <div className="menu-main">
-      <div className="company-logo">
-        <img src="/path/to/company-logo.png" alt="Company Logo" />
-      </div>
-      <div className="menu-links">
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/products">Products</Link>
-        <Link to="/contact">Contact</Link>
+      <Link className="company-logo" to="/">
+        <img src={icon_logo_1} alt="Company Logo" />
+      </Link>
+      <div className="links">
+        <Link className="links-item" to="/" children="Головна" />
+        <Link className="links-item" to="/shop" children="Магазин" />
+        <Link className="links-item" to="/top-prodazh-za-misyacz" children="Лідери Продажів" />
       </div>
       <div className="search-bar">
-        <input type="text" placeholder="Search..." />
-        <button>Search</button>
+        <img className="loupe-icon" src={icon_loupe} alt="search magnifier" />
+        <button className="search-button" children="Пошук" />
       </div>
       <div className="cart-icon">
         <img src="/path/to/cart-icon.png" alt="Shopping Cart" />

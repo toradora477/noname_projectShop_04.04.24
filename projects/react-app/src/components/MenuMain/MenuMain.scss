@@ -1,5 +1,44 @@
 @import '../../common_constants/styles/colors.scss';
 
 .menu-main {
-  background-color: $gray_6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: $gray_1;
+
+  .company-logo img {
+    height: 75px;
+  }
+
+  .links {
+    display: flex;
+
+    &-item {
+      margin-right: 20px;
+      text-decoration: none;
+      color: $gray_9;
+    }
+  }
+
+  .search-bar {
+    display: flex;
+  }
+
+  .search-button {
+    // padding: 5px 10px;
+    // background-color: $blue_6;
+    // color: $gray_1;
+    border: none;
+    cursor: pointer;
+  }
+
+  .cart-icon img {
+    height: 30px;
+  }
+
+  .loupe-icon {
+    height: 20px;
+    width: 20px;
+  }
 }
