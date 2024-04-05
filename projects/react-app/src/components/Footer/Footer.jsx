@@ -1,6 +1,7 @@
 import React from 'react';
-
+import dayjs from 'dayjs';
 import './Footer.scss';
+import { PHONE_VIEW, EMAIL_VIEW } from '../../common_constants/business';
 
 // const Footer = () => {
 //   return (
@@ -27,6 +28,8 @@ import './Footer.scss';
 // };
 
 const Footer = () => {
+  const currentYear = dayjs().format('YYYY');
+
   return (
     <footer className="footer">
       <div className="footer__container">
@@ -83,8 +86,8 @@ const Footer = () => {
       </div>
       <div className="footer__contact">
         <h3>Зв’яжіться з нами</h3>
-        <p>Телефон: +38(066)-280-6694</p>
-        <p>E-mail: purplelama.ua@gmail.com</p>
+        <p>Телефон: {PHONE_VIEW}</p>
+        <p>E-mail: {EMAIL_VIEW}</p>
       </div>
       <div className="footer__social">
         <h3>Ми в Instagram і Telegram</h3>
@@ -92,7 +95,7 @@ const Footer = () => {
         <a href="#">TELEGRAM</a>
       </div>
       <div className="footer__copyright">
-        <p>© 2024 Усі права захищені.</p>
+        <p>© {currentYear} Усі права захищені.</p>
       </div>
     </footer>
   );
