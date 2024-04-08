@@ -1,0 +1,29 @@
+.shop-page {
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 столбцов */
+    grid-auto-rows: auto; /* Автоматические ряды */
+    grid-gap: 20px; /* Пространство между элементами */
+  }
+
+  .product-list > * {
+    grid-column: span 1; /* Каждый элемент занимает один столбец */
+    grid-row: span 3; /* Каждый элемент занимает три ряда */
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    li {
+      display: inline-block;
+      margin-right: 5px;
+      cursor: pointer;
+
+      &.active {
+        font-weight: bold;
+      }
+    }
+  }
+}
