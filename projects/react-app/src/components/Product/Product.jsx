@@ -7,7 +7,9 @@ const Product = ({ name, price, imageUrl }) => {
       <img src={imageUrl} alt="product-image" />
       <h3>{name}</h3>
       <p>${price}</p>
-      <button>Add to Cart</button>
+      <button>
+        <span className="product-text-btn">Add to Cart</span>
+      </button>
     </div>
   );
 };

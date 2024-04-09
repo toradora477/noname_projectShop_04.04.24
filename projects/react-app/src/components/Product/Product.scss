@@ -32,4 +32,14 @@
   button:hover {
     background-color: #0056b3; /* Изменение цвета фона кнопки при наведении */
   }
+
+  .product-text-btn {
+    display: block !important;
+    overflow: hidden;
+    padding: 12px;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+  }
 }
