@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
 
+import BasketButton from './BasketButton';
+
 import icon_logo_1 from '../../images/icon_logo_1.svg';
 import icon_loupe from '../../images/icon_loupe.svg';
 import './MenuMain.scss';
@@ -24,6 +26,7 @@ const MenuMain = () => {
       <div className="cart-icon">
         <img src="/path/to/cart-icon.png" alt="Shopping Cart" />
       </div>
+      <BasketButton />
     </div>
   );
 };
