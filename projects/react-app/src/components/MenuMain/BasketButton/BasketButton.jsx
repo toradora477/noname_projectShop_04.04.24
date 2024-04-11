@@ -6,6 +6,8 @@
 // import icon_loupe from '../../images/icon_loupe.svg';
 // import './MenuMain.scss';
 
+import { request } from '../../../tools';
+
 // const BasketButton = () => {
 //   return (
 //     <div className="menu-main">
@@ -34,9 +36,19 @@ import React from 'react';
 
 // import { ShoppingCartOutlined } from '@ant-design/icons';
 
+const onSubmit = () => {
+  const body = {
+    actualization: true,
+  };
+
+  request.post('/products/info', body, () => {
+    console.log('true');
+  }); // TODO Тестове для api
+};
+
 const BasketButton = () => {
   return (
-    <button className="basket-button">
+    <button className="basket-button" onClick={onSubmit}>
       <span className="icon">{/* <ShoppingCartOutlined /> */}2</span>
       <span className="price">"$19.99"</span>
     </button>

@@ -18,6 +18,8 @@ app.use(express.json({ limit: '500mb' }));
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(timeout(240000));
 
+app.use('/products', require('./routes/products'));
+
 mongoClient
   .connect()
   .then(() => {
