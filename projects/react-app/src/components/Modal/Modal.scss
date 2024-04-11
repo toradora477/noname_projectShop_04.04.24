@@ -1,0 +1,34 @@
+@import '../../common_constants/styles/colors.scss';
+
+.modal {
+  display: block; /* Відображаємо модальне вікно */
+  position: fixed; /* Фіксоване положення */
+  z-index: 1; /* Збільшуємо індекс, щоб модальне вікно було поверх усіх інших елементів */
+  left: 0;
+  top: 0;
+  width: 100%; /* Заширюємо на всю ширину екрану */
+  height: 100%; /* За висотою */
+  overflow: auto; /* Дозволяємо прокрутку, якщо контент завеликий */
+  background-color: rgba(0, 0, 0, 0.4); /* Півпрозорий чорний фон */
+
+  .modal-content {
+    background-color: #fefefe; /* Фон вікна */
+    margin: 15% auto; /* Відступи для центрування вікна по вертикалі і горизонталі */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ширина вікна */
+  }
+
+  .close {
+    color: #aaa; /* Колір хрестика */
+    float: right; /* Вирівнюємо хрестик зправа */
+    font-size: 28px; /* Розмір шрифту хрестика */
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black; /* Змінюємо колір хрестика при наведенні */
+    text-decoration: none; /* Видаляємо підкреслення тексту */
+    cursor: pointer; /* Змінюємо курсор на покажчик при наведенні */
+  }
+}
