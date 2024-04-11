@@ -9,4 +9,12 @@ const DATE_OPTIONS = {
   hour12: false,
 };
 
-module.exports = { DATE_OPTIONS };
+const DEFAULT_USER = {
+  password: 'pass',
+  role: 'admin',
+  username: 'email@gmail.com',
+  name: 'adminUser',
+  p: 'sh',
+};
+
+module.exports = { DATE_OPTIONS, DEFAULT_USER };
