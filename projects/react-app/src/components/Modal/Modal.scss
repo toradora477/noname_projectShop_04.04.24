@@ -11,12 +11,34 @@
   overflow: auto; /* Дозволяємо прокрутку, якщо контент завеликий */
   background-color: rgba(0, 0, 0, 0.4); /* Півпрозорий чорний фон */
 
-  .modal-content {
+  &.centerPosition .modal-content {
     background-color: #fefefe; /* Фон вікна */
     margin: 15% auto; /* Відступи для центрування вікна по вертикалі і горизонталі */
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Ширина вікна */
+  }
+
+  &.leftPosition .modal-content {
+    background-color: #fefefe; /* Фон вікна */
+    padding: 20px;
+    border: 1px solid #888;
+
+    width: 30%; /* Ширина вікна */
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+
+  &.rightPosition .modal-content {
+    background-color: #fefefe; /* Фон вікна */
+    padding: 20px;
+    border: 1px solid #888;
+
+    width: 30%; /* Ширина вікна */
+    height: 100%;
+    left: 0;
+    top: 0;
   }
 
   .close {

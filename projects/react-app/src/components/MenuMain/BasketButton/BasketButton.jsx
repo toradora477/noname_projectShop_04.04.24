@@ -14,7 +14,7 @@ const onSubmit = () => {
 
 const BasketButton = () => {
   return (
-    <Modal>
+    <Modal position="center">
       <button className="basket-button" onClick={onSubmit}>
         <span className="icon">{/* <ShoppingCartOutlined /> */}2</span>
         <span className="price">"$19.99"</span>
