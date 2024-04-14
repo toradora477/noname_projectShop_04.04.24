@@ -2,7 +2,7 @@ import React from 'react';
 import { request } from '../../tools';
 import Modal from '../../components/Modal';
 
-const BasketOfGoods = () => {
+const Auth = () => {
   const onSubmit = () => {
     const body = {
       actualization: true,
@@ -23,4 +23,4 @@ const BasketOfGoods = () => {
   );
 };
 
-export default BasketOfGoods;
+export default Auth;

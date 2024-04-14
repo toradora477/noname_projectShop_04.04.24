@@ -7,6 +7,7 @@ import { setModal } from '../../store/commonReducer';
 
 import icon_logo_1 from '../../images/icon_logo_1.svg';
 import icon_loupe from '../../images/icon_loupe.svg';
+import icon_user from '../../images/icon_user.svg';
 import './MenuMain.scss';
 
 const MenuMain = () => {
@@ -30,9 +31,9 @@ const MenuMain = () => {
         <img className="loupe-icon" src={icon_loupe} alt="search magnifier" />
         <button className="search-button" children="Пошук" />
       </div>
-      <div className="cart-icon">
-        <img src="/path/to/cart-icon.png" alt="Shopping Cart" />
-      </div>
+      <button className="cart-icon" onClick={onClientBtnClick}>
+        <img src={icon_user} alt="Shopping Cart" />
+      </button>
       <button className="search-button" children="Кошик" onClick={onClientBtnClick} />
     </div>
   );
