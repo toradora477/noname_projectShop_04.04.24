@@ -12,11 +12,11 @@ const mongoClient = new MongoClient(process.env.MONGO_URL);
 
 const app = express();
 
-// Added middleware
 app.use(cors());
 app.use(express.json({ limit: '500mb' }));
 app.use(express.urlencoded({ limit: '500mb', extended: true }));
 app.use(timeout(240000));
+app.use(require('./configs/routesConfig'));
 
 mongoClient
   .connect()
@@ -38,7 +38,3 @@ mongoClient
     log.errorT('Error connecting to MongoDB:', err);
     process.exit(1);
   }); // Connect to MongoDB when the server starts
-
-app.get('/', (req, res) => {
-  res.send('Привіт, світ!');
-}); // TODO прибрати

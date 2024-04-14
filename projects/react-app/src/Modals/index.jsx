@@ -8,12 +8,29 @@ import BasketOfGoods from './BasketOfGoods';
 const Modals = () => {
   const name = useSelector((state) => state.common.modal?.name);
 
-  switch (name) {
-    case MODALS.BASKET_OF_GOODS:
-      return <BasketOfGoods />;
-    default:
-      return null;
-  }
+  // switch (name) {
+  //   case MODALS.BASKET_OF_GOODS:
+  //     return <BasketOfGoods />;
+  //   default:
+  //     return null;
+  // }
+
+  console.log('name', name);
+
+  // const modalComponent =
+  //   {
+  //     [MODALS.BASKET_OF_GOODS]: <BasketOfGoods />,
+  //   }[name] || null;
+
+  // return modalComponent;
+
+  const modalComponent =
+    name &&
+    {
+      [MODALS.BASKET_OF_GOODS]: <BasketOfGoods />,
+    }[name];
+
+  return modalComponent || null;
 };
 
 export default Modals;
