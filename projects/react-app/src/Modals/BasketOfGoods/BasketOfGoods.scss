@@ -1,39 +1,20 @@
-.basket-of-goods {
-  position: fixed;
-  top: 0;
-  right: -300px; /* Скрыть модалку за пределами экрана */
-  width: 300px;
-  height: 100%;
-  background-color: white;
-  transition: right 0.3s ease; /* Анимация для открытия/закрытия модалки */
-  z-index: 999; /* Убедитесь, что модалка находится выше других элементов */
+@import '../../common_constants/styles/colors.scss';
 
-  .cart-modal.open {
-    right: 0; /* Отобразить модалку на экране */
+.basket-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  .black-button .icon {
+    margin-right: 10px;
   }
 
-  .cart-content {
-    padding: 20px;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    margin-bottom: 10px;
-  }
-
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #0056b3;
+  .black-button .price {
+    font-weight: bold;
   }
 }

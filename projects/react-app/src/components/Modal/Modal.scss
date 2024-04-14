@@ -28,6 +28,8 @@
     height: 100%;
     left: 0;
     top: 0;
+
+    position: absolute;
   }
 
   &.rightPosition .modal-content {
@@ -37,8 +39,10 @@
 
     width: 30%; /* Ширина вікна */
     height: 100%;
-    left: 0;
+    right: 0;
     top: 0;
+
+    position: absolute;
   }
 
   .close {

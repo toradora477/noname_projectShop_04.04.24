@@ -1,14 +1,21 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
-
-import BasketButton from './BasketButton';
+import { BASKET_OF_GOODS } from '../../common_constants/modals';
+import { setModal } from '../../store/commonReducer';
 
 import icon_logo_1 from '../../images/icon_logo_1.svg';
 import icon_loupe from '../../images/icon_loupe.svg';
 import './MenuMain.scss';
 
 const MenuMain = () => {
+  const dispatch = useDispatch();
+
+  const onClientBtnClick = () => {
+    dispatch(setModal({ name: BASKET_OF_GOODS }));
+  };
+
   return (
     <div className="menu-main">
       <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
@@ -26,7 +33,7 @@ const MenuMain = () => {
       <div className="cart-icon">
         <img src="/path/to/cart-icon.png" alt="Shopping Cart" />
       </div>
-      <BasketButton />
+      <button className="search-button" children="Кошик" onClick={onClientBtnClick} />
     </div>
   );
 };

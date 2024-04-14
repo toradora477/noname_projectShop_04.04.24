@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import MenuMain from './components/MenuMain';
 import Footer from './components/Footer';
 import { useClientViewData } from './tools/hooks';
+import Modals from './Modals';
 import './App.scss';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <MenuMain />
         <RouterSwitch />
         <Footer />
+        <Modals />
       </Router>
     </div>
   );
