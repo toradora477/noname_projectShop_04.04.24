@@ -23,22 +23,22 @@ const MenuMain = () => {
 
   return (
     <div className="menu-main">
-      <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
-        <img src={icon_logo_1} alt="Company Logo" />
-      </Link>
-      <div className="links">
-        <Link className="links-item" to={ROUTES.HOME_DASHBOARD} children="Головна" />
-        <Link className="links-item" to={ROUTES.SHOP} children="Магазин" />
-        <Link className="links-item" to={ROUTES.TOP_PRODAZH_ZA_MISYACZ} children="Лідери Продажів" />
+      <div className="menu-part">
+        <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
+          <img src={icon_logo_1} alt="Company Logo" />
+        </Link>
+        <div className="links">
+          <Link className="links-item" to={ROUTES.HOME_DASHBOARD} children="Головна" />
+          <Link className="links-item" to={ROUTES.SHOP} children="Магазин" />
+          <Link className="links-item" to={ROUTES.TOP_PRODAZH_ZA_MISYACZ} children="Лідери Продажів" />
+        </div>
       </div>
-      <div className="search-bar">
-        <img className="loupe-icon" src={icon_loupe} alt="search magnifier" />
-        <button className="search-button" children="Пошук" />
+      <div className="menu-part">
+        <button className="btn-auth" onClick={onBtnClickAuth}>
+          <img src={icon_user} alt="Shopping Cart" />
+        </button>
+        <button className="search-button" children="Кошик" onClick={onBtnClickBasket} />
       </div>
-      <button className="cart-icon" onClick={onBtnClickAuth}>
-        <img src={icon_user} alt="Shopping Cart" />
-      </button>
-      <button className="search-button" children="Кошик" onClick={onBtnClickBasket} />
     </div>
   );
 };
