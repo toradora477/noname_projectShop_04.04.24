@@ -1,45 +1,24 @@
 .product {
-  width: 250px; /* Ширина компонента */
-  border: 1px solid #ccc; /* Граница для стиля */
-  padding: 10px; /* Внутренний отступ */
+  width: 250px;
+  height: 420px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  background-color: transparent;
 
   .product-image {
-    height: 150px; /* Высота изображения */
-    width: 100%; /* Ширина изображения, чтобы занимала всю ширину родительского блока */
-    object-fit: cover; /* Масштабирование изображения */
-    margin-bottom: 10px; /* Отступ между изображением и текстом */
+    height: 220px;
+    width: 220px;
+    object-fit: cover;
+    margin-bottom: 10px;
   }
 
   h3 {
-    font-size: 16px; /* Размер шрифта названия */
-    margin-bottom: 5px; /* Отступ между названием и ценой */
+    font-size: 16px;
+    margin-bottom: 5px;
   }
 
   p {
-    font-size: 14px; /* Размер шрифта цены */
-    margin-bottom: 10px; /* Отступ между ценой и кнопкой */
-  }
-
-  button {
-    background-color: #007bff; /* Цвет фона кнопки */
-    color: #fff; /* Цвет текста кнопки */
-    border: none; /* Убрать границу кнопки */
-    padding: 5px 10px; /* Внутренний отступ кнопки */
-    cursor: pointer; /* Изменение курсора при наведении */
-    transition: background-color 0.3s ease; /* Плавное изменение цвета фона при наведении */
-  }
-
-  button:hover {
-    background-color: #0056b3; /* Изменение цвета фона кнопки при наведении */
-  }
-
-  .product-text-btn {
-    display: block !important;
-    overflow: hidden;
-    padding: 12px;
-    line-height: 18px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 13px;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 }

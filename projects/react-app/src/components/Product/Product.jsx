@@ -1,15 +1,15 @@
 import React from 'react';
+import PrimaryPurpleBtn from '../PrimaryPurpleBtn';
+import img_test_murder from '../../images/img_test_murder.webp';
 import './Product.scss';
 
-const Product = ({ name, price, imageUrl }) => {
+const Product = ({ name, price, imageUrl = img_test_murder }) => {
   return (
     <div className="product">
-      <img src={imageUrl} alt="product-image" />
+      <img src={img_test_murder} alt="product-image" className="product-image" />
       <h3>{name}</h3>
       <p>${price}</p>
-      <button>
-        <span className="product-text-btn">Add to Cart</span>
-      </button>
+      <PrimaryPurpleBtn children="ДОДАТИ В КОШИК" />
     </div>
   );
 };
