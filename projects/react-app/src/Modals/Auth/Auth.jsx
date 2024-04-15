@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { request } from '../../tools';
+import { request, getTokenData } from '../../tools';
+
 import Modal from '../../components/Modal';
-import { setModal } from '../../store/commonReducer';
+import { setModal, setUserAuth } from '../../store/commonReducer';
 import PrimaryPurpleBtn from '../../components/PrimaryPurpleBtn';
 import icon_user from '../../images/icon_user.svg';
 import './Auth.scss';
@@ -10,18 +11,40 @@ import './Auth.scss';
 const Auth = () => {
   const dispatch = useDispatch();
 
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLoginChange = (e) => {
+    setLogin(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
   const closeModal = () => {
     dispatch(setModal());
   };
 
-  const handleButtonClick = () => {
+  const loginRequest = () => {
     const body = {
-      actualization: true,
+      username: login,
+      password: password,
     };
 
-    request.post('/products/info', body, () => {
-      console.log('true');
-    }); // TODO Тестове для api
+    request.post('/auth/login', body, (res) => {
+      if (res.noAccess) {
+        // notification.info({
+        //   message: 'Для отримання доступу треба звернутися до адміністратора.',
+        //   style: { wordWrap: 'break-word' },
+        // });
+        console.log('res.noAccess', res.noAccess);
+      } else {
+        window.localStorage.setItem('accessToken', res.accessToken);
+        console.log('res.accessToken', res.accessToken);
+        dispatch(setUserAuth(getTokenData(res.accessToken)));
+      }
+    });
   };
 
   return (
@@ -39,15 +62,15 @@ const Auth = () => {
             <label htmlFor="email">
               Логін чи e-mail адреса <span children="*" style={{ color: 'red' }} />
             </label>
-            <input type="text" id="email" name="email" />
+            <input type="text" id="email" name="email" onChange={handleLoginChange} />
           </div>
           <div className="input-group">
             <label htmlFor="password">
               Пароль <span children="*" style={{ color: 'red' }} />
             </label>
-            <input type="password" id="password" name="password" />
+            <input type="password" id="password" name="password" onChange={handlePasswordChange} />
           </div>
-          <PrimaryPurpleBtn children="УВІЙТИ" onClick={handleButtonClick} />
+          <PrimaryPurpleBtn children="УВІЙТИ" onClick={loginRequest} />
         </form>
         <hr />
         <div className="signup">

@@ -20,7 +20,7 @@ app.use(require('./configs/routesConfig'));
 
 mongoClient
   .connect()
-  .then(() => {
+  .then((mongoClient) => {
     log.success('MongoDB connected successfully');
 
     if (isDev) {
@@ -33,6 +33,8 @@ mongoClient
       // });
       // TODO тут треба перехід на продакшен
     }
+
+    app.locals.client = mongoClient;
   })
   .catch((err) => {
     log.errorT('Error connecting to MongoDB:', err);
