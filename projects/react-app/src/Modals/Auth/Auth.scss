@@ -29,4 +29,16 @@
     border-color: #007bff;
     outline: none;
   }
+
+  .close-button {
+    background-color: transparent;
+    border: none;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .close-button::before {
+    content: '× ';
+  }
 }
