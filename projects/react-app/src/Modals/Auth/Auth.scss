@@ -1,2 +1,12 @@
 .auth_modal {
+  /* Стилі для контейнера модального вікна */
+  .auth_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-button {
+    /* Стилі для кнопки закриття */
+  }
 }

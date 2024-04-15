@@ -5,7 +5,7 @@ import './Modal.scss';
 
 import { setModal } from '../../store/commonReducer';
 
-const Modal = ({ children, position }) => {
+const Modal = ({ children, position, btnClose = true }) => {
   const dispatch = useDispatch();
 
   const closeModal = () => {
@@ -22,9 +22,11 @@ const Modal = ({ children, position }) => {
       )}
     >
       <div className="modal-content">
-        <span className="close" onClick={closeModal}>
-          &times;
-        </span>
+        {btnClose && (
+          <span className="close" onClick={closeModal}>
+            &times;
+          </span>
+        )}
         {children}
       </div>
     </div>

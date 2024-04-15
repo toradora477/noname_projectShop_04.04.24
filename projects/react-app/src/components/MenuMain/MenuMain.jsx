@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
-import { BASKET_OF_GOODS } from '../../common_constants/modals';
+import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 
 import icon_logo_1 from '../../images/icon_logo_1.svg';
@@ -13,8 +13,12 @@ import './MenuMain.scss';
 const MenuMain = () => {
   const dispatch = useDispatch();
 
-  const onClientBtnClick = () => {
+  const onBtnClickBasket = () => {
     dispatch(setModal({ name: BASKET_OF_GOODS }));
+  };
+
+  const onBtnClickAuth = () => {
+    dispatch(setModal({ name: AUTH }));
   };
 
   return (
@@ -31,10 +35,10 @@ const MenuMain = () => {
         <img className="loupe-icon" src={icon_loupe} alt="search magnifier" />
         <button className="search-button" children="Пошук" />
       </div>
-      <button className="cart-icon" onClick={onClientBtnClick}>
+      <button className="cart-icon" onClick={onBtnClickAuth}>
         <img src={icon_user} alt="Shopping Cart" />
       </button>
-      <button className="search-button" children="Кошик" onClick={onClientBtnClick} />
+      <button className="search-button" children="Кошик" onClick={onBtnClickBasket} />
     </div>
   );
 };
