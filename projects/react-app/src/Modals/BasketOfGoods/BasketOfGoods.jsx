@@ -1,20 +1,3 @@
-// import React, { useState } from 'react';
-// // import './BasketOfGoods.scss';
-
-// const BasketOfGoods = ({ isOpen, onClose, cartItems }) => {
-//   return (
-//     <div className={`basket-of-goods ${!isOpen ? 'open' : ''}`}>
-//       <div className="cart-content">
-//         <h2>Корзина</h2>
-
-//         <button onClick={onClose}>Закрыть</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BasketOfGoods;
-
 import React from 'react';
 import { request } from '../../tools';
 import Modal from '../../components/Modal';
