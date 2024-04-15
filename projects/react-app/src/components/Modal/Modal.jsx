@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import './Modal.scss';
@@ -11,6 +11,19 @@ const Modal = ({ children, position, btnClose = true }) => {
   const closeModal = () => {
     dispatch(setModal());
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.modal-content')) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div

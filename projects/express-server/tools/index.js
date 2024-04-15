@@ -38,7 +38,7 @@ const log = {
   },
 };
 
-class CustomError extends Error {
+class ExtendedError extends Error {
   /**
    * Custom error constructor.
    * @param {string} messageLog - The log message for the error.
@@ -47,7 +47,7 @@ class CustomError extends Error {
    */
   constructor(messageLog, code = 500, messageJson) {
     super(messageLog);
-    this.name = 'CustomError';
+    this.name = 'ExtendedError';
     this.code = code;
     this.messageJson = messageJson;
   }
@@ -55,5 +55,5 @@ class CustomError extends Error {
 
 module.exports = {
   log,
-  CustomError,
+  ExtendedError,
 };

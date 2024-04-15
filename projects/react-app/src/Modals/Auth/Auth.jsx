@@ -1,10 +1,18 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { request } from '../../tools';
 import Modal from '../../components/Modal';
+import { setModal } from '../../store/commonReducer';
 import PrimaryPurpleBtn from '../../components/PrimaryPurpleBtn';
 import './Auth.scss';
 
 const Auth = () => {
+  const dispatch = useDispatch();
+
+  const closeModal = () => {
+    dispatch(setModal());
+  };
+
   const handleButtonClick = () => {
     const body = {
       actualization: true,
@@ -20,7 +28,9 @@ const Auth = () => {
       <div className="auth_modal">
         <div className="auth_header">
           <h2>Увійти</h2>
-          <button className="close-button">Закрити</button>
+          <button className="close-button" onClick={closeModal}>
+            Закрити
+          </button>
         </div>
         <hr />
         <form>
