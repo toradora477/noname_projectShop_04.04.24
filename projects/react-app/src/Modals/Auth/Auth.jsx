@@ -4,6 +4,7 @@ import { request } from '../../tools';
 import Modal from '../../components/Modal';
 import { setModal } from '../../store/commonReducer';
 import PrimaryPurpleBtn from '../../components/PrimaryPurpleBtn';
+import icon_user from '../../images/icon_user.svg';
 import './Auth.scss';
 
 const Auth = () => {
@@ -50,8 +51,11 @@ const Auth = () => {
         </form>
         <hr />
         <div className="signup">
-          <p>Ще немає аккаунту?</p>
-          <button>СТВОРИТИ АККАУНТ</button>
+          <img className="user-img" src={icon_user} alt="Shopping Cart" />
+          <p className="text-signup">
+            <b>Ще немає аккаунту?</b>
+          </p>
+          <button className="btn-signup">СТВОРИТИ АККАУНТ</button>
         </div>
         <hr />
       </div>

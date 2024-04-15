@@ -6,7 +6,6 @@ import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 
 import icon_logo_1 from '../../images/icon_logo_1.svg';
-import icon_loupe from '../../images/icon_loupe.svg';
 import icon_user from '../../images/icon_user.svg';
 import './MenuMain.scss';
 

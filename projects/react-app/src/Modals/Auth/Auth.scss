@@ -41,4 +41,17 @@
   .close-button::before {
     content: '× ';
   }
+
+  .signup {
+    .user-img {
+      width: 54px;
+      height: 54px;
+    }
+
+    .btn-signup {
+      background-color: transparent;
+      border: none;
+      text-decoration: underline;
+    }
+  }
 }

@@ -1,9 +1,14 @@
 .product {
   width: 250px;
   height: 420px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 2px solid #f8f8f8;
   padding: 10px;
   background-color: transparent;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
 
   .product-image {
     height: 220px;
