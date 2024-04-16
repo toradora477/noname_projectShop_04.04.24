@@ -10,7 +10,7 @@
   -ms-border-radius: 20px;
   -o-border-radius: 20px;
 
-  .product-image {
+  &-main-image {
     height: 220px;
     width: 220px;
     object-fit: cover;
@@ -25,5 +25,10 @@
   p {
     font-size: 14px;
     margin-bottom: 10px;
+  }
+
+  &-like-icon {
+    height: 20px;
+    width: 20px;
   }
 }

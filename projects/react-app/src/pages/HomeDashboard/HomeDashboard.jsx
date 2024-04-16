@@ -13,8 +13,8 @@ const HomeDashboard = () => {
       {/* <h1>Shop</h1> */}
       <img src={billboardHomeDashboard} alt="billboard" />
       <div className="product-list">
-        {products.map((product) => (
-          <Product key={product.id} name={product.name} price={product.price} imageUrl={product.imageUrl} />
+        {products.map((item) => (
+          <Product key={item.id} item={item} />
         ))}
       </div>
     </div>

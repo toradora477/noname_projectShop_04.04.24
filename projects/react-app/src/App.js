@@ -10,11 +10,15 @@ import './common_constants/styles/textStyle.scss';
 function App() {
   useClientViewData();
   return (
-    <div className="App text-style regular-text">
+    <div className="App">
       <Router>
-        <MenuMain />
-        <SideMenu />
-        <RouterSwitch />
+        <div className="App-side-menu-and-content">
+          <SideMenu />
+          <div className="App-menu-main-and-content">
+            <MenuMain />
+            <RouterSwitch />
+          </div>
+        </div>
         <Footer />
         <Modals />
       </Router>

@@ -22,8 +22,8 @@ const Shop = () => {
     <div className="shop-page">
       <h1>Shop</h1>
       <div className="product-list">
-        {currentProducts.map((product) => (
-          <Product key={product.id} name={product.name} price={product.price} imageUrl={product.imageUrl} />
+        {currentProducts.map((item) => (
+          <Product key={item.id} item={item} />
         ))}
       </div>
       <ReactPaginate

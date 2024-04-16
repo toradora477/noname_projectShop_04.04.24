@@ -1,3 +1,23 @@
 .App {
   text-align: center;
+
+  &-side-menu-and-content {
+    display: flex;
+  }
 }
+
+// .App {
+//   display: flex;
+//   height: 100vh;
+//   overflow-x: hidden; /* Попереджає прокручування горизонтальної сторінки */
+// }
+// .wrapper {
+//   display: flex;
+//   flex: 1;
+//   overflow-x: hidden; /* Попереджає прокручування горизонтальної частини */
+// }
+
+// .content {
+//   flex: 1;
+//   overflow-y: auto; /* Додає прокручування у вмісті, якщо вміст перевищує висоту */
+// }
