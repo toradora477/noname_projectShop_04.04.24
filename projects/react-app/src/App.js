@@ -6,11 +6,12 @@ import Footer from './components/Footer';
 import { useClientViewData } from './tools/hooks';
 import Modals from './Modals';
 import './App.scss';
+import './common_constants/styles/textStyle.scss';
 
 function App() {
   useClientViewData();
   return (
-    <div className="App">
+    <div className="App text-style regular-text">
       <Router>
         <MenuMain />
         <RouterSwitch />
