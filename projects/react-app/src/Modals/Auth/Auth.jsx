@@ -4,7 +4,7 @@ import { request, getTokenData } from '../../tools';
 
 import Modal from '../../components/Modal';
 import { setModal, setUserAuth } from '../../store/commonReducer';
-import PrimaryPurpleBtn from '../../components/PrimaryPurpleBtn';
+import PrimaryGradientBtn from '../../components/PrimaryGradientBtn';
 import icon_user from '../../images/icon_user.svg';
 import './Auth.scss';
 
@@ -34,33 +34,31 @@ const Auth = () => {
 
     request.post('/auth/login', body, (res) => {
       if (res.noAccess) {
-        // notification.info({
-        //   message: 'Для отримання доступу треба звернутися до адміністратора.',
-        //   style: { wordWrap: 'break-word' },
-        // });
-        console.log('res.noAccess', res.noAccess);
+        console.error('res.noAccess', res.noAccess);
       } else {
         window.localStorage.setItem('accessToken', res.accessToken);
         console.log('res.accessToken', res.accessToken);
         dispatch(setUserAuth(getTokenData(res.accessToken)));
+        dispatch(setModal());
       }
     });
   };
 
   return (
-    <Modal position="right" btnClose={false}>
+    <Modal position="center" btnClose={false}>
       <div className="auth_modal">
         <div className="auth_header">
-          <h2>Увійти</h2>
-          <button className="close-button" onClick={closeModal}>
+          <h2>Вхід</h2>
+          {/* <button className="close-button" onClick={closeModal}>
             Закрити
-          </button>
+          </button> */}
         </div>
-        <hr />
+        <p>Увійдіть під своїми даними, які вводили під час реєстрації.</p>
+
         <form>
           <div className="input-group">
             <label htmlFor="email">
-              Логін чи e-mail адреса <span children="*" style={{ color: 'red' }} />
+              Email <span children="*" style={{ color: 'red' }} />
             </label>
             <input type="text" id="email" name="email" onChange={handleLoginChange} />
           </div>
@@ -70,9 +68,10 @@ const Auth = () => {
             </label>
             <input type="password" id="password" name="password" onChange={handlePasswordChange} />
           </div>
-          <PrimaryPurpleBtn children="УВІЙТИ" onClick={loginRequest} />
+          <PrimaryGradientBtn children="УВІЙТИ" onClick={loginRequest} />
         </form>
-        <hr />
+        <p> Запам’ятати мене</p>
+
         <div className="signup">
           <img className="user-img" src={icon_user} alt="Shopping Cart" />
           <p className="text-signup">
@@ -80,7 +79,7 @@ const Auth = () => {
           </p>
           <button className="btn-signup">СТВОРИТИ АККАУНТ</button>
         </div>
-        <hr />
+        {/* <hr /> */}
       </div>
     </Modal>
   );
