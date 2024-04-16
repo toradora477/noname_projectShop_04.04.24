@@ -1,6 +1,6 @@
 import React from 'react';
 import './Error404.scss';
-import error404 from '../../images/Error404.svg';
+import { error404 } from '../../images';
 
 const Error404 = () => {
   return (

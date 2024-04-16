@@ -2,8 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { Product } from '../../components';
-
-import billboardHomeDashboard from '../../images/billboard-HomeDashboard.png';
+import { billboardHomeDashboard } from '../../images';
 
 const HomeDashboard = () => {
   const products = useSelector((state) => state.common.products) ?? [];

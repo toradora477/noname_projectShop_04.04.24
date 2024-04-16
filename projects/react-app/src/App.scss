@@ -1,23 +1,39 @@
-.App {
-  text-align: center;
+// .App {
+//   text-align: center;
 
-  &-side-menu-and-content {
+//   &-side-menu-and-content {
+//     display: flex;
+//   }
+
+//   &-menu-main-and-content {
+//     width: 100%;
+//     max-width: 1200px;
+//     margin: 0 auto;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//   }
+// }
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Забезпечити мінімальну висоту на весь екран */
+
+  .App-side-menu-and-content {
     display: flex;
+    flex: 1; /* Розтягнути на весь доступний простір */
+  }
+
+  .App-menu-main-and-content {
+    flex: 1; /* Розтягнути на всю доступну ширину */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрувати вміст по горизонталі */
+    padding: 0 20px; /* Додати відступи з обох сторін контейнера */
+  }
+
+  .App-footer {
+    margin-top: auto; /* Розмістити підвал внизу сторінки */
   }
 }
-
-// .App {
-//   display: flex;
-//   height: 100vh;
-//   overflow-x: hidden; /* Попереджає прокручування горизонтальної сторінки */
-// }
-// .wrapper {
-//   display: flex;
-//   flex: 1;
-//   overflow-x: hidden; /* Попереджає прокручування горизонтальної частини */
-// }
-
-// .content {
-//   flex: 1;
-//   overflow-y: auto; /* Додає прокручування у вмісті, якщо вміст перевищує висоту */
-// }

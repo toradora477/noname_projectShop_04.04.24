@@ -1,35 +1,9 @@
 @import '../../common_constants/styles/colors.scss';
 
 .side-main {
-  // position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 200px;
-  // background-color: #fff;
-  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  // .side-menu {
-  //   padding: 20px;
-  // }
-
-  // .menu-item {
-  //   margin-bottom: 15px;
-  // }
-
-  // .menu-item button {
-  //   width: 100%;
-  //   padding: 10px 0;
-  //   font-size: 16px;
-  //   font-weight: bold;
-  //   color: #333;
-  //   background-color: transparent;
-  //   border: none;
-  //   cursor: pointer;
-  //   transition: background-color 0.3s ease;
-  // }
-
-  // .menu-item button:hover {
-  //   background-color: #f0f0f0;
-  // }
+  width: 50px;
+  border-right: 1px solid $light_primary;
 }

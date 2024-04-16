@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0px 30px;
-  // background-color: $gray_1;
   height: 80px;
+  border-bottom: 1px solid $light_primary;
 
   .company-logo img {
     height: 45px;
@@ -19,7 +19,6 @@
     &-item {
       margin-right: 20px;
       text-decoration: none;
-      // color: $gray_9;
     }
   }
 

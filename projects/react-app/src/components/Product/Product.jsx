@@ -1,8 +1,8 @@
 import React from 'react';
 import PrimaryGradientBtn from '../PrimaryGradientBtn';
-import img_test_murder from '../../images/img_test_murder.webp';
-import icon_heart_empty_grey from '../../images/icon-heart-empty-grey.svg';
-import icon_heart_empty_red from '../../images/icon-heart-empty-red.svg';
+
+import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '../../images';
+
 import './Product.scss';
 
 const Product = ({ item }) => {

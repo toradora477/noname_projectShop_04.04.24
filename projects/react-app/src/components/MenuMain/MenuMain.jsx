@@ -5,10 +5,7 @@ import { ROUTES } from '../../common_constants/routes';
 import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 
-import logo_menu_component from '../../images/logo-menu-component.png';
-import icons8_user_96 from '../../images/icons8-user-96.png';
-import icon_heart_empty_black from '../../images/icon-heart-empty-black.svg';
-import shopping_bag_color from '../../images/shopping-bag-color.svg';
+import { logo_menu_component, icons8_user_96, icon_heart_empty_black, shopping_bag_color } from '../../images';
 import './MenuMain.scss';
 
 const MenuMain = () => {
