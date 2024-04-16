@@ -5,8 +5,10 @@ import { ROUTES } from '../../common_constants/routes';
 import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 
-import icon_logo_1 from '../../images/icon_logo_1.svg';
-import icon_user from '../../images/icon_user.svg';
+import logo_menu_component from '../../images/logo-menu-component.png';
+import icons8_user_96 from '../../images/icons8-user-96.png';
+import icon_heart_empty_black from '../../images/icon-heart-empty-black.svg';
+import shopping_bag_color from '../../images/shopping-bag-color.svg';
 import './MenuMain.scss';
 
 const MenuMain = () => {
@@ -24,19 +26,25 @@ const MenuMain = () => {
     <div className="menu-main">
       <div className="menu-part">
         <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
-          <img src={icon_logo_1} alt="Company Logo" />
+          <img src={logo_menu_component} alt="Company Logo" />
         </Link>
         <div className="links">
           <Link className="links-item" to={ROUTES.HOME_DASHBOARD} children="Головна" />
           <Link className="links-item" to={ROUTES.SHOP} children="Магазин" />
-          <Link className="links-item" to={ROUTES.TOP_PRODAZH_ZA_MISYACZ} children="Лідери Продажів" />
         </div>
       </div>
       <div className="menu-part">
         <button className="btn-auth" onClick={onBtnClickAuth}>
-          <img src={icon_user} alt="Shopping Cart" />
+          <img src={icons8_user_96} alt="btn-login" />
+          <p>Увійти</p>
         </button>
-        <button className="search-button" children="Кошик" onClick={onBtnClickBasket} />
+        <button className="btn-auth">
+          <img src={icon_heart_empty_black} alt="btn-like" />
+          <p>Улюблене</p>
+        </button>
+        <button className="btn-auth" onClick={onBtnClickBasket}>
+          <img src={shopping_bag_color} alt="btn-basket" />
+        </button>
       </div>
     </div>
   );
