@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReactPaginate from 'react-paginate';
-import Product from '../../components/Product';
+import { Product } from '../../components';
 import './Shop.scss';
 
 const Shop = () => {

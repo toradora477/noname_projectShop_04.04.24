@@ -1,0 +1,54 @@
+@import '../../common_constants/styles/colors.scss';
+
+.side-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 30px;
+  // background-color: $gray_1;
+  height: 80px;
+
+  .company-logo img {
+    height: 45px;
+    width: 155px;
+  }
+
+  .links {
+    display: flex;
+
+    &-item {
+      margin-right: 20px;
+      text-decoration: none;
+      // color: $gray_9;
+    }
+  }
+
+  .search-bar {
+    display: flex;
+  }
+
+  .search-button {
+    border: none;
+    cursor: pointer;
+  }
+
+  .cart-icon img {
+    height: 30px;
+  }
+
+  .loupe-icon {
+    height: 20px;
+    width: 20px;
+  }
+
+  .btn-auth {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .menu-part {
+    display: flex;
+    align-items: center;
+  }
+}

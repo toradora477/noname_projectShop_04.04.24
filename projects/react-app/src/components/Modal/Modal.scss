@@ -17,6 +17,14 @@
     padding: 20px;
     border: 1px solid #888;
     width: 80%; /* Ширина вікна */
+
+    width: 450px;
+    height: 732px;
+    top: 80px;
+    left: 495px;
+    gap: 0px;
+    border-radius: 12px 0px 0px 0px;
+    opacity: 0px;
   }
 
   &.leftPosition .modal-content {

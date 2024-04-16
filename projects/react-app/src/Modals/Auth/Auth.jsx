@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { request, getTokenData } from '../../tools';
 
-import Modal from '../../components/Modal';
 import { setModal, setUserAuth } from '../../store/commonReducer';
-import PrimaryGradientBtn from '../../components/PrimaryGradientBtn';
-import icon_user from '../../images/icon_user.svg';
+
+import { PrimaryGradientBtn, Modal } from '../../components';
+
 import './Auth.scss';
 
 const Auth = () => {
@@ -73,7 +73,6 @@ const Auth = () => {
         <p> Запам’ятати мене</p>
 
         <div className="signup">
-          <img className="user-img" src={icon_user} alt="Shopping Cart" />
           <p className="text-signup">
             <b>Ще немає аккаунту?</b>
           </p>

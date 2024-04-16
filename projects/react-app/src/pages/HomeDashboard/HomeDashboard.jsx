@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Product from '../../components/Product';
+
+import { Product } from '../../components';
 
 import billboardHomeDashboard from '../../images/billboard-HomeDashboard.png';
 
