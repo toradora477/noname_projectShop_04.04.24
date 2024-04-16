@@ -1,5 +1,17 @@
 import axios from 'axios';
 
+const prepareUsers = (list) => {
+  window.users = {};
+  const _users = {};
+  list.forEach?.((i) => {
+    window.users[i.username] = i;
+    _users[i._id] = i;
+  });
+  return _users;
+};
+
+const getTokenData = (token) => (token ? JSON.parse(window.atob(token.split('.')[1])) : false);
+
 const request_platform = async (checkType, url, dataDynamic, callback, onError) => {
   try {
     let response;
@@ -38,4 +50,4 @@ const request = {
   },
 };
 
-export { request };
+export { request, prepareUsers, getTokenData };

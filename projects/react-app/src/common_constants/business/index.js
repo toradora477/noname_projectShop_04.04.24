@@ -12,10 +12,13 @@ const WORKING_DAYS = {
   END_WEEK: 'Неділя',
 }; // ! Змінити на реальні дані
 
+const ACCESS_TOKEN = 'accessToken';
+
 module.exports = {
   PHONE_VIEW,
   EMAIL_VIEW,
   COMPANY_NAME,
   WORKING_HOURS,
   WORKING_DAYS,
+  ACCESS_TOKEN,
 };

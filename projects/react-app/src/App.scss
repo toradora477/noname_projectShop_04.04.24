@@ -1,3 +1,39 @@
+// .App {
+//   text-align: center;
+
+//   &-side-menu-and-content {
+//     display: flex;
+//   }
+
+//   &-menu-main-and-content {
+//     width: 100%;
+//     max-width: 1200px;
+//     margin: 0 auto;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//   }
+// }
+
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Забезпечити мінімальну висоту на весь екран */
+
+  .App-side-menu-and-content {
+    display: flex;
+    flex: 1; /* Розтягнути на весь доступний простір */
+  }
+
+  .App-menu-main-and-content {
+    flex: 1; /* Розтягнути на всю доступну ширину */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрувати вміст по горизонталі */
+    padding: 0 20px; /* Додати відступи з обох сторін контейнера */
+  }
+
+  .App-footer {
+    margin-top: auto; /* Розмістити підвал внизу сторінки */
+  }
 }

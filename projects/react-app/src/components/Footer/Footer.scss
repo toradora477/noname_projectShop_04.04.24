@@ -1,9 +1,9 @@
 @import '../../common_constants/styles/colors.scss';
 
 .footer {
-  background-color: #f8f9fa;
+  background-color: $light_primary;
   padding: 20px 0;
-  color: #333;
+  color: $black;
 
   .footer__container {
     display: flex;

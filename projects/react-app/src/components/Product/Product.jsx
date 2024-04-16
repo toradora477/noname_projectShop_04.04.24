@@ -1,15 +1,21 @@
 import React from 'react';
-import PrimaryPurpleBtn from '../PrimaryPurpleBtn';
-import img_test_murder from '../../images/img_test_murder.webp';
+import PrimaryGradientBtn from '../PrimaryGradientBtn';
+
+import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '../../images';
+
 import './Product.scss';
 
-const Product = ({ name, price, imageUrl = img_test_murder }) => {
+const Product = ({ item }) => {
+  const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_grey;
+  const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
+
   return (
     <div className="product">
-      <img src={img_test_murder} alt="product-image" className="product-image" />
-      <h3>{name}</h3>
-      <p>${price}</p>
-      <PrimaryPurpleBtn children="ДОДАТИ В КОШИК" />
+      <img src={isLikeProduct} alt="svg like" className="product-like-icon " />
+      <img src={validImageProduct} alt="product image" className="product-main-image" />
+      <h3>{item.name}</h3>
+      <p>${item.price}</p>
+      <PrimaryGradientBtn children="ДОДАТИ В КОШИК" />
     </div>
   );
 };

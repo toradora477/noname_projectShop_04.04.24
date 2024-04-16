@@ -2,31 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import './Footer.scss';
 import { PHONE_VIEW, EMAIL_VIEW, COMPANY_NAME, WORKING_HOURS, WORKING_DAYS } from '../../common_constants/business';
-import icon_payment_group from '../../images/icon_payment_group.png';
-
-// const Footer = () => {
-//   return (
-//     <footer className="footer">
-//       <div className="footer__container">
-//         <div className="footer__section">
-//           <h3>Про нас</h3>
-//           <p>Інформація про ваш магазин та компанію.</p>
-//         </div>
-//         <div className="footer__section">
-//           <h3>Контакти</h3>
-//           <p>Ваша адреса, номер телефону, електронна адреса.</p>
-//         </div>
-//         <div className="footer__section">
-//           <h3>Служба підтримки</h3>
-//           <p>Інформація про те, як зв'язатися з вашою службою підтримки.</p>
-//         </div>
-//       </div>
-//       <div className="footer__copyright">
-//         <p>© 2024 Усі права захищені.</p>
-//       </div>
-//     </footer>
-//   );
-// };
+import { icon_payment_group } from '../../images';
 
 const Footer = () => {
   const currentYear = dayjs().format('YYYY');

@@ -1,0 +1,9 @@
+@import '../../common_constants/styles/colors.scss';
+
+.side-main {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  border-right: 1px solid $light_primary;
+}

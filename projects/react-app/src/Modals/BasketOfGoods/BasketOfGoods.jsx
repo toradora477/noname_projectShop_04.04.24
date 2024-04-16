@@ -1,6 +1,7 @@
 import React from 'react';
 import { request } from '../../tools';
-import Modal from '../../components/Modal';
+
+import { Modal } from '../../components';
 
 const BasketOfGoods = () => {
   const onSubmit = () => {
