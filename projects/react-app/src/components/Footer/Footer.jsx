@@ -3,46 +3,38 @@ import dayjs from 'dayjs';
 import './Footer.scss';
 import { PHONE_VIEW, EMAIL_VIEW, COMPANY_NAME, WORKING_HOURS, WORKING_DAYS } from '../../common_constants/business';
 import { icon_payment_group } from '../../images';
+import { PrimaryGradientBtn, Modal, Text as Typography, Box } from '../';
 
 const Footer = () => {
   const currentYear = dayjs().format('YYYY');
+
+  const [TItle, Text] = [
+    ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={700} />,
+    ({ children, mt }) => <Typography children={children} mt={mt ?? 12} sz={12} fw={400} />,
+  ];
 
   return (
     <footer className="footer">
       <div className="footer__container">
         <div className="footer__section">
-          <h3>Про нас</h3>
-          <p>
-            {COMPANY_NAME} - ваш партнер у світі стильного та якісного одягу. Наші вироби поєднують унікальний дизайн з високою якістю матеріалів.
-            З&nbsp;
-            {COMPANY_NAME} ви будете завжди виглядати стильно та впевнено.
-          </p>
-        </div>
-        <div className="footer__section">
-          <h3>Час роботи</h3>
-          <p>
+          <TItle>Про нас</TItle>
+          <Text
+            children={`${COMPANY_NAME} - ваш партнер у світі стильного та якісного одягу. Наші вироби поєднують унікальний дизайн з високою якістю матеріалів. З ${COMPANY_NAME} ви будете завжди виглядати стильно та впевнено.`}
+          />
+          <TItle mt={30}>Час роботи</TItle>
+          <Text>
             {WORKING_DAYS.START_WEEK} - {WORKING_DAYS.END_WEEK} {WORKING_HOURS.START_DAY} до {WORKING_HOURS.END_DAY}
-          </p>
+          </Text>
         </div>
+
         <div className="footer__section">
-          <h3>Інформація</h3>
-          <ul>
-            <li>
-              <a href="#">Про нас</a>
-            </li>
-            <li>
-              <a href="#">Доставка</a>
-            </li>
-            <li>
-              <a href="#">Обмін та повернення</a>
-            </li>
-            <li>
-              <a href="#">Поширені запитання</a>
-            </li>
-            <li>
-              <a href="#">Політика конфіденційності</a>
-            </li>
-          </ul>
+          <TItle>Інформація</TItle>
+
+          <Text>Про нас</Text>
+          <Text>Доставка</Text>
+          <Text>Обмін та повернення</Text>
+          <Text>Поширені запитання</Text>
+          <Text>Політика конфіденційності</Text>
         </div>
         <div className="footer__section">
           <h3>Допомога</h3>

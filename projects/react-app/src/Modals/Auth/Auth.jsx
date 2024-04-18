@@ -43,20 +43,20 @@ const Auth = () => {
   return (
     <Modal position="center" btnClose={false}>
       <div className="auth-modal">
-        <Text fz={60} fw={700}>
+        <Text fs={60} fw={700}>
           Вхід
         </Text>
         <Text mt={16}>Увійдіть під своїми даними, які вводили під час реєстрації.</Text>
 
         <form>
           <Box mt={32} className="input-group">
-            <Text mb={4} fz={12} fw={600}>
+            <Text mb={4} fs={12} fw={600}>
               Email
             </Text>
             <input placeholder="name@example.com" aria-label="login" type="text" id="email" name="email" onChange={handleLoginChange} />
           </Box>
           <Box mt={24} className="input-group">
-            <Text mb={4} fz={12} fw={600}>
+            <Text mb={4} fs={12} fw={600}>
               Пароль
             </Text>
             <input
