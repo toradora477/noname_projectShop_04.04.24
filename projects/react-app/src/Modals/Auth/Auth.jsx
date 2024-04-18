@@ -4,7 +4,7 @@ import { request, getTokenData } from '../../tools';
 
 import { setModal, setUserAuth } from '../../store/commonReducer';
 
-import { PrimaryGradientBtn, Modal } from '../../components';
+import { PrimaryGradientBtn, Modal, Text } from '../../components';
 
 import './Auth.scss';
 
@@ -46,24 +46,19 @@ const Auth = () => {
 
   return (
     <Modal position="center" btnClose={false}>
-      <div className="auth_modal">
-        {/* <div className="auth_header"> */}
-        <p className="text-title ">Вхід</p>
-
-        {/* </div> */}
-        <p>Увійдіть під своїми даними, які вводили під час реєстрації.</p>
+      <div className="auth-modal">
+        <Text mt={0} fz={60} fw={700}>
+          Вхід
+        </Text>
+        <Text mt={26}>Увійдіть під своїми даними, які вводили під час реєстрації.</Text>
 
         <form>
           <div className="input-group">
-            <label htmlFor="email">
-              Email <span children="*" style={{ color: 'red' }} />
-            </label>
+            <label htmlFor="email">Email</label>
             <input type="text" id="email" name="email" onChange={handleLoginChange} />
           </div>
           <div className="input-group">
-            <label htmlFor="password">
-              Пароль <span children="*" style={{ color: 'red' }} />
-            </label>
+            <label htmlFor="password">Пароль</label>
             <input type="password" id="password" name="password" onChange={handlePasswordChange} />
           </div>
           <PrimaryGradientBtn children="УВІЙТИ" onClick={loginRequest} />
@@ -76,7 +71,6 @@ const Auth = () => {
           </p>
           <button className="btn-signup">СТВОРИТИ АККАУНТ</button>
         </div>
-        {/* <hr /> */}
       </div>
     </Modal>
   );
