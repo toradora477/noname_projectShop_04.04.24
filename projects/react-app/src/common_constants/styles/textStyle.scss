@@ -1,19 +1,24 @@
-.text-style {
-  font-family: Nunito;
-}
-
-.regular-text {
+.font-style {
+  font-family: 'Nunito', sans-serif;
   font-weight: normal;
-}
 
-.medium-text {
-  font-weight: 500;
-}
+  &-regular {
+    font-weight: normal;
+  }
 
-.semi-bold-text {
-  font-weight: 600;
-}
+  &-medium {
+    font-weight: 500;
+  }
 
-.bold-text {
-  font-weight: bold;
+  &-semi-bold {
+    font-weight: 600;
+  }
+
+  &-large {
+    font-weight: 700;
+  }
+
+  &-bold-text {
+    font-weight: bold;
+  }
 }

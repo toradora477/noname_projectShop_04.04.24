@@ -47,12 +47,10 @@ const Auth = () => {
   return (
     <Modal position="center" btnClose={false}>
       <div className="auth_modal">
-        <div className="auth_header">
-          <h2>Вхід</h2>
-          {/* <button className="close-button" onClick={closeModal}>
-            Закрити
-          </button> */}
-        </div>
+        {/* <div className="auth_header"> */}
+        <p className="text-title ">Вхід</p>
+
+        {/* </div> */}
         <p>Увійдіть під своїми даними, які вводили під час реєстрації.</p>
 
         <form>

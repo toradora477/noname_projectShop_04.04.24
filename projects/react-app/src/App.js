@@ -10,7 +10,7 @@ import './common_constants/styles/textStyle.scss';
 function App() {
   useClientViewData();
   return (
-    <div className="App">
+    <div className="App font-style">
       <Router>
         <div className="App-side-menu-and-content">
           <SideMenu />

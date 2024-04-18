@@ -1,9 +1,14 @@
 .auth_modal {
-  .auth_header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .text-title {
+    font-size: 60px;
+    margin: 0px;
   }
+
+  // .auth_header {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  // }
 
   .input-group {
     display: flex;
