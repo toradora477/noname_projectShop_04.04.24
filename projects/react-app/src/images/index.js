@@ -12,3 +12,11 @@ export { default as shopping_bag_color } from './shopping_bag_color.svg';
 export { default as icon_instagram } from './icon_instagram.svg';
 export { default as icon_telegram } from './icon_telegram.svg';
 export { default as icon_tictoc } from './icon_tictoc.svg';
+///////////////////////////////////////////////////////////////////////////
+export { default as Icon_menu_sidemenu } from './Icon_menu_sidemenu.svg';
+export { default as icons8_bag_96 } from './icons8_bag_96.png';
+export { default as icons8_cap_96 } from './icons8_cap_96.png';
+export { default as icons8_like_96 } from './icons8_like_96.png';
+export { default as icons8_pants_96 } from './icons8_pants_96.png';
+export { default as icons8_shoes_96 } from './icons8_shoes_96.png';
+export { default as icons8_t_shirt_96 } from './icons8_t_shirt_96.png';
