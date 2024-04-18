@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 
 import { Product } from '../../components';
 import { billboardHomeDashboard } from '../../images';
+import './HomeDashboard.scss';
 
 const HomeDashboard = () => {
   const products = useSelector((state) => state.common.products) ?? [];
 
   return (
-    <div className="shop-page">
-      {/* <h1>Shop</h1> */}
+    <div className="home-dashboard-page">
       <img src={billboardHomeDashboard} alt="billboard" />
       <div className="product-list">
         {products.map((item) => (

@@ -1,4 +1,9 @@
 .shop-page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   .product-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 5 столбцов */
