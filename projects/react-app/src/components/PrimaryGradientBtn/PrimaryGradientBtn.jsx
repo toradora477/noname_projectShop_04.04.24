@@ -1,9 +1,18 @@
 import React from 'react';
+import clsx from 'clsx';
 import './PrimaryGradientBtn.scss';
 
-const PrimaryGradientBtn = ({ onClick, children }) => {
+const PrimaryGradientBtn = ({ onClick, className, children, mt, style }) => {
   return (
-    <button className="primary-gradient-main-btn" type="button" onClick={onClick}>
+    <button
+      className={clsx('primary-gradient-main-btn', className)}
+      style={{
+        marginTop: mt ?? 0,
+        ...style,
+      }}
+      type="button"
+      onClick={onClick}
+    >
       {children}
     </button>
   );
