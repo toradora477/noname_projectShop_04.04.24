@@ -1,15 +1,16 @@
 import React from 'react';
 import clsx from 'clsx';
+import { Box } from '../';
 
 const FlexBox = ({ children, className, mt, style }) => (
-  <div
+  <Box
     className={clsx(className)}
     style={{
-      marginTop: mt ?? 8,
       display: 'flex',
       alignItems: 'center',
       ...style,
     }}
+    mt={mt}
     children={children}
   />
 );

@@ -20,11 +20,6 @@
     outline: none;
   }
 
-  .save-group {
-    display: flex;
-    align-items: center;
-  }
-
   .signup-group {
     display: flex;
     align-items: center;
@@ -35,10 +30,6 @@
     background-color: transparent;
     border: none;
     padding: 0;
-  }
-
-  .text-green {
-    color: $primary;
   }
 
   button,

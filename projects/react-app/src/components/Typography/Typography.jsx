@@ -1,11 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import './Text.scss';
+import './Typography.scss';
 
-const Text = ({ children, className, mt, mb, fs, fw, style }) => {
+const Typography = ({ children, className, mt, mb, fs, fw, style, color }) => {
   return (
     <div
-      className={clsx('text-component', className)}
+      className={clsx('typography-component', className, color)}
       style={{
         marginTop: mt ?? 0,
         marginBottom: mb ?? 0,
@@ -18,4 +18,4 @@ const Text = ({ children, className, mt, mb, fs, fw, style }) => {
   );
 };
 
-export default Text;
+export default Typography;

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import './Footer.scss';
 import { COMPANY_NAME, WORKING_HOURS, WORKING_DAYS } from '../../common_constants/business';
 import { icon_instagram, icon_telegram, icon_tictoc } from '../../images';
-import { Text as Typography, FlexBox } from '../';
+import { Typography, FlexBox } from '../';
 
 const Footer = () => {
   const currentYear = dayjs().format('YYYY');
