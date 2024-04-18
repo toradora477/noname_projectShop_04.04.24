@@ -22,10 +22,6 @@ const Auth = () => {
     setPassword(e.target.value);
   };
 
-  const closeModal = () => {
-    dispatch(setModal());
-  };
-
   const loginRequest = () => {
     const body = {
       username: login,
@@ -47,20 +43,20 @@ const Auth = () => {
   return (
     <Modal position="center" btnClose={false}>
       <div className="auth-modal">
-        <Text mt={0} fz={60} fw={700}>
+        <Text fz={60} fw={700}>
           Вхід
         </Text>
-        <Text mt={26}>Увійдіть під своїми даними, які вводили під час реєстрації.</Text>
+        <Text mt={16}>Увійдіть під своїми даними, які вводили під час реєстрації.</Text>
 
         <form>
-          <Box className="input-group">
-            <Text mt={30} mb={4} fz={12} fw={600}>
+          <Box mt={32} className="input-group">
+            <Text mb={4} fz={12} fw={600}>
               Email
             </Text>
             <input placeholder="name@example.com" aria-label="login" type="text" id="email" name="email" onChange={handleLoginChange} />
           </Box>
-          <Box className="input-group">
-            <Text mt={12} mb={4} fz={12} fw={600}>
+          <Box mt={24} className="input-group">
+            <Text mb={4} fz={12} fw={600}>
               Пароль
             </Text>
             <input
@@ -72,23 +68,24 @@ const Auth = () => {
               onChange={handlePasswordChange}
             />
           </Box>
-          <Box className="save-group">
-            <input type="checkbox" id="myCheckbox" /> &nbsp;
-            <Text mt={0}> Запам’ятати мене</Text>
+          <Box mt={24} className="save-group">
+            <input aria-label="save auth" type="checkbox" id="myCheckbox" /> &nbsp;
+            <Text> Запам’ятати мене</Text>
           </Box>
 
           <PrimaryGradientBtn mt={40} children="УВІЙТИ" onClick={loginRequest} />
         </form>
-
-        <div className="signup">
-          <p className="text-signup">
-            <b>Забули пароль?</b>
-          </p>
-          <Text mt={0}>Забули пароль?</Text>
-          <Text mt={0}>Не маєте акаунта? Зареєструватися</Text>
-
-          <button className="btn-signup">СТВОРИТИ АККАУНТ</button>
-        </div>
+        <Box mt={28} className="signup-group ">
+          <button className="btn-signup">
+            <Text className="text-green">Забули пароль?</Text>
+          </button>
+        </Box>
+        <Box mt={106} className="signup-group">
+          <Text>Не маєте акаунта?</Text> &nbsp;
+          <button className="btn-signup">
+            <Text className="text-green">Зареєструватися</Text>
+          </button>
+        </Box>
       </div>
     </Modal>
   );

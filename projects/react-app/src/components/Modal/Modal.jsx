@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import './Modal.scss';
@@ -8,9 +8,9 @@ import { setModal } from '../../store/commonReducer';
 const Modal = ({ children, position, btnClose = true }) => {
   const dispatch = useDispatch();
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     dispatch(setModal());
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -23,7 +23,7 @@ const Modal = ({ children, position, btnClose = true }) => {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [closeModal]);
 
   return (
     <div
