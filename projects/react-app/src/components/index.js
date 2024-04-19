@@ -7,3 +7,4 @@ export { default as Modal } from './Modal';
 export { default as Typography } from './Typography';
 export { default as Box } from './Box';
 export { default as FlexBox } from './FlexBox';
+export { default as Card } from './Card';

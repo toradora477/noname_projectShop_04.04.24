@@ -24,7 +24,7 @@ const Shop = () => {
       <img src={billboardHomeDashboard} alt="billboard" />
       <div className="product-list">
         {currentProducts.map((item) => (
-          <Product key={item.id} item={item} />
+          <Product key={item._id} item={item} />
         ))}
       </div>
       <ReactPaginate
