@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
 import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
-
+import { FlexBox } from '../';
 import { logo_menu_component, icons8_user_96, icon_heart_empty_black, shopping_bag_color } from '../../images';
 import './MenuMain.scss';
 
@@ -20,30 +20,42 @@ const MenuMain = () => {
   };
 
   return (
-    <div className="menu-main">
-      <div className="menu-part">
-        <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
-          <img src={logo_menu_component} alt="Company Logo" />
-        </Link>
-        <div className="links">
-          <Link className="links-item" to={ROUTES.HOME_DASHBOARD} children="Головна" />
-          <Link className="links-item" to={ROUTES.SHOP} children="Магазин" />
+    <header className="menu-main">
+      <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
+        <img src={logo_menu_component} alt="Company Logo" />
+      </Link>
+      <FlexBox className="group-links">
+        <div className="menu-part">
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <div className="links">
+            <Link className="links-item" to={ROUTES.HOME_DASHBOARD} children="Головна" />
+            &nbsp;&nbsp;
+            <Link className="links-item" to={ROUTES.SHOP} children="Магазин" />
+          </div>
         </div>
-      </div>
-      <div className="menu-part">
-        <button className="btn-auth" onClick={onBtnClickAuth}>
-          <img src={icons8_user_96} alt="btn-login" />
-          <p>Увійти</p>
-        </button>
-        <button className="btn-auth">
-          <img src={icon_heart_empty_black} alt="btn-like" />
-          <p>Улюблене</p>
-        </button>
-        <button className="btn-auth" onClick={onBtnClickBasket}>
-          <img src={shopping_bag_color} alt="btn-basket" />
-        </button>
-      </div>
-    </div>
+        <div className="menu-part">
+          <button className="btn-auth" onClick={onBtnClickAuth}>
+            <FlexBox>
+              <img src={icons8_user_96} alt="btn-login" />
+              &nbsp;&nbsp;
+              <p>Увійти</p>
+            </FlexBox>
+          </button>
+          &nbsp;&nbsp;
+          <button className="btn-auth" onClick={onBtnClickAuth}>
+            <FlexBox>
+              <img src={icon_heart_empty_black} alt="btn-like" />
+              &nbsp;&nbsp;
+              <p>Улюблене</p>
+            </FlexBox>
+          </button>
+          &nbsp;&nbsp;
+          <button className="btn-auth" onClick={onBtnClickBasket}>
+            <img src={shopping_bag_color} alt="btn-basket" />
+          </button>
+        </div>
+      </FlexBox>
+    </header>
   );
 };
 

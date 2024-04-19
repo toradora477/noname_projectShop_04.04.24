@@ -12,7 +12,7 @@ const Product = ({ item }) => {
   return (
     <div className="product">
       <img src={isLikeProduct} alt="svg like" className="product-like-icon " />
-      <img src={validImageProduct} alt="product image" className="product-main-image" />
+      <img src={validImageProduct} alt="product" className="product-main-image" />
       <h3>{item.name}</h3>
       <p>${item.price}</p>
       <PrimaryGradientBtn children="ДОДАТИ В КОШИК" />

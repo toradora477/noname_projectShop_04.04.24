@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 import { Product } from '../../components';
+import { billboardHomeDashboard } from '../../images';
 import './Shop.scss';
 
 const Shop = () => {
@@ -20,15 +21,15 @@ const Shop = () => {
 
   return (
     <div className="shop-page">
-      <h1>Shop</h1>
+      <img src={billboardHomeDashboard} alt="billboard" />
       <div className="product-list">
         {currentProducts.map((item) => (
-          <Product key={item.id} item={item} />
+          <Product key={item._id} item={item} />
         ))}
       </div>
       <ReactPaginate
-        previousLabel={'Previous'}
-        nextLabel={'Next'}
+        previousLabel={currentPage === 0 ? '' : '<'}
+        nextLabel={currentPage === pageCount - 1 ? '' : '>'}
         breakLabel={'...'}
         pageCount={pageCount}
         marginPagesDisplayed={2}

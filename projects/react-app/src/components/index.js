@@ -4,3 +4,7 @@ export { default as Footer } from './Footer';
 export { default as Product } from './Product';
 export { default as PrimaryGradientBtn } from './PrimaryGradientBtn';
 export { default as Modal } from './Modal';
+export { default as Typography } from './Typography';
+export { default as Box } from './Box';
+export { default as FlexBox } from './FlexBox';
+export { default as Card } from './Card';
