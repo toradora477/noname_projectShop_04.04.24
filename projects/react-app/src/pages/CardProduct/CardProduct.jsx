@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import './CardProduct.scss';
-import { Product } from '../../components';
+import { Card } from '../../components';
 
 const CardProduct = () => {
   const [dispatch, history, { productId }] = [useDispatch(), useHistory(), useParams()];
@@ -30,12 +30,14 @@ const CardProduct = () => {
       <br />
       Інфо товару
       <br />
-      {item._id}
-      <br />
-      {item.i} <br />
-      {item.imageUrl} <br />
-      {item.name} <br />
-      {item.price}
+      <Card pl={35}>
+        {item._id}
+        <br />
+        {item.i} <br />
+        {item.imageUrl} <br />
+        {item.name} <br />
+        {item.price}
+      </Card>
       <br />
     </div>
   );
