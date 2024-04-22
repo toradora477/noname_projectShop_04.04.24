@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
-import { ROLES } from '../../common_constants/business';
+import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '../../images';
 
 import './Product.scss';
@@ -17,7 +18,10 @@ const Product = ({ item }) => {
   return (
     <div className="product">
       <img src={isLikeProduct} alt="svg like" className="product-like-icon " />
-      <img src={validImageProduct} alt="product" className="product-main-image" />
+
+      <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
+        <img src={validImageProduct} alt="product" className="product-main-image" />
+      </Link>
       <h3>{item.name}</h3>
       <p>${item.price}</p>
       <PrimaryButton children="ДОДАТИ В КОШИК" />
