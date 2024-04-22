@@ -3,7 +3,7 @@ export { default as MenuAdmin } from './MenuAdmin';
 export { default as SideMenu } from './SideMenu';
 export { default as Footer } from './Footer';
 export { default as Product } from './Product';
-export { default as PrimaryGradientBtn } from './PrimaryGradientBtn';
+export { default as PrimaryButton } from './PrimaryButton/PrimaryButton.jsx';
 export { default as Modal } from './Modal';
 export { default as Typography } from './Typography';
 export { default as Box } from './Box';

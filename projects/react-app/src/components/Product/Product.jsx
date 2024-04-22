@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import PrimaryGradientBtn from '../PrimaryGradientBtn';
+import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { ROLES } from '../../common_constants/business';
 import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '../../images';
 
@@ -20,7 +20,13 @@ const Product = ({ item }) => {
       <img src={validImageProduct} alt="product" className="product-main-image" />
       <h3>{item.name}</h3>
       <p>${item.price}</p>
-      {userOrBelow && <PrimaryGradientBtn children="ДОДАТИ В КОШИК" />}
+      {userOrBelow && <PrimaryButton children="ДОДАТИ В КОШИК" />}
+      {admin && (
+        <>
+          <PrimaryButton color="orange" children="Редагувати" />
+          <PrimaryButton mt={8} color="red" children="Видалити" />
+        </>
+      )}
     </div>
   );
 };
