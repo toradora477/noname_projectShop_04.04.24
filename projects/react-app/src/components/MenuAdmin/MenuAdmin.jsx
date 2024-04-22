@@ -7,13 +7,13 @@ import './MenuAdmin.scss';
 const MenuAdmin = () => {
   return (
     <header className="menu-admin">
-      <Link className="menu-admin-btn" to={ROUTES.PAGE_ADMIN_ORDER}>
+      <Link className="menu-admin-btn" to={ROUTES.ORDER_ADMIN}>
         <button>Замовлення</button>
       </Link>
-      <Link className="menu-admin-btn" to={ROUTES.PAGE_ADMIN_PRODUCTS}>
+      <Link className="menu-admin-btn" to={ROUTES.PRODUCTS_ADMIN}>
         <button>Товари</button>
       </Link>
-      <Link className="menu-admin-btn" to={ROUTES.PAGE_ADMIN_STATISTICS}>
+      <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
         <button>Статистика</button>
       </Link>
     </header>
