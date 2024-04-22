@@ -1,9 +1,9 @@
-import { ROUTES } from './common_constants/routes';
+import { ROUTES } from '../common_constants/routes';
 import { Route, Switch } from 'react-router-dom';
 
-import HomeDashboard from './pages/HomeDashboard';
-import Shop from './pages/Shop';
-import Error404 from './pages/Error404';
+import HomeDashboard from '../pages/HomeDashboard';
+import Shop from '../pages/Shop';
+import Error404 from '../pages/Error404';
 
 export default function RouterSwitch() {
   const routersError = (

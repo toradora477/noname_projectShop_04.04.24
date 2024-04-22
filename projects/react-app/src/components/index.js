@@ -1,4 +1,5 @@
 export { default as MenuMain } from './MenuMain';
+export { default as MenuAdmin } from './MenuAdmin';
 export { default as SideMenu } from './SideMenu';
 export { default as Footer } from './Footer';
 export { default as Product } from './Product';

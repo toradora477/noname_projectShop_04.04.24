@@ -1,7 +1,7 @@
 import React from 'react';
-import RouterSwitch from './RouterSwitch';
+import RouterSwitch from './configs/RouterSwitch';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { MenuMain, SideMenu, Footer } from './components';
+import { MenuMain, MenuAdmin, SideMenu, Footer } from './components';
 import { useClientViewData } from './tools/hooks';
 import Modals from './Modals';
 import './App.scss';
@@ -16,6 +16,7 @@ function App() {
           <SideMenu />
           <div className="App-menu-main-and-content">
             <MenuMain />
+            <MenuAdmin />
             <RouterSwitch />
           </div>
         </div>
