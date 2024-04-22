@@ -18,30 +18,26 @@ router.post('/info', async (req, res) => {
 
     res.json(transportationData);
   } catch ({ message, stack }) {
-    log.errorT({ log: 'Error', method: req.method, url: req.originalUrl, line: stack?.match(/.*index.js:(\d+):\d+/)?.[1], err: message });
+    log.error({ log: 'Error', method: req.method, url: req.originalUrl, line: stack?.match(/.*index.js:(\d+):\d+/)?.[1], err: message });
     res.status(500).json({ status: false, err: message });
   }
 });
 
-router.post('/getListAllProducts', async (req, res) => {
+router.get('/getListAllProducts', async (req, res) => {
   try {
-    console.log('test 4');
-    console.log('test 3', req.body);
-
     const transportationData = {
       status: true,
       data: PRODUCTS,
     };
 
     res.status(200).json(transportationData);
-    log.info({
-      url: req.originalUrl,
-      method: req.method,
+
+    req.logInfo = {
       dataLength: transportationData.data?.length ?? null,
       operation: 'Get all list products',
-    });
+    };
   } catch ({ message, stack }) {
-    log.errorT({ log: 'Error', method: req.method, url: req.originalUrl, line: stack?.match(/.*index.js:(\d+):\d+/)?.[1], err: message });
+    log.error({ log: 'Error', method: req.method, url: req.originalUrl, line: stack?.match(/.*index.js:(\d+):\d+/)?.[1], err: message });
     res.status(500).json({ status: false, err: message });
   }
 });

@@ -17,4 +17,12 @@ const DEFAULT_USER = {
   p: 'sh',
 };
 
-module.exports = { DATE_OPTIONS, DEFAULT_USER };
+const HTTP_METHODS = {
+  POST: 'post',
+  DELETE: 'delete',
+  GET: 'get',
+  PUT: 'put',
+  PATCH: 'patch',
+};
+
+module.exports = { DATE_OPTIONS, DEFAULT_USER, HTTP_METHODS };

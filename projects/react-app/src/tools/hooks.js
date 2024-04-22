@@ -13,7 +13,7 @@ const useClientViewData = () => {
         actualization: true,
       };
 
-      request.post('/products/getListAllProducts', body, (res) => {
+      request.get('/products/getListAllProducts', body, (res) => {
         if (res.data) dispatch(setProducts(res.data));
       }); // TODO Тестове для api
     };

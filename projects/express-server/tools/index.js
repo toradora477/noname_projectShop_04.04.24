@@ -16,19 +16,16 @@ const log = {
     logger.debug(rest);
   },
   info: (rest) => {
-    logger.info(new Date(), rest);
+    logger.info('Info: ' + new Date().toLocaleDateString('en-US', DATE_OPTIONS) + ':', rest);
   },
   warning: (rest) => {
     logger.warning(rest);
   },
   warn: (rest) => {
-    logger.warn(rest);
-  },
-  errorT: (rest) => {
-    logger.error('Error: ' + new Date().toLocaleDateString('en-US', DATE_OPTIONS) + ':', rest);
+    logger.warn('Warn: ' + new Date().toLocaleDateString('en-US', DATE_OPTIONS) + ':', rest);
   },
   error: (rest) => {
-    logger.error(rest);
+    logger.error('Error: ' + new Date().toLocaleDateString('en-US', DATE_OPTIONS) + ':', rest);
   },
   show: (rest) => {
     logger.show(rest);
