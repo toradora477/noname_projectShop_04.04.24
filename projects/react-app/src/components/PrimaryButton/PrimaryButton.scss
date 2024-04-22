@@ -14,12 +14,12 @@
   height: Hug (44px) px;
   padding: 12px 16px 12px 16px;
   gap: 8px;
-  border-radius: 8px;
   opacity: 0px;
+  -o-border-radius: 8px;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   -ms-border-radius: 8px;
-  -o-border-radius: 8px;
+  border-radius: 8px;
 
   &.orange {
     background: $orange;
@@ -28,12 +28,8 @@
   &.red {
     background: $red;
   }
+
+  &.blue {
+    background: $blue;
+  }
 }
-
-// .primary-main-btn.orange {
-//   background: $orange;
-// }
-
-// .primary-main-btn.red {
-//   background: $red;
-// }

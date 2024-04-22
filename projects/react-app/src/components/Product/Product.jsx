@@ -7,9 +7,9 @@ import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '..
 import './Product.scss';
 
 const Product = ({ item }) => {
-  const userAuth = useSelector((state) => state.common.userAuth);
-  const { role = 'guest' } = userAuth;
-  const [admin, userOrBelow] = [ROLES[role] === ROLES.admin, ROLES[role] >= ROLES.user];
+  // const userAuth = useSelector((state) => state.common.userAuth);
+  // const { role = 'guest' } = userAuth;
+  // const [admin, userOrBelow] = [ROLES[role] === ROLES.admin, ROLES[role] >= ROLES.user];
 
   const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_grey;
   const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
@@ -20,13 +20,7 @@ const Product = ({ item }) => {
       <img src={validImageProduct} alt="product" className="product-main-image" />
       <h3>{item.name}</h3>
       <p>${item.price}</p>
-      {userOrBelow && <PrimaryButton children="ДОДАТИ В КОШИК" />}
-      {admin && (
-        <>
-          <PrimaryButton color="orange" children="Редагувати" />
-          <PrimaryButton mt={8} color="red" children="Видалити" />
-        </>
-      )}
+      <PrimaryButton children="ДОДАТИ В КОШИК" />
     </div>
   );
 };

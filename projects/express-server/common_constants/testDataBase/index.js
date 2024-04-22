@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+
 const PRODUCTS = (() => {
   const SEASONS = ['Літній', 'Весняний', 'Осінній', 'Зимовий'];
   const CLOTHING_TYPES = ['футболка', 'світшот', 'штани', 'куртка', 'кепка', 'светр', 'шорти', 'кросівки'];
@@ -29,7 +31,8 @@ const PRODUCTS = (() => {
     const productName = getRandomName();
 
     products.push({
-      id: i,
+      _id: new ObjectId(),
+      i: i,
       name: productName,
       price: Math.floor(Math.random() * 100) + 1,
       imageUrl: `https://via.placeholder.com/150?text=${productName.replace(/ /g, '+')}`,
