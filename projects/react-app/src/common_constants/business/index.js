@@ -19,10 +19,17 @@ const HTTP_METHODS = {
   PATCH: 'patch',
 };
 
+const ROLES = {
+  admin: 0,
+  user: 99,
+  guest: 999,
+};
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
   WORKING_DAYS,
   ACCESS_TOKEN,
   HTTP_METHODS,
+  ROLES,
 };

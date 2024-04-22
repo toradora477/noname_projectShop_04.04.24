@@ -22,15 +22,15 @@ app.use(require('./configs/routesConfig'));
 mongoClient
   .connect()
   .then((mongoClient) => {
-    log.success('MongoDB connected successfully');
+    log.ok('MongoDB connected successfully');
 
     if (isDev) {
       app.listen(getPort, () => {
-        log.success(`The server is running on the port ${getPort}`);
+        log.ok(`The server is running on the port ${getPort}`);
       }); // Listening port after successfully connecting to MongoDB
     } else {
       // https.createServer(getCredentials(defaultCredentialsPath), app).listen(getPort, () => {
-      //   log.success(`API service started on port ${getPort}`);
+      //   log.ok(`API service started on port ${getPort}`);
       // });
       // TODO тут треба перехід на продакшен
     }

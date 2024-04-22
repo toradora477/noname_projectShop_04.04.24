@@ -25,4 +25,10 @@ const HTTP_METHODS = {
   PATCH: 'patch',
 };
 
-module.exports = { DATE_OPTIONS, DEFAULT_USER, HTTP_METHODS };
+const ROLES = {
+  admin: 0,
+  user: 99,
+  guest: 999,
+};
+
+module.exports = { DATE_OPTIONS, DEFAULT_USER, HTTP_METHODS, ROLES };
