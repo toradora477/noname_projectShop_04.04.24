@@ -1,29 +1,22 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
-import ReactPaginate from 'react-paginate';
+import React from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { ROUTES } from '../../common_constants/routes';
 import './CardProduct.scss';
 import { Card } from '../../components';
 
 const CardProduct = () => {
-  const [dispatch, history, { productId }] = [useDispatch(), useHistory(), useParams()];
+  const { productId } = useParams();
+  const history = useHistory();
 
   const products = useSelector((state) => state.common.products) ?? [];
-  const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 15; // Количество продуктов на странице
-
-  const offset = currentPage * productsPerPage;
-  const pageCount = Math.ceil(products.length / productsPerPage);
-
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
-  };
 
   const item = products.find((item) => item._id === productId);
 
-  console.log(item);
-
-  const currentProducts = products.slice(offset, offset + productsPerPage);
+  if (!item) {
+    history.push(ROUTES.ERROR404);
+    return null;
+  }
 
   return (
     <div className="products-admin">

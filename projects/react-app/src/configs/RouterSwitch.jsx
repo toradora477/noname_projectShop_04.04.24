@@ -15,21 +15,19 @@ import StatisticsAdmin from '../pages/StatisticsAdmin';
 const RouterSwitch = () => {
   const userAuth = useSelector((state) => state.common.userAuth),
     { role = 'guest' } = userAuth,
-    admin = ROLES[role] === ROLES.admin;
+    isAdmin = ROLES[role] === ROLES.admin;
 
   return (
     <Switch>
-      {admin && (
-        <>
-          <Route exact path={ROUTES.ORDER_ADMIN} component={OrderAdmin} />
-          <Route exact path={ROUTES.PRODUCTS_ADMIN} component={ProductsAdmin} />
-          <Route exact path={ROUTES.STATISTICS_ADMIN} component={StatisticsAdmin} />
-        </>
-      )}
+      {isAdmin && <Route exact path={ROUTES.ORDER_ADMIN} component={OrderAdmin} />}
+      {isAdmin && <Route exact path={ROUTES.PRODUCTS_ADMIN} component={ProductsAdmin} />}
+      {isAdmin && <Route exact path={ROUTES.STATISTICS_ADMIN} component={StatisticsAdmin} />}
+
       <Route exact path={ROUTES.HOME_DASHBOARD} component={HomeDashboard} />
       <Route exact path={ROUTES.SHOP} component={Shop} />
       <Route exact path={`${ROUTES.CARD_PRODUCT}/:productId`} component={CardProduct} />
       <Route exact path={ROUTES.ERROR404} component={Error404} />
+
       <Route component={Error404} />
     </Switch>
   );

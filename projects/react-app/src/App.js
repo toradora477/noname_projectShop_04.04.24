@@ -12,7 +12,7 @@ import { ROLES } from './common_constants/business';
 const App = () => {
   const userAuth = useSelector((state) => state.common.userAuth),
     { role = 'guest' } = userAuth,
-    admin = ROLES[role] === ROLES.admin;
+    isAdmin = ROLES[role] === ROLES.admin;
 
   useClientViewData();
   return (
@@ -22,7 +22,7 @@ const App = () => {
           <SideMenu />
           <div className="App-menu-main-and-content">
             <MenuMain />
-            {admin && <MenuAdmin />}
+            {isAdmin && <MenuAdmin />}
             <RouterSwitch />
           </div>
         </div>
