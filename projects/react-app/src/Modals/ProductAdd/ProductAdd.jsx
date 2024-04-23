@@ -7,19 +7,31 @@ const ProductAdd = () => {
   const [formData, setFormData] = useState({
     productName: '',
     description: '',
-    mainImage: null,
-    auxiliaryImages: [],
+    price: '',
+    colors: [{ colorName: '', images: [] }],
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e, index) => {
     const { name, value, files } = e.target;
-    if (name === 'mainImage') {
-      setFormData({ ...formData, mainImage: files[0] });
-    } else if (name === 'auxiliaryImages') {
-      setFormData({ ...formData, auxiliaryImages: files });
+    if (name === 'colorName') {
+      const updatedColors = [...formData.colors];
+      updatedColors[index] = { ...updatedColors[index], colorName: value };
+      setFormData({ ...formData, colors: updatedColors });
+    } else if (name === 'colorImage') {
+      const updatedColors = [...formData.colors];
+      const images = updatedColors[index].images.concat([...files]); // Додавання нових файлів до існуючого масиву зображень
+      updatedColors[index] = { ...updatedColors[index], images };
+      setFormData({ ...formData, colors: updatedColors });
     } else {
       setFormData({ ...formData, [name]: value });
     }
+  };
+
+  const handleAddColor = () => {
+    setFormData({
+      ...formData,
+      colors: [...formData.colors, { colorName: '', images: [] }],
+    });
   };
 
   const handleSubmit = (e) => {
@@ -28,9 +40,12 @@ const ProductAdd = () => {
     const body = new FormData();
     body.append('productName', formData.productName);
     body.append('description', formData.description);
-    body.append('mainImage', formData.mainImage);
-    formData.auxiliaryImages.forEach((image) => {
-      body.append('auxiliaryImages', image);
+    body.append('price', formData.price);
+    formData.colors.forEach((color, index) => {
+      body.append(`colors[${index}][colorName]`, color.colorName);
+      color.images.forEach((image) => {
+        body.append(`colors[${index}][images]`, image);
+      });
     });
 
     request.post('/products/info', body, () => {
@@ -50,13 +65,24 @@ const ProductAdd = () => {
           <textarea name="description" value={formData.description} onChange={handleChange} className="form-input textarea" required />
         </label>
         <label className="form-label">
-          Основне зображення товару:
-          <input type="file" name="mainImage" onChange={handleChange} accept="image/*" className="form-input" required />
+          Ціна:
+          <input type="number" name="price" value={formData.price} onChange={handleChange} className="form-input" required />
         </label>
-        <label className="form-label">
-          Додаткові зображення товару:
-          <input type="file" name="auxiliaryImages" onChange={handleChange} multiple accept="image/*" className="form-input" />
-        </label>
+        {formData.colors.map((color, index) => (
+          <div key={index}>
+            <label className="form-label">
+              Колір:
+              <input type="text" name="colorName" value={color.colorName} onChange={(e) => handleChange(e, index)} className="form-input" required />
+            </label>
+            <label className="form-label">
+              Зображення для кольору "{color.colorName}":
+              <input type="file" name="colorImage" onChange={(e) => handleChange(e, index)} multiple accept="image/*" className="form-input" />
+            </label>
+          </div>
+        ))}
+        <button type="button" onClick={handleAddColor} className="form-button">
+          Додати колір
+        </button>
         <button type="submit" className="form-button">
           Додати товар
         </button>
