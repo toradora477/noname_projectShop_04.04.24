@@ -6,6 +6,10 @@
   padding-top: 68px;
   padding-bottom: 60px;
 
+  .products-btn-add {
+    width: auto;
+  }
+
   .product-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 5 столбцов */
