@@ -16,7 +16,7 @@ const logRequestFinish = function (req, res, next) {
     const status = res.statusCode,
       statusСircumcised = Math.floor(status / 100).toString();
 
-    const customLogInfo = typeof req.logInfo === 'object' && req.logInfo !== null ? req.logInfo : null,
+    const customLogInfo = typeof req.loggingData === 'object' && req.loggingData !== null ? req.loggingData : null,
       _customLogInfo = customLogInfo
         ? {
             4: { logWarn: customLogInfo },

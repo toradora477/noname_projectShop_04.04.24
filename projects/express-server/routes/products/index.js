@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
-const { log, getNextSequenceValue } = require('../../tools');
+const { log, getNextSequenceValue, ExtendedError } = require('../../tools');
 const { ObjectId } = require('mongodb');
 
 const path = require('path');
@@ -33,7 +33,7 @@ router.get('/getListAllProducts', (req, res) => {
 
     res.status(200).json(transportationData);
 
-    req.logInfo = {
+    req.loggingData = {
       dataLength: transportationData.data?.length ?? null,
       operation: 'Get all list products',
     };
@@ -54,28 +54,35 @@ router.post('/addProduct', multer({ dest: path.join(__dirname, './') }).single('
     const commonParams = req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS);
 
     const newBodyProduct = {
-      n: productName,
-      p: price,
-      d: description,
+      ...(productName ? { n: productName } : {}),
+      ...(price ? { p: price } : {}),
+      ...(description ? { d: description } : {}),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
     };
 
     const resultInsertOne = await collection.insertOne(newBodyProduct);
 
-    log.show(resultInsertOne);
+    if (!resultInsertOne?.insertedId)
+      throw new ExtendedError({
+        messageLog: 'Poor collection insertOne result.',
+        messageJson: 'Помилка сервера. Не вдалося завантажити новий продукт.',
+      });
 
     const transportationData = {
       status: true,
       data: { ...newBodyProduct, _id: resultInsertOne.insertedId },
     };
 
+    req.loggingData = {
+      log: 'Add new products',
+      operation: 'insertOne for collection PRODUCTS',
+      'req.body': req.body,
+      result: transportationData.data,
+    };
     res.status(200).json(transportationData);
-
-    req.logInfo = { operation: 'add products', 'req.body': req.body, result: transportationData.data };
-  } catch ({ message, stack }) {
-    req.logInfo = { errLine: stack?.match(/.*index.js:(\d+):\d+/)?.[1], errMessage: message };
-
-    res.status(500).json({ status: false, err: message });
+  } catch ({ message, stack, messageJson, сode = 500 }) {
+    req.loggingData = { errLine: stack?.match(/.*index.js:(\d+):\d+/)?.[1], errMessage: message };
+    res.status(сode).json({ status: false, errMessage: messageJson ?? message });
   }
 });
 
