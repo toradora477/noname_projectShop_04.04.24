@@ -22,8 +22,8 @@ const ProductAdminItem = ({ item }) => {
       <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
         <img src={validImageProduct} alt="product" className="product-main-image" />
       </Link>
-      <h3>{item.name}</h3>
-      <p>${item.price}</p>
+      <h3>{item.n}</h3>
+      <p>${item.p}</p>
       {userOrBelow && <PrimaryButton children="ДОДАТИ В КОШИК" />}
       {admin && (
         <>

@@ -5,9 +5,8 @@ const { ObjectId } = require('mongodb');
 
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
-const { PRODUCTS } = require('../../common_constants/testDataBase');
 
-router.post('/info', async (req, res) => {
+router.post('/info', (req, res, next) => {
   try {
     console.log('test 1');
     console.log('test 2', req.body);
@@ -18,40 +17,49 @@ router.post('/info', async (req, res) => {
     };
 
     res.json(transportationData);
-  } catch ({ message, stack }) {
-    log.error({ log: 'Error', method: req.method, url: req.originalUrl, line: stack?.match(/.*index.js:(\d+):\d+/)?.[1], err: message });
-    res.status(500).json({ status: false, err: message });
+  } catch (err) {
+    next(err);
   }
-});
+}); // TODO тестовий, прибрати
 
-router.get('/getListAllProducts', (req, res) => {
+router.get('/getListAllProducts', async (req, res, next) => {
   try {
+    const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
+    const resultFind = await collection.find({}).toArray();
+
+    if (!resultFind?.length || !Array.isArray(resultFind))
+      throw new ExtendedError({
+        messageLog: 'Poor collection find result.',
+        messageJson: 'Помилка сервера. Не вдалося вивантажити список продуктів.',
+      });
+
     const transportationData = {
       status: true,
-      data: PRODUCTS,
+      data: resultFind,
     };
-
-    res.status(200).json(transportationData);
 
     req.loggingData = {
-      dataLength: transportationData.data?.length ?? null,
-      operation: 'Get all list products',
+      log: 'Get all list products',
+      operation: 'find for collection PRODUCTS',
+      dataLength: resultFind?.length ?? null,
     };
-  } catch ({ message, stack }) {
-    log.error({ log: 'Error', method: req.method, url: req.originalUrl, line: stack?.match(/.*index.js:(\d+):\d+/)?.[1], err: message });
-    res.status(500).json({ status: false, err: message });
+    res.status(200).json(transportationData);
+  } catch (err) {
+    next(err);
   }
 });
 
-router.post('/addProduct', multer({ dest: path.join(__dirname, './') }).single('file'), async (req, res) => {
+router.post('/addProduct', multer({ dest: path.join(__dirname, './') }).single('file'), async (req, res, next) => {
   try {
     console.log('req.body', req.body);
     console.log('req.files', req.files);
 
     const { productName, description, price, colors } = req.body;
 
-    const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
-    const commonParams = req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS);
+    const [collection, commonParams] = [
+      req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS),
+      req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS),
+    ];
 
     const newBodyProduct = {
       ...(productName ? { n: productName } : {}),
@@ -80,9 +88,8 @@ router.post('/addProduct', multer({ dest: path.join(__dirname, './') }).single('
       result: transportationData.data,
     };
     res.status(200).json(transportationData);
-  } catch ({ message, stack, messageJson, сode = 500 }) {
-    req.loggingData = { errLine: stack?.match(/.*index.js:(\d+):\d+/)?.[1], errMessage: message };
-    res.status(сode).json({ status: false, errMessage: messageJson ?? message });
+  } catch (err) {
+    next(err);
   }
 });
 

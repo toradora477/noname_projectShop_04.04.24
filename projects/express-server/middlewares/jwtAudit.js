@@ -1,11 +1,6 @@
-const { log } = require('../tools');
-
-const { ROLES } = require('../common_constants/business');
-
 const jwt = require('jsonwebtoken');
-
+const { ROLES } = require('../common_constants/business');
 const { log } = require('../tools');
-
 const { allUsersExport } = require('../routes/auth/actions');
 
 const reqLogMiddleware = (req) => {
@@ -18,7 +13,7 @@ const reqLogMiddleware = (req) => {
   });
 };
 
-const freeJWT = (req, res, next, role = 100) => {
+const guestJWT = (req, res, next, role = 100) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
@@ -77,4 +72,5 @@ const adminJWT = (req, res, next) => {
 module.exports = {
   authenticateJWT,
   adminJWT,
+  guestJWT,
 };
