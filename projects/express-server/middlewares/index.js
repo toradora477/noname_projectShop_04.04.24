@@ -10,23 +10,27 @@ const logRequestFinish = function (req, res, next) {
     const endTime = dayjs(),
       duration = (endTime.diff(startTime) / 1000).toFixed(3);
 
-    const method = req.method;
+    const method = req.method,
+      url = method === HTTP_METHODS.GET?.toUpperCase() ? req.originalUrl.split('?')[0] : req.originalUrl;
 
-    const url = method === HTTP_METHODS.GET?.toUpperCase() ? req.originalUrl.split('?')[0] : req.originalUrl;
+    const status = res.statusCode,
+      statusСircumcised = Math.floor(status / 100).toString();
 
-    const customLogInfo = typeof req.logInfo === 'object' && req.logInfo !== null ? req.logInfo : {};
-
-    const status = res.statusCode;
+    const customLogInfo = typeof req.logInfo === 'object' && req.logInfo !== null ? req.logInfo : null,
+      _customLogInfo = customLogInfo
+        ? {
+            4: { logWarn: customLogInfo },
+            5: { logError: customLogInfo },
+          }[statusСircumcised] || { logInfo: customLogInfo }
+        : {};
 
     const dataTransfer = {
       url,
       method,
       status: res.statusCode,
       duration: `${duration} seconds`,
-      ...customLogInfo,
+      ..._customLogInfo,
     };
-
-    const statusСircumcised = Math.floor(status / 100).toString();
 
     (
       ({

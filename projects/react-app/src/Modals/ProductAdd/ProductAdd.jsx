@@ -34,6 +34,25 @@ const ProductAdd = () => {
     });
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   const body = new FormData();
+  //   body.append('productName', formData.productName);
+  //   body.append('description', formData.description);
+  //   body.append('price', formData.price);
+  //   formData.colors.forEach((color, index) => {
+  //     body.append(`colors[${index}][colorName]`, color.colorName);
+  //     color.images.forEach((image) => {
+  //       body.append(`colors[${index}][images]`, image);
+  //     });
+  //   });
+
+  //   request.post('/products/addProduct', body, () => {
+  //     console.log('Товар успішно додано');
+  //   });
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -48,7 +67,7 @@ const ProductAdd = () => {
       });
     });
 
-    request.post('/products/info', body, () => {
+    request.post('/products/addProduct', body, () => {
       console.log('Товар успішно додано');
     });
   };
