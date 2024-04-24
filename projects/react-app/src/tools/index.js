@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { HTTP_METHODS } from '../common_constants/business';
 
 const prepareUsers = (list) => {
   window.users = {};
@@ -17,11 +18,20 @@ const request_platform = async (checkType, url, dataDynamic, callback, onError) 
     let response;
 
     switch (checkType) {
-      case 'post':
+      case HTTP_METHODS.POST:
         response = await axios.post(`${process.env.REACT_APP_API}${url}`, dataDynamic);
         break;
-      case 'delete':
+      case HTTP_METHODS.DELETE:
         response = await axios.delete(`${process.env.REACT_APP_API}${url}${dataDynamic}`);
+        break;
+      case HTTP_METHODS.GET:
+        response = await axios.get(`${process.env.REACT_APP_API}${url}`, { params: dataDynamic });
+        break;
+      case HTTP_METHODS.PUT:
+        response = await axios.put(`${process.env.REACT_APP_API}${url}`, dataDynamic);
+        break;
+      case HTTP_METHODS.PATCH:
+        response = await axios.patch(`${process.env.REACT_APP_API}${url}`, dataDynamic);
         break;
       default:
         break;
@@ -43,10 +53,19 @@ const request_platform = async (checkType, url, dataDynamic, callback, onError) 
 
 const request = {
   async post(url, data, callback, onError) {
-    await request_platform('post', url, data, callback, onError);
+    await request_platform(HTTP_METHODS.POST, url, data, callback, onError);
   },
   async delete(url, id, callback, onError) {
-    await request_platform('delete', url, id, callback, onError);
+    await request_platform(HTTP_METHODS.DELETE, url, id, callback, onError);
+  },
+  async get(url, params, callback, onError) {
+    await request_platform(HTTP_METHODS.GET, url, params, callback, onError);
+  },
+  async put(url, data, callback, onError) {
+    await request_platform(HTTP_METHODS.PUT, url, data, callback, onError);
+  },
+  async patch(url, data, callback, onError) {
+    await request_platform(HTTP_METHODS.PATCH, url, data, callback, onError);
   },
 };
 

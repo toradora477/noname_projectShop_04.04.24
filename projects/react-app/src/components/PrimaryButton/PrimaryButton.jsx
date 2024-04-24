@@ -1,11 +1,11 @@
 import React from 'react';
 import clsx from 'clsx';
-import './PrimaryGradientBtn.scss';
+import './PrimaryButton.scss';
 
-const PrimaryGradientBtn = ({ onClick, className, children, mt, style }) => {
+const PrimaryButton = ({ onClick, className, children, mt, style, color }) => {
   return (
     <button
-      className={clsx('primary-gradient-main-btn', className)}
+      className={clsx('primary-main-btn', className, color)}
       style={{
         marginTop: mt ?? 0,
         ...style,
@@ -18,4 +18,4 @@ const PrimaryGradientBtn = ({ onClick, className, children, mt, style }) => {
   );
 };
 
-export default PrimaryGradientBtn;
+export default PrimaryButton;

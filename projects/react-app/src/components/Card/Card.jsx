@@ -2,16 +2,21 @@ import React, { Fragment } from 'react';
 import './Card.scss';
 import { Typography, FlexBox, Product } from '../';
 
-const Card = ({ title, list, mt, style }) => {
+const Card = ({ title, list, mt, style, children, pl }) => {
   return (
     <div
       className="card-component"
       style={{
         marginTop: mt ?? 8,
+        padding: pl ?? 0,
         ...style,
       }}
     >
-      <div className="card-content">{title && <Typography fs={20} fw={500} children={title} />}</div>
+      {title && (
+        <div className="card-content">
+          <Typography fs={20} fw={500} children={title} />
+        </div>
+      )}
       {list?.length > 0 && (
         <Fragment>
           {list.reduce((acc, item, index) => {
@@ -29,6 +34,7 @@ const Card = ({ title, list, mt, style }) => {
           }, [])}
         </Fragment>
       )}
+      {children}
     </div>
   );
 };

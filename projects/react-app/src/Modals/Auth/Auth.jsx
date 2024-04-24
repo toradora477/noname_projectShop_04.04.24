@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { request, getTokenData } from '../../tools';
 import { setModal, setUserAuth } from '../../store/commonReducer';
-import { PrimaryGradientBtn, Modal, Typography, Box, FlexBox } from '../../components';
+import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../components';
 import './Auth.scss';
 
 const Auth = () => {
@@ -69,7 +69,7 @@ const Auth = () => {
             <Typography> Запам’ятати мене</Typography>
           </FlexBox>
 
-          <PrimaryGradientBtn mt={40} children="УВІЙТИ" onClick={loginRequest} />
+          <PrimaryButton mt={40} children="УВІЙТИ" onClick={loginRequest} />
         </form>
         <Box mt={28} className="signup-group ">
           <button className="btn-signup">

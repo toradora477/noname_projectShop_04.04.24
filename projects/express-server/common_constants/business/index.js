@@ -1,14 +1,3 @@
-const DATE_OPTIONS = {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-  hour12: false,
-};
-
 const DEFAULT_USER = {
   password: 'pass',
   role: 'admin',
@@ -17,4 +6,18 @@ const DEFAULT_USER = {
   p: 'sh',
 };
 
-module.exports = { DATE_OPTIONS, DEFAULT_USER };
+const HTTP_METHODS = {
+  POST: 'post',
+  DELETE: 'delete',
+  GET: 'get',
+  PUT: 'put',
+  PATCH: 'patch',
+};
+
+const ROLES = {
+  admin: 0,
+  user: 99,
+  guest: 999,
+};
+
+module.exports = { DEFAULT_USER, HTTP_METHODS, ROLES };

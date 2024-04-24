@@ -5,6 +5,7 @@ import * as MODALS from '../common_constants/modals';
 
 import BasketOfGoods from './BasketOfGoods';
 import Auth from './Auth';
+import ProductAdd from './ProductAdd';
 
 const Modals = () => {
   const name = useSelector((state) => state.common.modal?.name);
@@ -14,6 +15,7 @@ const Modals = () => {
     {
       [MODALS.BASKET_OF_GOODS]: <BasketOfGoods />,
       [MODALS.AUTH]: <Auth />,
+      [MODALS.PRODUCT_ADD]: <ProductAdd />,
     }[name];
 
   return modalComponent || null;

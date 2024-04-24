@@ -11,9 +11,25 @@ const WORKING_DAYS = {
 
 const ACCESS_TOKEN = 'accessToken';
 
+const HTTP_METHODS = {
+  POST: 'post',
+  DELETE: 'delete',
+  GET: 'get',
+  PUT: 'put',
+  PATCH: 'patch',
+};
+
+const ROLES = {
+  admin: 0,
+  user: 99,
+  guest: 999,
+};
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
   WORKING_DAYS,
   ACCESS_TOKEN,
+  HTTP_METHODS,
+  ROLES,
 };

@@ -1,0 +1,35 @@
+// @import '../../common_constants/styles/colors.scss';
+
+.product-form-add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .form-label {
+    margin: 10px 0;
+  }
+
+  .form-input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 300px;
+    margin-top: 5px;
+  }
+
+  .textarea {
+    height: 100px;
+  }
+
+  .form-button {
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 200px;
+    font-size: 16px;
+  }
+}
