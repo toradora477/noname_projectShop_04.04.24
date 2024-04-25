@@ -15,23 +15,36 @@ const getTokenData = (token) => (token ? JSON.parse(window.atob(token.split('.')
 
 const request_platform = async (checkType, url, dataDynamic, callback, onError) => {
   try {
+    const token = window.localStorage.getItem('accessToken');
+    const headers = { Authorization: `Bearer ${token}` };
     let response;
 
     switch (checkType) {
       case HTTP_METHODS.POST:
-        response = await axios.post(`${process.env.REACT_APP_API}${url}`, dataDynamic);
+        response = await axios.post(`${process.env.REACT_APP_API}${url}`, dataDynamic, {
+          headers: headers,
+        });
         break;
       case HTTP_METHODS.DELETE:
-        response = await axios.delete(`${process.env.REACT_APP_API}${url}${dataDynamic}`);
+        response = await axios.delete(`${process.env.REACT_APP_API}${url}${dataDynamic}`, {
+          headers: headers,
+        });
         break;
       case HTTP_METHODS.GET:
-        response = await axios.get(`${process.env.REACT_APP_API}${url}`, { params: dataDynamic });
+        response = await axios.get(`${process.env.REACT_APP_API}${url}`, {
+          headers: headers,
+          params: dataDynamic,
+        });
         break;
       case HTTP_METHODS.PUT:
-        response = await axios.put(`${process.env.REACT_APP_API}${url}`, dataDynamic);
+        response = await axios.put(`${process.env.REACT_APP_API}${url}`, dataDynamic, {
+          headers: headers,
+        });
         break;
       case HTTP_METHODS.PATCH:
-        response = await axios.patch(`${process.env.REACT_APP_API}${url}`, dataDynamic);
+        response = await axios.patch(`${process.env.REACT_APP_API}${url}`, dataDynamic, {
+          headers: headers,
+        });
         break;
       default:
         break;

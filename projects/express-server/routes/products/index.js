@@ -2,7 +2,7 @@ const router = require('express').Router();
 const multer = require('multer');
 const { log, getNextSequenceValue, ExtendedError } = require('../../tools');
 const { ObjectId } = require('mongodb');
-
+const { adminJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 
@@ -49,10 +49,11 @@ router.get('/getListAllProducts', async (req, res, next) => {
   }
 });
 
-router.post('/addProduct', multer({ dest: path.join(__dirname, './') }).single('file'), async (req, res, next) => {
+router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).single('file'), async (req, res, next) => {
   try {
     console.log('req.body', req.body);
     console.log('req.files', req.files);
+    console.log('req.user', req.user);
 
     const { productName, description, price, colors } = req.body;
 

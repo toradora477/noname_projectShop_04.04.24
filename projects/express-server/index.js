@@ -10,6 +10,8 @@ const isDev = process.env.DEV === 'true';
 const getPort = process.env.PORT || 3005;
 const mongoClient = new MongoClient(process.env.MONGO_URL);
 
+const { prepareAllUsers } = require('./routes/auth/actions');
+
 const app = express();
 
 app.use(cors());
@@ -24,6 +26,8 @@ mongoClient
   .connect()
   .then((mongoClient) => {
     log.success('MongoDB connected successfully');
+
+    prepareAllUsers(mongoClient);
 
     if (isDev) {
       app.listen(getPort, () => {
