@@ -1,5 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { addBasket } from '../../store/commonReducer';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { ROUTES } from '../../common_constants/routes';
@@ -8,12 +9,14 @@ import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '..
 import './Product.scss';
 
 const Product = ({ item }) => {
-  // const userAuth = useSelector((state) => state.common.userAuth);
-  // const { role = 'guest' } = userAuth;
-  // const [admin, userOrBelow] = [ROLES[role] === ROLES.admin, ROLES[role] >= ROLES.user];
+  const dispatch = useDispatch();
 
   const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_grey;
   const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
+
+  const onPutInBasket = () => {
+    dispatch(addBasket(item._id));
+  };
 
   return (
     <div className="product">
@@ -24,7 +27,7 @@ const Product = ({ item }) => {
       </Link>
       <h3>{item.n}</h3>
       <p>${item.p}</p>
-      <PrimaryButton children="ДОДАТИ В КОШИК" />
+      <PrimaryButton children="ДОДАТИ В КОШИК" onClick={onPutInBasket} />
     </div>
   );
 };

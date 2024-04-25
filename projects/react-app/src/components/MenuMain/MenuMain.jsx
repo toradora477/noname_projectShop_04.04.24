@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
 import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
@@ -10,6 +10,7 @@ import './MenuMain.scss';
 
 const MenuMain = () => {
   const dispatch = useDispatch();
+  const basket = useSelector((state) => state.common.basket) ?? [];
 
   const onBtnClickBasket = () => {
     dispatch(setModal({ name: BASKET_OF_GOODS }));
@@ -52,6 +53,7 @@ const MenuMain = () => {
           &nbsp;&nbsp;
           <button className="btn-auth" onClick={onBtnClickBasket}>
             <img src={shopping_bag_color} alt="btn-basket" />
+            {basket?.length || null}
           </button>
         </div>
       </FlexBox>
