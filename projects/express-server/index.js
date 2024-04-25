@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const timeout = require('connect-timeout');
 const { MongoClient } = require('mongodb');
-const { log } = require('./tools');
 
 require('dotenv').config({ path: '.env' });
 
@@ -10,6 +9,7 @@ const isDev = process.env.DEV === 'true';
 const getPort = process.env.PORT || 3005;
 const mongoClient = new MongoClient(process.env.MONGO_URL);
 
+const { log } = require('./tools');
 const { prepareAllUsers } = require('./routes/auth/actions');
 
 const app = express();

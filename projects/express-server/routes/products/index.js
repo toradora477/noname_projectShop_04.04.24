@@ -56,6 +56,12 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
     console.log('req.user', req.user);
 
     const { productName, description, price, colors } = req.body;
+    const { _id: userID } = req.user;
+
+    // console.log(userID);
+
+    // console.log(ObjectId.createFromTime(userID));
+    // console.log(new ObjectId(userID));
 
     const [collection, commonParams] = [
       req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS),
@@ -66,6 +72,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       ...(productName ? { n: productName } : {}),
       ...(price ? { p: price } : {}),
       ...(description ? { d: description } : {}),
+      а: new ObjectId(userID),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
     };
 
