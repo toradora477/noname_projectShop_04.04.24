@@ -58,10 +58,17 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
     const { productName, description, price, colors } = req.body;
     const { _id: userID } = req.user;
 
-    // console.log(userID);
+    if (![userID, !productName, price].every(Boolean))
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
 
-    // console.log(ObjectId.createFromTime(userID));
-    // console.log(new ObjectId(userID));
+    console.log(userID);
+
+    console.log(ObjectId.createFromTime(userID));
+    console.log(new ObjectId(userID));
 
     const [collection, commonParams] = [
       req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS),
@@ -73,6 +80,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       ...(price ? { p: price } : {}),
       ...(description ? { d: description } : {}),
       а: new ObjectId(userID),
+      t: new Date(),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
     };
 
