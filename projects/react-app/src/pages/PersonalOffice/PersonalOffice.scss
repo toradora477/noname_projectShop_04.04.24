@@ -5,4 +5,12 @@
   align-items: center;
   padding-top: 68px;
   padding-bottom: 60px;
+
+  .button-like-card {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    outline: none;
+  }
 }
