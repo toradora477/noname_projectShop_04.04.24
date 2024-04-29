@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react';
 import './Card.scss';
+import clsx from 'clsx';
 import { Typography, FlexBox, Product } from '../';
 
-const Card = ({ title, list, mt, style, children, pl }) => {
+const Card = ({ title, list, mt, style, children, pl, className }) => {
   return (
     <div
-      className="card-component"
+      className={clsx('card-component', className)}
       style={{
         marginTop: mt ?? 8,
         padding: pl ?? 0,
