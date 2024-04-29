@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const multer = require('multer');
-const { log, getNextSequenceValue, ExtendedError } = require('../../tools');
+const { getNextSequenceValue, ExtendedError } = require('../../tools');
 const { ObjectId } = require('mongodb');
 const { adminJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');

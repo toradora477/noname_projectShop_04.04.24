@@ -5,12 +5,15 @@ import { ROUTES } from '../../common_constants/routes';
 import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
+import { request } from '../../tools';
 import { logo_menu_component, icons8_user_96, icon_heart_empty_black, shopping_bag_color } from '../../images';
 import './MenuMain.scss';
 
 const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
+  const userAuth = useSelector((state) => state.common.userAuth);
+
 
   const onBtnClickBasket = () => {
     dispatch(setModal({ name: BASKET_OF_GOODS }));
@@ -19,6 +22,14 @@ const MenuMain = () => {
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
   };
+
+  const logout = () => {
+    window.localStorage.removeItem('accessToken');
+    window.location.reload();
+  };
+
+  const testDynamicForLogin = userAuth ? 'Вийти' : 'Увійти';
+  const btnDynamicForLogin = userAuth ? logout : onBtnClickAuth;
 
   return (
     <header className="menu-main">
@@ -35,11 +46,11 @@ const MenuMain = () => {
           </div>
         </div>
         <div className="menu-part">
-          <button className="btn-auth" onClick={onBtnClickAuth}>
+          <button className="btn-auth" onClick={btnDynamicForLogin}>
             <FlexBox>
               <img src={icons8_user_96} alt="btn-login" />
               &nbsp;&nbsp;
-              <p>Увійти</p>
+              <p>{testDynamicForLogin}</p>
             </FlexBox>
           </button>
           &nbsp;&nbsp;
