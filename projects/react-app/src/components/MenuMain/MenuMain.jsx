@@ -2,10 +2,9 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
-import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
+import { AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
-import { request } from '../../tools';
 import { logo_menu_component, icons8_user_96, icon_heart_empty_black, shopping_bag_color } from '../../images';
 import './MenuMain.scss';
 
@@ -13,11 +12,6 @@ const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const userAuth = useSelector((state) => state.common.userAuth);
-
-
-  const onBtnClickBasket = () => {
-    dispatch(setModal({ name: BASKET_OF_GOODS }));
-  };
 
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
@@ -54,18 +48,18 @@ const MenuMain = () => {
             </FlexBox>
           </button>
           &nbsp;&nbsp;
-          <button className="btn-auth" onClick={onBtnClickAuth}>
+          <Link className="btn-auth" to={ROUTES.PERSONAL_OFFICE}>
             <FlexBox>
               <img src={icon_heart_empty_black} alt="btn-like" />
               &nbsp;&nbsp;
               <p>Улюблене</p>
             </FlexBox>
-          </button>
+          </Link>
           &nbsp;&nbsp;
-          <button className="btn-auth" onClick={onBtnClickBasket}>
+          <Link className="btn-auth" to={ROUTES.PERSONAL_OFFICE}>
             <img src={shopping_bag_color} alt="btn-basket" />
             {basket?.length || null}
-          </button>
+          </Link>
         </div>
       </FlexBox>
     </header>

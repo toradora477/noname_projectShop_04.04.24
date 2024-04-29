@@ -11,6 +11,7 @@ import OrderAdmin from '../pages/OrderAdmin';
 import ProductsAdmin from '../pages/ProductsAdmin';
 import CardProduct from '../pages/CardProduct/CardProduct.jsx';
 import StatisticsAdmin from '../pages/StatisticsAdmin';
+import PersonalOffice from '../pages/PersonalOffice';
 
 const RouterSwitch = () => {
   const userAuth = useSelector((state) => state.common.userAuth),
@@ -24,6 +25,7 @@ const RouterSwitch = () => {
       {isAdmin && <Route exact path={ROUTES.STATISTICS_ADMIN} component={StatisticsAdmin} />}
 
       <Route exact path={ROUTES.HOME_DASHBOARD} component={HomeDashboard} />
+      <Route exact path={ROUTES.PERSONAL_OFFICE} component={PersonalOffice} />
       <Route exact path={ROUTES.SHOP} component={Shop} />
       <Route exact path={`${ROUTES.CARD_PRODUCT}/:productId`} component={CardProduct} />
       <Route exact path={ROUTES.ERROR404} component={Error404} />

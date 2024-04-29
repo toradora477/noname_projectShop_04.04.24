@@ -9,6 +9,7 @@ const ROUTES = {
   ORDER_ADMIN: `${BASE_PATH}/order`,
   PRODUCTS_ADMIN: `${BASE_PATH}/product`,
   STATISTICS_ADMIN: `${BASE_PATH}/statistics`,
+  PERSONAL_OFFICE: '/personalOffice',
 };
 
 module.exports = {
