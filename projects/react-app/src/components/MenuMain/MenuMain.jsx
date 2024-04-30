@@ -3,16 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
 import { AUTH } from '../../common_constants/modals';
-import { NAME_SELECT } from '../../common_constants/business';
+import { NAME_SELECT, ROLES } from '../../common_constants/business';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
 import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_color_green_gradient } from '../../images';
 import './MenuMain.scss';
+import { PrimaryButton } from '../';
 
 const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
-  const userAuth = useSelector((state) => state.common.userAuth);
+  const userAuth = useSelector((state) => state.common.userAuth),
+    { role = 'guest' } = userAuth,
+    isAdmin = ROLES[role] === ROLES.admin;
 
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
@@ -26,12 +29,26 @@ const MenuMain = () => {
   const testDynamicForLogin = userAuth ? 'Вийти' : 'Увійти';
   const btnDynamicForLogin = userAuth ? logout : onBtnClickAuth;
 
+  const menuAdmin = (
+    <div className="menu-admin">
+      <Link className="menu-admin-btn" to={ROUTES.ORDER_ADMIN}>
+        <PrimaryButton children="Замовлення" color="blue" />
+      </Link>
+      <Link className="menu-admin-btn" to={ROUTES.PRODUCTS_ADMIN}>
+        <PrimaryButton children="Товари" color="blue" />
+      </Link>
+      <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
+        <PrimaryButton children="Статистика" color="blue" />
+      </Link>
+    </div>
+  );
+
   return (
     <header className="menu-main">
       <Link className="company-logo" to={ROUTES.HOME_DASHBOARD}>
         <img src={logo_menu_component} alt="Company Logo" />
       </Link>
-      <FlexBox className="group-links">
+      <FlexBox mt={0} className="group-links">
         <div className="menu-part">
           &nbsp;&nbsp;&nbsp;&nbsp;
           <div className="links">
@@ -40,6 +57,9 @@ const MenuMain = () => {
             <Link className="links-item" to={ROUTES.SHOP} children="Магазин" />
           </div>
         </div>
+
+        {isAdmin && menuAdmin}
+
         <div className="menu-part">
           <div className="btn-auth">
             <FlexBox>
