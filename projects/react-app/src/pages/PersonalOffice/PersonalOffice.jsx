@@ -1,107 +1,78 @@
-// import React from 'react';
-// import { Card, Typography, PrymaryIconBackground, FlexBox } from '../../components';
-// import './PersonalOffice.scss';
-// import { icon_heart_empty_red, icon_heart_empty_white, icon_user_white } from '../../images';
-
-// const PersonalOffice = () => {
-//   const [TItle, Text] = [
-//     ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={700} />,
-//     ({ children, mt }) => <Typography children={children} mt={mt ?? 7} sz={13} fw={400} />,
-//   ];
-
-//   return (
-//     <div className="personal-office">
-//       <Card pl={16} className="personal-office-card">
-//         <FlexBox>
-//           <PrymaryIconBackground image={icon_user_white} backgroundColor="primary" />
-//           &nbsp;&nbsp;
-//           <div>
-//             <TItle>Акаунт</TItle>
-//             <Text>Особиста інформація</Text>
-//           </div>
-//         </FlexBox>
-//       </Card>
-//       <Card pl={16} className="personal-office-card">
-//         <FlexBox>
-//           <PrymaryIconBackground image={icon_heart_empty_white} />
-//           &nbsp;&nbsp;
-//           <div>
-//             <TItle>Список бажань</TItle>
-//             <Text>Вподобані товари</Text>
-//           </div>
-//         </FlexBox>
-//       </Card>
-//       <br />
-//       <Card pl={16} className="personal-office-card">
-//         <FlexBox>
-//           <PrymaryIconBackground image={icon_user_white} />
-//           &nbsp;&nbsp;
-//           <div>
-//             <TItle>Акаунт</TItle>
-//             <Text>Особиста інформація</Text>
-//           </div>
-//         </FlexBox>
-//       </Card>
-//       <Card pl={16} className="personal-office-card">
-//         <FlexBox>
-//           <PrymaryIconBackground image={icon_heart_empty_white} backgroundColor="primary" />
-//           &nbsp;&nbsp;
-//           <div>
-//             <TItle>Список бажань</TItle>
-//             <Text>Вподобані товари</Text>
-//           </div>
-//         </FlexBox>
-//       </Card>
-//     </div>
-//   );
-// };
-
-// export default PersonalOffice;
-
 import React, { useState } from 'react';
-import { Card, Typography, PrymaryIconBackground, FlexBox } from '../../components';
+import { Card, Typography, PrymaryIconBackground, FlexBox, Box } from '../../components';
 import './PersonalOffice.scss';
-import { icon_heart_empty_red, icon_heart_empty_white, icon_user_white } from '../../images';
+import { icon_heart_empty_white, icon_user_white } from '../../images';
 import clsx from 'clsx';
+
+const CardItem = ({ selectedCard, handleCardClick, cardId, icon, title, text }) => {
+  const [TItle, Text] = [
+    ({ children }) => <Typography children={children} mt={0} sz={14} fw={700} />,
+    ({ children }) => <Typography children={children} mt={7} sz={13} fw={400} />,
+  ];
+
+  return (
+    <button className="button-like-card" onClick={() => handleCardClick(cardId)}>
+      <Card
+        pl={16}
+        className={clsx('personal-office-card', {
+          selectedPersonalOffice: selectedCard === cardId,
+          unselectedPersonalOffice: selectedCard !== cardId,
+        })}
+      >
+        <FlexBox>
+          <PrymaryIconBackground image={icon} backgroundColor={selectedCard === cardId ? 'primary' : ''} />
+          &nbsp;&nbsp;
+          <div>
+            <TItle children={title} />
+            <Text children={text} />
+          </div>
+        </FlexBox>
+      </Card>
+    </button>
+  );
+};
 
 const PersonalOffice = () => {
   const [selectedCard, setSelectedCard] = useState(null);
+
+  const [TItle, Text] = [
+    ({ children, mt }) => <Typography children={children} mt={mt} sz={20} fw={600} />,
+    ({ children, mt }) => <Typography children={children} mt={mt ?? 12} sz={12} fw={400} />,
+  ];
 
   const handleCardClick = (cardId) => {
     setSelectedCard(cardId);
   };
 
-  const [Title, Text] = [
-    ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={700} />,
-    ({ children, mt }) => <Typography children={children} mt={mt ?? 7} sz={13} fw={400} />,
-  ];
-
   return (
     <div className="personal-office">
-      <button className="button-like-card" onClick={() => handleCardClick('account')}>
-        <Card pl={16} className={clsx('personal-office-card', { selected: selectedCard === 'account' })}>
-          <FlexBox>
-            <PrymaryIconBackground image={icon_user_white} backgroundColor={selectedCard === 'account' ? 'primary' : ''} />
-            &nbsp;&nbsp;
-            <div>
-              <Title>Акаунт</Title>
-              <Text>Особиста інформація</Text>
-            </div>
-          </FlexBox>
-        </Card>
-      </button>
-      <button className="button-like-card" onClick={() => handleCardClick('wishlist')}>
-        <Card pl={16} className={clsx('personal-office-card', { selected: selectedCard === 'wishlist' })}>
-          <FlexBox>
-            <PrymaryIconBackground image={icon_heart_empty_white} backgroundColor={selectedCard === 'wishlist' ? 'primary' : ''} />
-            &nbsp;&nbsp;
-            <div>
-              <Title>Список бажань</Title>
-              <Text>Вподобані товари</Text>
-            </div>
-          </FlexBox>
-        </Card>
-      </button>
+      <div className="select-menu">
+        <TItle>Налаштування</TItle>
+        <CardItem
+          selectedCard={selectedCard}
+          handleCardClick={handleCardClick}
+          cardId="account"
+          icon={icon_user_white}
+          title="Акаунт"
+          text="Особиста інформація"
+        />
+        <CardItem
+          selectedCard={selectedCard}
+          handleCardClick={handleCardClick}
+          cardId="wishlist"
+          icon={icon_heart_empty_white}
+          title="Список бажань"
+          text="Вподобані товари"
+        />
+        <CardItem
+          selectedCard={selectedCard}
+          handleCardClick={handleCardClick}
+          cardId="basketlist"
+          icon={icon_heart_empty_white}
+          title="Кошик"
+          text="Вибрані товари"
+        />
+      </div>
     </div>
   );
 };
