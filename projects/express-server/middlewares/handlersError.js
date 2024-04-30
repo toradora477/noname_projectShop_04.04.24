@@ -1,8 +1,9 @@
 const handlersError = (err, req, res, next) => {
   if (err) {
-    const { message, stack, messageJson, сode = 500 } = err;
+    const { message, stack, messageJson, code = 500 } = err;
+
     req.loggingData = { message, stack };
-    res.status(сode).json({ status: false, errMessage: messageJson ?? message });
+    res.status(code).json({ status: false, errMessage: messageJson ?? message });
   } else {
     next();
   }

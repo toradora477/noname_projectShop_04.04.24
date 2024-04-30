@@ -1,23 +1,30 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
-import { BASKET_OF_GOODS, AUTH } from '../../common_constants/modals';
+import { AUTH } from '../../common_constants/modals';
+import { NAME_SELECT } from '../../common_constants/business';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
-import { logo_menu_component, icons8_user_96, icon_heart_empty_black, shopping_bag_color } from '../../images';
+import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_color_green_gradient } from '../../images';
 import './MenuMain.scss';
 
 const MenuMain = () => {
   const dispatch = useDispatch();
-
-  const onBtnClickBasket = () => {
-    dispatch(setModal({ name: BASKET_OF_GOODS }));
-  };
+  const basket = useSelector((state) => state.common.basket) ?? [];
+  const userAuth = useSelector((state) => state.common.userAuth);
 
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
   };
+
+  const logout = () => {
+    window.localStorage.removeItem('accessToken');
+    window.location.reload();
+  };
+
+  const testDynamicForLogin = userAuth ? 'Вийти' : 'Увійти';
+  const btnDynamicForLogin = userAuth ? logout : onBtnClickAuth;
 
   return (
     <header className="menu-main">
@@ -34,25 +41,29 @@ const MenuMain = () => {
           </div>
         </div>
         <div className="menu-part">
-          <button className="btn-auth" onClick={onBtnClickAuth}>
+          <div className="btn-auth">
             <FlexBox>
-              <img src={icons8_user_96} alt="btn-login" />
-              &nbsp;&nbsp;
-              <p>Увійти</p>
+              <Link to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.ACCOUNT } }}>
+                <img src={icon_user_black} alt="btn-login" />
+              </Link>
+              <button className="btn-auth" onClick={btnDynamicForLogin}>
+                <p>{testDynamicForLogin}</p>
+              </button>
             </FlexBox>
-          </button>
+          </div>
           &nbsp;&nbsp;
-          <button className="btn-auth" onClick={onBtnClickAuth}>
+          <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
             <FlexBox>
               <img src={icon_heart_empty_black} alt="btn-like" />
-              &nbsp;&nbsp;
+              &nbsp;
               <p>Улюблене</p>
             </FlexBox>
-          </button>
+          </Link>
           &nbsp;&nbsp;
-          <button className="btn-auth" onClick={onBtnClickBasket}>
-            <img src={shopping_bag_color} alt="btn-basket" />
-          </button>
+          <Link className="btn-auth" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
+            <img src={shopping_bag_color_green_gradient} alt="btn-basket" />
+            {basket?.length || null}
+          </Link>
         </div>
       </FlexBox>
     </header>

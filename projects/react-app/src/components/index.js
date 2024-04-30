@@ -9,3 +9,5 @@ export { default as Typography } from './Typography';
 export { default as Box } from './Box';
 export { default as FlexBox } from './FlexBox';
 export { default as Card } from './Card';
+export { default as Spin } from './Spin';
+export { default as PrymaryIconBackground } from './PrymaryIconBackground';

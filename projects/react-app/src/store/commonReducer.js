@@ -18,9 +18,16 @@ export const commonSlice = createSlice({
   reducers: {
     setProducts: (state, action) => {
       state.products = action.payload;
+      state.products.sort((a, b) => b.i - a.i);
     },
-    setBasket: (state, action) => {
-      state.basket = action.payload;
+    addProduct: (state, action) => {
+      (state.products ??= []).unshift(action.payload);
+    },
+    // setBasket: (state, action) => {
+    //   state.basket = action.payload;
+    // },
+    addBasket: (state, action) => {
+      (state.basket ??= []).unshift(action.payload);
     },
     setModal: (state, action) => {
       state.modal = {
@@ -34,6 +41,6 @@ export const commonSlice = createSlice({
   },
 });
 
-export const { setProducts, setBasket, setModal, setUserAuth } = commonSlice.actions;
+export const { setProducts, addProduct, addBasket, setModal, setUserAuth } = commonSlice.actions;
 
 export default commonSlice.reducer;

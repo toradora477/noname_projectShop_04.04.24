@@ -1,10 +1,48 @@
 @import '../../common_constants/styles/colors.scss';
 
+// .side-menu {
+//   left: 0;
+//   top: 0;
+//   bottom: 0;
+//   border-right: 1px solid $light_primary;
+
+//   .container {
+//     margin: 20px 10px;
+//     display: flex;
+//     flex-direction: column;
+
+//     .btn-first {
+//       background-color: transparent;
+//       border: none;
+//       padding: 0;
+//       margin: 0px 0px 30px 0px;
+//       cursor: pointer;
+//     }
+//   }
+//   width: 60px;
+
+//   -webkit-transition: width 0.3s ease;
+//   -moz-transition: width 0.3s ease;
+//   -ms-transition: width 0.3s ease;
+//   -o-transition: width 0.3s ease;
+//   transition: width 0.3s ease;
+// }
+
+// .side-menu.expanded {
+//   width: 200px; /* Ширина меню після розширення */
+// }
+
 .side-menu {
   left: 0;
   top: 0;
   bottom: 0;
   border-right: 1px solid $light_primary;
+  -webkit-transition: width 0.3s ease;
+  -moz-transition: width 0.3s ease;
+  -ms-transition: width 0.3s ease;
+  -o-transition: width 0.3s ease;
+  transition: width 0.3s ease;
+  width: 60px;
 
   .container {
     margin: 20px 10px;
@@ -17,6 +55,32 @@
       padding: 0;
       margin: 0px 0px 30px 0px;
       cursor: pointer;
+      position: relative;
+
+      .text {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        // -webkit-transform: translate(-100%, -50%);
+        // -moz-transform: translate(-100%, -50%);
+        // -ms-transform: translate(-100%, -50%);
+        // -o-transform: translate(-100%, -50%);
+        // transform: translate(-100%, -50%);
+        -webkit-transition: opacity 0.9s ease 0.9s;
+        -moz-transition: opacity 0.9s ease 0.9s;
+        -ms-transition: opacity 0.9s ease 0.9s;
+        -o-transition: opacity 0.9s ease 0.9s;
+        transition: opacity 0.9s ease 0.9s;
+        opacity: 0;
+      }
+    }
+  }
+
+  &.expanded {
+    width: 200px;
+
+    .btn-first .text {
+      opacity: 1; // Показати текст при розширенні меню
     }
   }
 }

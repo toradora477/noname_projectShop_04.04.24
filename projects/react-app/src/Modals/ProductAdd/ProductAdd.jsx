@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
 import { Modal } from '../../components';
 import './ProductAdd.scss';
 
 const ProductAdd = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     productName: '',
     description: '',
@@ -67,8 +70,10 @@ const ProductAdd = () => {
       });
     });
 
-    request.post('/products/addProduct', body, () => {
-      console.log('Товар успішно додано');
+    request.post('/products/addProduct', body, (res) => {
+      console.log('Товар успішно додано', res);
+      if (res?.data) dispatch(addProduct(res.data));
+      dispatch(setModal());
     });
   };
 

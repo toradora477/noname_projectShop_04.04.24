@@ -1,11 +1,15 @@
 @import '../../common_constants/styles/colors.scss';
 
 .card-component {
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid $gray;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  -ms-border-radius: 12px;
+  -o-border-radius: 12px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: $white;
   transition: box-shadow 0.3s ease;
 
   .card:hover {
@@ -29,5 +33,24 @@
   .card-description {
     font-size: 14px;
     color: #555;
+  }
+
+  &.selectedPersonalOffice {
+    border: 2px solid $primary;
+    background-color: $light_primary;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    border-radius: 12px;
+  }
+
+  &.unselectedPersonalOffice {
+    border: 1px solid $gray;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    border-radius: 12px;
   }
 }
