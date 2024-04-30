@@ -74,11 +74,10 @@
   .menu-admin {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
+    justify-content: center;
     height: 80px;
-    border-bottom: 1px solid $light_primary;
-    background-color: $blue10;
-    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+    padding: 0 60px;
+    background-color: $light_primary;
+    clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
   }
 }

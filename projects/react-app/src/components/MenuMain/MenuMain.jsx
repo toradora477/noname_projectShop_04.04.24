@@ -32,13 +32,15 @@ const MenuMain = () => {
   const menuAdmin = (
     <div className="menu-admin">
       <Link className="menu-admin-btn" to={ROUTES.ORDER_ADMIN}>
-        <PrimaryButton children="Замовлення" color="blue" />
+        <PrimaryButton children="Замовлення" color="gradient_main" />
       </Link>
+      &nbsp;&nbsp;&nbsp;&nbsp;
       <Link className="menu-admin-btn" to={ROUTES.PRODUCTS_ADMIN}>
-        <PrimaryButton children="Товари" color="blue" />
+        <PrimaryButton children="Товари" color="gradient_main" />
       </Link>
+      &nbsp;&nbsp;&nbsp;&nbsp;
       <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
-        <PrimaryButton children="Статистика" color="blue" />
+        <PrimaryButton children="Статистика" color="gradient_main" />
       </Link>
     </div>
   );

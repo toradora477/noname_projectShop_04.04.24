@@ -32,4 +32,20 @@
   &.blue {
     background: $blue;
   }
+
+  &.light_primary {
+    background: $light_primary;
+  }
+
+  &.primary50 {
+    background: $primary50;
+  }
+
+  &.primary {
+    background: $primary;
+  }
+
+  &.gradient_main {
+    background: $gradient_main;
+  }
 }
