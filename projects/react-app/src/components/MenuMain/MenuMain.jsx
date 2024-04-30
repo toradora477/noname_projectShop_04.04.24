@@ -5,7 +5,7 @@ import { ROUTES } from '../../common_constants/routes';
 import { AUTH } from '../../common_constants/modals';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
-import { logo_menu_component, icons8_user_96, icon_heart_empty_black, shopping_bag_color } from '../../images';
+import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_color_green_gradient } from '../../images';
 import './MenuMain.scss';
 
 const MenuMain = () => {
@@ -42,7 +42,7 @@ const MenuMain = () => {
         <div className="menu-part">
           <button className="btn-auth" onClick={btnDynamicForLogin}>
             <FlexBox>
-              <img src={icons8_user_96} alt="btn-login" />
+              <img src={icon_user_black} alt="btn-login" />
               &nbsp;&nbsp;
               <p>{testDynamicForLogin}</p>
             </FlexBox>
@@ -57,7 +57,7 @@ const MenuMain = () => {
           </Link>
           &nbsp;&nbsp;
           <Link className="btn-auth" to={ROUTES.PERSONAL_OFFICE}>
-            <img src={shopping_bag_color} alt="btn-basket" />
+            <img src={shopping_bag_color_green_gradient} alt="btn-basket" />
             {basket?.length || null}
           </Link>
         </div>

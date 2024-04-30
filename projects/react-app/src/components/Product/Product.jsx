@@ -4,7 +4,7 @@ import { addBasket } from '../../store/commonReducer';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { ROUTES } from '../../common_constants/routes';
-import { icon_heart_empty_red, icon_heart_empty_grey, img_test_murder } from '../../images';
+import { icon_heart_empty_red, icon_heart_empty_gray, img_test_murder } from '../../images';
 import { Spin } from '../';
 import './Product.scss';
 
@@ -12,7 +12,7 @@ const Product = ({ item }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_grey;
+  const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_gray;
   const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
 
   const onPutInBasket = () => {

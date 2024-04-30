@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
-import { Card, Typography, PrymaryIconBackground, FlexBox, Box } from '../../components';
+import { Card, Typography, PrymaryIconBackground, FlexBox } from '../../components';
 import './PersonalOffice.scss';
-import { icon_heart_empty_white, icon_user_white } from '../../images';
+import {
+  icon_user_white,
+  icon_user_gray,
+  icon_heart_empty_white,
+  icon_heart_empty_gray,
+  shopping_bag_color_white,
+  shopping_bag_color_gray,
+} from '../../images';
 import clsx from 'clsx';
 
-const CardItem = ({ selectedCard, handleCardClick, cardId, icon, title, text }) => {
+const CardItem = ({ selectedCard, handleCardClick, cardId, iconSelected, iconUnselected, title, text }) => {
   const [TItle, Text] = [
     ({ children }) => <Typography children={children} mt={0} sz={14} fw={700} />,
     ({ children }) => <Typography children={children} mt={7} sz={13} fw={400} />,
   ];
+
+  const isSelected = selectedCard === cardId;
 
   return (
     <button className="button-like-card" onClick={() => handleCardClick(cardId)}>
       <Card
         pl={16}
         className={clsx('personal-office-card', {
-          selectedPersonalOffice: selectedCard === cardId,
-          unselectedPersonalOffice: selectedCard !== cardId,
+          selectedPersonalOffice: isSelected,
+          unselectedPersonalOffice: !isSelected,
         })}
       >
-        <FlexBox>
-          <PrymaryIconBackground image={icon} backgroundColor={selectedCard === cardId ? 'primary' : ''} />
+        <FlexBox mt={0}>
+          <PrymaryIconBackground image={isSelected ? iconSelected : iconUnselected} backgroundColor={isSelected ? 'primary' : ''} />
           &nbsp;&nbsp;
           <div>
             <TItle children={title} />
@@ -52,7 +61,8 @@ const PersonalOffice = () => {
           selectedCard={selectedCard}
           handleCardClick={handleCardClick}
           cardId="account"
-          icon={icon_user_white}
+          iconSelected={icon_user_white}
+          iconUnselected={icon_user_gray}
           title="Акаунт"
           text="Особиста інформація"
         />
@@ -60,7 +70,8 @@ const PersonalOffice = () => {
           selectedCard={selectedCard}
           handleCardClick={handleCardClick}
           cardId="wishlist"
-          icon={icon_heart_empty_white}
+          iconSelected={icon_heart_empty_white}
+          iconUnselected={icon_heart_empty_gray}
           title="Список бажань"
           text="Вподобані товари"
         />
@@ -68,7 +79,8 @@ const PersonalOffice = () => {
           selectedCard={selectedCard}
           handleCardClick={handleCardClick}
           cardId="basketlist"
-          icon={icon_heart_empty_white}
+          iconSelected={shopping_bag_color_white}
+          iconUnselected={shopping_bag_color_gray}
           title="Кошик"
           text="Вибрані товари"
         />
