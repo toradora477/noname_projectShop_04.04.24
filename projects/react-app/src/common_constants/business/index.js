@@ -80,6 +80,12 @@ const PRODUCT_CATEGORIES = [
   },
 ];
 
+const NAME_SELECT = {
+  ACCOUNT: 'Акаунт',
+  WISHLIST: 'Список бажань',
+  BASKETLIST: 'Кошик',
+};
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
@@ -88,4 +94,5 @@ module.exports = {
   HTTP_METHODS,
   ROLES,
   PRODUCT_CATEGORIES,
+  NAME_SELECT,
 };
