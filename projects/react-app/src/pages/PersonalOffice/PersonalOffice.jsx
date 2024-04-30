@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Card, Typography, FlexBox } from '../../components';
 import { NAME_SELECT } from '../../common_constants/business';
 import CardSelected from './CardSelected';
+import CardMain from './CardMain';
+
 import './PersonalOffice.scss';
 import {
   icon_user_white,
@@ -12,24 +14,6 @@ import {
   shopping_bag_color_gray,
 } from '../../images';
 import clsx from 'clsx';
-
-const CardComponentBasketlist = ({ selectedCard }) => {
-  console.log('selectedCard', selectedCard);
-  return (
-    <Card
-      pl={16}
-      className={clsx(
-        'card-selected-path-two',
-
-        'unselectedPersonalOffice',
-      )}
-    >
-      <div>1 gegergergege gegergergegegegerg gegegge</div>
-      <div>2 gegergergege gegergergegegegerg gegegge</div>
-      <div>3 gegergergege gegergergegegegerg gegegge</div>
-    </Card>
-  );
-};
 
 const PersonalOffice = () => {
   const [selectedCard, setSelectedCard] = useState(null);
@@ -73,7 +57,7 @@ const PersonalOffice = () => {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="select-menu">
           <TItle children={selectedCard ?? ''} />
-          <CardComponentBasketlist selectedCard={selectedCard} />
+          <CardMain selectedCard={selectedCard} />
         </div>
       </FlexBox>
     </div>
