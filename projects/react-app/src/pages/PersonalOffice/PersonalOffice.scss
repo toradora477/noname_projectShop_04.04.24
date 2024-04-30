@@ -19,11 +19,14 @@
     cursor: pointer;
     outline: none;
     width: 350px;
+  }
 
-    .text-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  .card-selected-path-two {
+  }
+
+  .flex-start {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

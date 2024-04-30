@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Typography, PrymaryIconBackground, FlexBox } from '../../components';
+import { Card, Typography, FlexBox } from '../../components';
 import { NAME_SELECT } from '../../common_constants/business';
-import CardItem from './CardItem';
+import CardSelected from './CardSelected';
 import './PersonalOffice.scss';
 import {
   icon_user_white,
@@ -13,13 +13,28 @@ import {
 } from '../../images';
 import clsx from 'clsx';
 
+const CardComponentBasketlist = ({ selectedCard }) => {
+  console.log('selectedCard', selectedCard);
+  return (
+    <Card
+      pl={16}
+      className={clsx(
+        'card-selected-path-two',
+
+        'unselectedPersonalOffice',
+      )}
+    >
+      <div>1 gegergergege gegergergegegegerg gegegge</div>
+      <div>2 gegergergege gegergergegegegerg gegegge</div>
+      <div>3 gegergergege gegergergegegegerg gegegge</div>
+    </Card>
+  );
+};
+
 const PersonalOffice = () => {
   const [selectedCard, setSelectedCard] = useState(null);
 
-  const [TItle, Text] = [
-    ({ children, mt }) => <Typography children={children} mt={mt} sz={20} fw={600} />,
-    ({ children, mt }) => <Typography children={children} mt={mt ?? 12} sz={12} fw={400} />,
-  ];
+  const TItle = ({ children, mt }) => <Typography children={children} mb={8} mt={mt} sz={20} fw={600} />;
 
   const handleCardClick = (cardId) => {
     setSelectedCard(cardId);
@@ -30,7 +45,7 @@ const PersonalOffice = () => {
       <FlexBox mt={0}>
         <div className="select-menu">
           <TItle children="Налаштування" />
-          <CardItem
+          <CardSelected
             selectedCard={selectedCard}
             handleCardClick={handleCardClick}
             iconSelected={icon_user_white}
@@ -38,7 +53,7 @@ const PersonalOffice = () => {
             cardId={NAME_SELECT.ACCOUNT}
             text="Особиста інформація"
           />
-          <CardItem
+          <CardSelected
             selectedCard={selectedCard}
             handleCardClick={handleCardClick}
             iconSelected={icon_heart_empty_white}
@@ -46,7 +61,7 @@ const PersonalOffice = () => {
             cardId={NAME_SELECT.WISHLIST}
             text="Вподобані товари"
           />
-          <CardItem
+          <CardSelected
             selectedCard={selectedCard}
             handleCardClick={handleCardClick}
             iconSelected={shopping_bag_color_white}
@@ -58,33 +73,7 @@ const PersonalOffice = () => {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="select-menu">
           <TItle children={selectedCard ?? ''} />
-          <CardItem
-            selectedCard={selectedCard}
-            handleCardClick={handleCardClick}
-            cardId="account"
-            iconSelected={icon_user_white}
-            iconUnselected={icon_user_gray}
-            title="Акаунт"
-            text="Особиста інформація"
-          />
-          <CardItem
-            selectedCard={selectedCard}
-            handleCardClick={handleCardClick}
-            cardId="wishlist"
-            iconSelected={icon_heart_empty_white}
-            iconUnselected={icon_heart_empty_gray}
-            title="Список бажань"
-            text="Вподобані товари"
-          />
-          <CardItem
-            selectedCard={selectedCard}
-            handleCardClick={handleCardClick}
-            cardId="basketlist"
-            iconSelected={shopping_bag_color_white}
-            iconUnselected={shopping_bag_color_gray}
-            title="Кошик"
-            text="Вибрані товари"
-          />
+          <CardComponentBasketlist selectedCard={selectedCard} />
         </div>
       </FlexBox>
     </div>

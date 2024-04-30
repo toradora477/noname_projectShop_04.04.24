@@ -3,7 +3,7 @@ import { Card, Typography, PrymaryIconBackground, FlexBox } from '../../../compo
 import '../PersonalOffice.scss';
 import clsx from 'clsx';
 
-const CardItem = ({ selectedCard, handleCardClick, cardId, iconSelected, iconUnselected, text }) => {
+const CardSelected = ({ selectedCard, handleCardClick, cardId, iconSelected, iconUnselected, text }) => {
   const [TItle, Text] = [
     ({ children }) => <Typography children={children} mt={0} sz={14} fw={700} />,
     ({ children }) => <Typography children={children} mt={7} sz={13} fw={400} />,
@@ -15,7 +15,7 @@ const CardItem = ({ selectedCard, handleCardClick, cardId, iconSelected, iconUns
     <button className="button-like-card" onClick={() => handleCardClick(cardId)}>
       <Card
         pl={16}
-        className={clsx('personal-office-card', {
+        className={clsx({
           selectedPersonalOffice: isSelected,
           unselectedPersonalOffice: !isSelected,
         })}
@@ -23,7 +23,7 @@ const CardItem = ({ selectedCard, handleCardClick, cardId, iconSelected, iconUns
         <FlexBox mt={0}>
           <PrymaryIconBackground image={isSelected ? iconSelected : iconUnselected} backgroundColor={isSelected ? 'primary' : ''} />
           &nbsp;&nbsp;
-          <div className="text-card">
+          <div className="flex-start">
             <TItle children={cardId} />
             <Text children={text} />
           </div>
@@ -33,4 +33,4 @@ const CardItem = ({ selectedCard, handleCardClick, cardId, iconSelected, iconUns
   );
 };
 
-export default CardItem;
+export default CardSelected;
