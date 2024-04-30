@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
 import { AUTH } from '../../common_constants/modals';
+import { NAME_SELECT } from '../../common_constants/business';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
 import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_color_green_gradient } from '../../images';
@@ -40,23 +41,26 @@ const MenuMain = () => {
           </div>
         </div>
         <div className="menu-part">
-          <button className="btn-auth" onClick={btnDynamicForLogin}>
+          <div className="btn-auth">
             <FlexBox>
-              <img src={icon_user_black} alt="btn-login" />
-              &nbsp;&nbsp;
-              <p>{testDynamicForLogin}</p>
+              <Link to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.ACCOUNT } }}>
+                <img src={icon_user_black} alt="btn-login" />
+              </Link>
+              <button className="btn-auth" onClick={btnDynamicForLogin}>
+                <p>{testDynamicForLogin}</p>
+              </button>
             </FlexBox>
-          </button>
+          </div>
           &nbsp;&nbsp;
-          <Link className="btn-auth" to={ROUTES.PERSONAL_OFFICE}>
+          <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
             <FlexBox>
               <img src={icon_heart_empty_black} alt="btn-like" />
-              &nbsp;&nbsp;
+              &nbsp;
               <p>Улюблене</p>
             </FlexBox>
           </Link>
           &nbsp;&nbsp;
-          <Link className="btn-auth" to={ROUTES.PERSONAL_OFFICE}>
+          <Link className="btn-auth" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
             <img src={shopping_bag_color_green_gradient} alt="btn-basket" />
             {basket?.length || null}
           </Link>

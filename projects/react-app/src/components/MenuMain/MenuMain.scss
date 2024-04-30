@@ -28,7 +28,17 @@
     &-item {
       margin-right: 20px;
       text-decoration: none;
+      color: inherit;
     }
+
+    &-item:hover {
+      color: inherit;
+    }
+  }
+
+  .text-link {
+    text-decoration: none;
+    color: inherit;
   }
 
   .search-bar {

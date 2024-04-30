@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Card, Typography, FlexBox } from '../../components';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Typography, FlexBox } from '../../components';
 import { NAME_SELECT } from '../../common_constants/business';
 import CardSelected from './CardSelected';
 import CardMain from './CardMain';
@@ -13,16 +14,22 @@ import {
   shopping_bag_color_white,
   shopping_bag_color_gray,
 } from '../../images';
-import clsx from 'clsx';
 
 const PersonalOffice = () => {
-  const [selectedCard, setSelectedCard] = useState(null);
+  const location = useLocation();
+  const selectParam = location.state?.selectParam;
+
+  const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 
   const TItle = ({ children, mt }) => <Typography children={children} mb={8} mt={mt} sz={20} fw={600} />;
 
   const handleCardClick = (cardId) => {
     setSelectedCard(cardId);
   };
+
+  useEffect(() => {
+    setSelectedCard(selectParam);
+  }, [selectParam]);
 
   return (
     <div className="personal-office">
