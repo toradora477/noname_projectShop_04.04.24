@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { Typography, FlexBox } from '../../components';
-import { NAME_SELECT } from '../../common_constants/business';
+import { NAME_SELECT, ROLES } from '../../common_constants/business';
 import CardSelected from './CardSelected';
 import CardMain from './CardMain';
 
@@ -18,6 +19,10 @@ import {
 const PersonalOffice = () => {
   const location = useLocation();
   const selectParam = location.state?.selectParam;
+
+  const userAuth = useSelector((state) => state.common.userAuth),
+    { role = 'guest' } = userAuth,
+    isAdmin = ROLES[role] === ROLES.admin;
 
   const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 
@@ -36,14 +41,17 @@ const PersonalOffice = () => {
       <FlexBox mt={0}>
         <div className="select-menu">
           <TItle children="Налаштування" />
-          <CardSelected
-            selectedCard={selectedCard}
-            handleCardClick={handleCardClick}
-            iconSelected={icon_user_white}
-            iconUnselected={icon_user_gray}
-            cardId={NAME_SELECT.ACCOUNT}
-            text="Особиста інформація"
-          />
+          {isAdmin && (
+            <CardSelected
+              selectedCard={selectedCard}
+              handleCardClick={handleCardClick}
+              iconSelected={icon_user_white}
+              iconUnselected={icon_user_gray}
+              cardId={NAME_SELECT.ACCOUNT}
+              text="Особиста інформація"
+            />
+          )}
+
           <CardSelected
             selectedCard={selectedCard}
             handleCardClick={handleCardClick}

@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
+const { authenticateJWT } = require('../../middlewares/jwtAudit');
+const { updateUser } = require('./actions');
+const { ExtendedError } = require('../../tools');
 
 router.post('/login', async (req, res, next) => {
   try {
@@ -37,6 +40,37 @@ router.post('/login', async (req, res, next) => {
     };
 
     res.status(200).json(responseData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/editUser', authenticateJWT, (req, res, next) => {
+  try {
+    const { _id } = req.user;
+
+    if (![_id, typeof req.body === 'object'].every(Boolean))
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
+
+    req.body._id = _id;
+
+    const result = updateUser(req, req.body);
+
+    const transportationData = {
+      status: true,
+    };
+
+    req.loggingData = {
+      log: 'editUser',
+      operation: 'updateOne for collection USERS',
+      'req.body': req.body,
+      result: result,
+    };
+    res.status(200).json(transportationData);
   } catch (err) {
     next(err);
   }

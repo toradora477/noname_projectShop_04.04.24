@@ -21,7 +21,7 @@ const HTTP_METHODS = {
 
 const ROLES = {
   admin: 0,
-  user: 99,
+  client: 99,
   guest: 999,
 };
 
