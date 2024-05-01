@@ -23,9 +23,6 @@
     width: 350px;
   }
 
-  .card-selected-path-two {
-  }
-
   .flex-start {
     display: flex;
     flex-direction: column;
@@ -37,8 +34,12 @@
     height: 42px;
     padding: 0 15px;
     box-sizing: border-box;
-    border: 2px solid $medium_gray;
-    border-radius: 5px;
+    border: 1px solid $medium_gray;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    border-radius: 8px;
     font-size: 14px;
     background-color: transparent;
   }

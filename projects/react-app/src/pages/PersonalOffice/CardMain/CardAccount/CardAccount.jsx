@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../../../components';
+import { PrimaryButton, Typography, Box, FlexBox } from '../../../../components';
 import { request } from '../../../../tools';
 import '../../PersonalOffice.scss';
 
 const CardAccount = () => {
   const [Title, Label] = [
     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
-
     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
   ];
 
@@ -91,8 +90,8 @@ const CardAccount = () => {
 
   return (
     <div>
-      <Title>Особиста інформація</Title>
-      <Box mt={16} className="input-group">
+      <Title mt={8} children="Особиста інформація" />
+      <Box mt={12} className="input-group">
         <Label>Пароль входу</Label>
         <input
           placeholder="мін. 8 символів"
@@ -104,55 +103,66 @@ const CardAccount = () => {
           onChange={handlePasswordChange}
         />
       </Box>
-      <Box mt={16} className="input-group">
-        <Label>Email</Label>
-        <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
-      </Box>
-      <Box mt={16} className="input-group">
-        <Label>Ім'я</Label>
-        <input
-          placeholder="Ім'я"
-          aria-label="firstName"
-          type="text"
-          id="firstName"
-          name="firstName"
-          value={firstName}
-          onChange={handleFirstNameChange}
-        />
-      </Box>
-      <Box mt={16} className="input-group">
-        <Label>Прізвище</Label>
-        <input
-          placeholder="Прізвище"
-          aria-label="lastName"
-          type="text"
-          id="lastName"
-          name="lastName"
-          value={lastName}
-          onChange={handleLastNameChange}
-        />
-      </Box>
-      <Box mt={16} className="input-group">
-        <Label>Номер телефону</Label>
-        <input
-          placeholder="Номер телефону"
-          aria-label="phoneNumber"
-          type="tel"
-          id="phoneNumber"
-          name="phoneNumber"
-          value={phoneNumber}
-          onChange={handlePhoneNumberChange}
-        />
-      </Box>
-      <Box mt={16} className="input-group">
-        <Label>Місто</Label>
-        <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
-      </Box>
-      <Box mt={16} className="input-group">
-        <Label>Область</Label>
-        <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
-      </Box>
-      <Box mt={16} className="input-group">
+      <FlexBox>
+        <Box className="input-group">
+          <Label>Ім'я</Label>
+          <input
+            placeholder="Ім'я"
+            aria-label="firstName"
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={firstName}
+            onChange={handleFirstNameChange}
+          />
+        </Box>
+        &nbsp;&nbsp;
+        <Box className="input-group">
+          <Label>Прізвище</Label>
+          <input
+            placeholder="Прізвище"
+            aria-label="lastName"
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={lastName}
+            onChange={handleLastNameChange}
+          />
+        </Box>
+      </FlexBox>
+      <FlexBox>
+        <Box className="input-group">
+          <Label>Номер телефону</Label>
+          <input
+            placeholder="Номер телефону"
+            aria-label="phoneNumber"
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+          />
+        </Box>
+        &nbsp;&nbsp;
+        <Box className="input-group">
+          <Label>Email</Label>
+          <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
+        </Box>
+      </FlexBox>
+      <Title mt={32} children="Доставка" />
+      <FlexBox mt={12}>
+        <Box className="input-group">
+          <Label>Місто</Label>
+          <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
+        </Box>
+        &nbsp;&nbsp;
+        <Box className="input-group">
+          <Label>Область</Label>
+          <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
+        </Box>
+      </FlexBox>
+
+      <Box className="input-group">
         <Label>Відділення Нової Пошти</Label>
         <select
           aria-label="novaPoshtaBranch"
@@ -169,7 +179,6 @@ const CardAccount = () => {
           ))}
         </select>
       </Box>
-
       <PrimaryButton onClick={onSubmit} mt={32}>
         Зберегти зміни
       </PrimaryButton>

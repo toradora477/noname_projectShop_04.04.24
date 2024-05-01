@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Typography, FlexBox } from '../../components';
 import { NAME_SELECT, ROLES } from '../../common_constants/business';
 import CardSelected from './CardSelected';
@@ -38,7 +38,7 @@ const PersonalOffice = () => {
 
   return (
     <div className="personal-office">
-      <FlexBox mt={0}>
+      <FlexBox mt={0} alignItems="flex-start">
         <div className="select-menu">
           <TItle children="Налаштування" />
           {isClientOrAbove && (
