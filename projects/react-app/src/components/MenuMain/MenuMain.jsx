@@ -15,6 +15,7 @@ const MenuMain = () => {
   const basket = useSelector((state) => state.common.basket) ?? [];
   const userAuth = useSelector((state) => state.common.userAuth),
     { role = 'guest' } = userAuth,
+    isClientOrAbove = ROLES[role] <= ROLES.client,
     isAdmin = ROLES[role] === ROLES.admin;
 
   const onBtnClickAuth = () => {
@@ -65,11 +66,17 @@ const MenuMain = () => {
         <div className="menu-part">
           <div className="btn-auth">
             <FlexBox>
-              <Link to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.ACCOUNT } }}>
-                <img src={icon_user_black} alt="btn-login" />
-              </Link>
+              {isClientOrAbove && (
+                <Link to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.ACCOUNT } }}>
+                  <img src={icon_user_black} alt="btn-login" />
+                </Link>
+              )}
+
               <button className="btn-auth" onClick={btnDynamicForLogin}>
-                <p>{testDynamicForLogin}</p>
+                <FlexBox>
+                  {!isClientOrAbove && <img src={icon_user_black} alt="btn-login" />}
+                  <p>{testDynamicForLogin}</p>
+                </FlexBox>
               </button>
             </FlexBox>
           </div>

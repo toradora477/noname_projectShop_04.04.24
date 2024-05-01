@@ -22,7 +22,7 @@ const PersonalOffice = () => {
 
   const userAuth = useSelector((state) => state.common.userAuth),
     { role = 'guest' } = userAuth,
-    isAdmin = ROLES[role] === ROLES.admin;
+    isClientOrAbove = ROLES[role] <= ROLES.client;
 
   const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 
@@ -41,7 +41,7 @@ const PersonalOffice = () => {
       <FlexBox mt={0}>
         <div className="select-menu">
           <TItle children="Налаштування" />
-          {isAdmin && (
+          {isClientOrAbove && (
             <CardSelected
               selectedCard={selectedCard}
               handleCardClick={handleCardClick}

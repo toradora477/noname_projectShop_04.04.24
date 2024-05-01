@@ -1,99 +1,97 @@
-// import React, { useState } from 'react';
-// import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../../../components';
-// import { request } from '../../../../tools';
-// import '../../PersonalOffice.scss';
-
-// const CardAccount = () => {
-//   const [TItle, Text, Label] = [
-//     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
-//     ({ children }) => <Typography children={children} mt={7} sz={13} fw={400} />,
-//     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
-//   ];
-
-//   const [login, setLogin] = useState('');
-//   const [password, setPassword] = useState('');
-
-//   const handleLoginChange = (e) => {
-//     setLogin(e.target.value);
-//   };
-
-//   const handlePasswordChange = (e) => {
-//     setPassword(e.target.value);
-//   };
-
-//   const onSubmit = () => {
-//     const body = {
-//       actualization: true,
-//     };
-
-//     request.post('/products/info', body, () => {
-//       console.log('true');
-//     }); // TODO Тестове для api
-//   };
-
-//   return (
-//     <div>
-//       <TItle children="Особиста інформація" />
-//       <Box mt={16} className="input-group">
-//         <Label>Пароль входу</Label>
-//         <input placeholder="мін. 8 символів" aria-label="password" type="password" id="password" name="password" onChange={handlePasswordChange} />
-//       </Box>
-//       <Box mt={32} className="input-group">
-//         <Label>Email</Label>
-//         <input placeholder="name@example.com" aria-label="login" type="text" id="email" name="email" onChange={handleLoginChange} />
-//       </Box>
-
-//       <TItle mt={32} children="Доставка" />
-//     </div>
-//   );
-// };
-
-// export default CardAccount;
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../../../components';
 import { request } from '../../../../tools';
 import '../../PersonalOffice.scss';
 
 const CardAccount = () => {
-  const [TItle, Text, Label] = [
+  const [Title, Label] = [
     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
-    ({ children }) => <Typography children={children} mt={7} sz={13} fw={400} />,
+
     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
   ];
 
-  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleLoginChange = (e) => {
-    setLogin(e.target.value);
-  };
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [city, setCity] = useState('');
+  const [region, setRegion] = useState('');
+  const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
+  const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value);
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
+  };
+
+  const handleRegionChange = (e) => {
+    setRegion(e.target.value);
+  };
+
+  const handleNovaPoshtaBranchChange = (e) => {
+    setSelectedNovaPoshtaBranch(e.target.value);
+  };
+
   const onSubmit = () => {
     const body = {
-      username: login,
+      username: email,
       password: password,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      city: city,
+      region: region,
+      novaPoshtaBranch: selectedNovaPoshtaBranch,
     };
+
+    const filteredBody = Object.fromEntries(Object.entries(body).filter(([key, value]) => value !== ''));
 
     request.post(
       '/auth/editUser',
-      body,
+      filteredBody,
       (response) => {
-        console.log('Данные успешно отправлены:', response);
+        console.log('Дані успішно відправлені:', response);
       },
       (error) => {
-        console.error('Ошибка отправки данных:', error);
+        console.error('Помилка відправлення даних:', error);
       },
     );
   };
 
+  // request.post(
+  //   '/api/getNovaPoshtaBranches',
+  //   {},
+  //   (response) => {
+  //     console.log('Дані успішно відправлені:', response);
+  //   },
+  //   (error) => {
+  //     console.error('Помилка відправлення даних:', error);
+  //   },
+  // );
+
   return (
     <div>
-      <TItle children="Особиста інформація" />
+      <Title>Особиста інформація</Title>
       <Box mt={16} className="input-group">
         <Label>Пароль входу</Label>
         <input
@@ -106,15 +104,75 @@ const CardAccount = () => {
           onChange={handlePasswordChange}
         />
       </Box>
-      <Box mt={32} className="input-group">
+      <Box mt={16} className="input-group">
         <Label>Email</Label>
-        <input placeholder="name@example.com" aria-label="login" type="text" id="email" name="email" value={login} onChange={handleLoginChange} />
+        <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
+      </Box>
+      <Box mt={16} className="input-group">
+        <Label>Ім'я</Label>
+        <input
+          placeholder="Ім'я"
+          aria-label="firstName"
+          type="text"
+          id="firstName"
+          name="firstName"
+          value={firstName}
+          onChange={handleFirstNameChange}
+        />
+      </Box>
+      <Box mt={16} className="input-group">
+        <Label>Прізвище</Label>
+        <input
+          placeholder="Прізвище"
+          aria-label="lastName"
+          type="text"
+          id="lastName"
+          name="lastName"
+          value={lastName}
+          onChange={handleLastNameChange}
+        />
+      </Box>
+      <Box mt={16} className="input-group">
+        <Label>Номер телефону</Label>
+        <input
+          placeholder="Номер телефону"
+          aria-label="phoneNumber"
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          value={phoneNumber}
+          onChange={handlePhoneNumberChange}
+        />
+      </Box>
+      <Box mt={16} className="input-group">
+        <Label>Місто</Label>
+        <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
+      </Box>
+      <Box mt={16} className="input-group">
+        <Label>Область</Label>
+        <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
+      </Box>
+      <Box mt={16} className="input-group">
+        <Label>Відділення Нової Пошти</Label>
+        <select
+          aria-label="novaPoshtaBranch"
+          id="novaPoshtaBranch"
+          name="novaPoshtaBranch"
+          value={selectedNovaPoshtaBranch}
+          onChange={handleNovaPoshtaBranchChange}
+        >
+          <option value="">Оберіть відділення Нової Пошти</option>
+          {novaPoshtaBranches.map((branch) => (
+            <option key={branch.id} value={branch.name}>
+              {branch.name}
+            </option>
+          ))}
+        </select>
       </Box>
 
       <PrimaryButton onClick={onSubmit} mt={32}>
         Зберегти зміни
       </PrimaryButton>
-      {/* Добавьте любые другие компоненты или разметку, которые вам нужны */}
     </div>
   );
 };
