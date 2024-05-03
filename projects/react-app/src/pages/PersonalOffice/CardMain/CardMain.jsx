@@ -17,14 +17,7 @@ const CardMain = ({ selectedCard }) => {
       [NAME_SELECT.BASKETLIST]: <CardBasketList />,
     }[selectedCard] || null;
   return (
-    <Card
-      pl={16}
-      className={clsx(
-        'card-selected-path-two',
-
-        'unselectedPersonalOffice',
-      )}
-    >
+    <Card pl={16} className={clsx('unselectedPersonalOffice')}>
       {dynamicComponent}
     </Card>
   );

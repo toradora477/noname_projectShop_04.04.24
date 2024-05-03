@@ -27,7 +27,7 @@ const guestJWT = (req, res, next, role = 100) => {
   }
 }; // TODO
 
-const authenticateJWT = (req, res, next, role = ROLES.user) => {
+const authenticateJWT = (req, res, next, role = ROLES.client) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
