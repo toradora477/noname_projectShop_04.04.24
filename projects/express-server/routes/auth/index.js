@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
-const { authenticateJWT } = require('../../middlewares/jwtAudit');
+const { authenticateJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const { updateUser } = require('./actions');
 const { ExtendedError } = require('../../tools');
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', guestJWT, async (req, res, next) => {
   try {
     const { username, password } = req.body;
 

@@ -2,7 +2,7 @@ const router = require('express').Router();
 const multer = require('multer');
 const { getNextSequenceValue, ExtendedError } = require('../../tools');
 const { ObjectId } = require('mongodb');
-const { adminJWT } = require('../../middlewares/jwtAudit');
+const { adminJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 
@@ -22,7 +22,7 @@ router.post('/info', (req, res, next) => {
   }
 }); // TODO тестовий, прибрати
 
-router.get('/getListAllProducts', async (req, res, next) => {
+router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   try {
     const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
     const resultFind = await collection.find({}).toArray();
