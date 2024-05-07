@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { request } from '../../tools';
-import { setModal } from '../../store/commonReducer';
+
 import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../components';
 import { REGISTER } from '../../common_constants/modals';
+import { request, getTokenData } from '../../tools';
+import { setModal, setUserAuth } from '../../store/commonReducer';
 import './Register.scss';
 
 const Register = () => {
@@ -11,6 +12,7 @@ const Register = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [existsClient, setExistsClient] = useState(null);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -27,13 +29,13 @@ const Register = () => {
     };
 
     request.post('/auth/clientRegistration', body, (res) => {
-      if (res.error) {
-        console.error('Registration failed:', res.error);
-      } else {
-        console.log('Registration successful:', res.message);
-        // Optionally, you can dispatch an action to close the registration modal
-        // dispatch(setModal());
-      }
+      if (res.exists) return setExistsClient(true);
+
+      window.localStorage.setItem('accessToken', res.accessToken);
+      setExistsClient(null);
+
+      dispatch(setUserAuth(getTokenData(res.accessToken)));
+      dispatch(setModal());
     });
   };
 
@@ -65,8 +67,8 @@ const Register = () => {
               onChange={handlePasswordChange}
             />
           </Box>
-
           <PrimaryButton mt={40} children="Зареєструватися" onClick={registerRequest} />
+          {existsClient && <Typography fs={12} fw={500} mt={8} color="red" children="Помилка. Користувач з такою поштою існує" />}
         </form>
       </div>
     </Modal>

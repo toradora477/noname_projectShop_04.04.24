@@ -17,6 +17,7 @@ const Auth = () => {
 
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [noConsumer, setNoConsumer] = useState(null);
 
   const handleLoginChange = (e) => {
     setLogin(e.target.value);
@@ -33,14 +34,13 @@ const Auth = () => {
     };
 
     request.post('/auth/login', body, (res) => {
-      if (res.noAccess) {
-        console.error('res.noAccess', res.noAccess);
-      } else {
-        window.localStorage.setItem('accessToken', res.accessToken);
-        console.log('res.accessToken', res.accessToken);
-        dispatch(setUserAuth(getTokenData(res.accessToken)));
-        dispatch(setModal());
-      }
+      if (res.noConsumer) return setNoConsumer(true);
+
+      window.localStorage.setItem('accessToken', res.accessToken);
+      setNoConsumer(null);
+
+      dispatch(setUserAuth(getTokenData(res.accessToken)));
+      dispatch(setModal());
     });
   };
 
@@ -74,6 +74,8 @@ const Auth = () => {
           </FlexBox>
 
           <PrimaryButton mt={40} children="УВІЙТИ" onClick={loginRequest} />
+
+          {noConsumer && <Typography fs={12} fw={500} mt={8} color="red" children="Помилка. Користувач з такими параметрами не існує" />}
         </form>
         <Box mt={28} className="signup-group ">
           <button className="btn-signup">

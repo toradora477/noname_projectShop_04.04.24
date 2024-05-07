@@ -9,22 +9,43 @@ router.post('/login', guestJWT, async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.USERS);
+    const [clients, users] = [
+      req.app.locals.client.db(DB).collection(COLLECTIONS.CLIENTS),
+      req.app.locals.client.db(DB).collection(COLLECTIONS.USERS),
+    ];
 
-    const user = await collection.findOne({
-      email,
-      password,
-    });
+    if (![email, password].every(Boolean))
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
 
-    if (!user) {
-      return res.status(401).json({ status: false, noUser: true });
+    const clientPromise = clients.findOne({ email, password });
+    const userPromise = users.findOne({ email, password });
+
+    const [client, user] = await Promise.all([clientPromise, userPromise]);
+
+    if (!user && !client) {
+      res.status(200).json({
+        status: true,
+        noConsumer: true,
+      });
+      req.loggingData = {
+        log: 'Login is not possible because there is no such customer in the database',
+        operation: 'findOne for collection CLIENTS and USERS',
+        email,
+      };
+      return;
     }
+
+    const consumer = client ?? user;
 
     const secretOrPrivateKey = process.env.TOKEN_SECRET;
     const encryptionOfPersonalData = {
-      _id: user._id,
-      email: user.email,
-      role: user.role,
+      _id: consumer._id,
+      email: consumer.email,
+      role: consumer.role,
     };
 
     const responseData = {
@@ -74,12 +95,12 @@ router.post('/editUser', authenticateJWT, (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
+}); // TODO Доробити для обох колекцій
 
 router.post('/clientRegistration', guestJWT, async (req, res, next) => {
   try {
-    console.log(req.body);
     const { email, password } = req.body;
+
     if (![email, password].every(Boolean))
       throw new ExtendedError({
         messageLog: 'One or more values are empty.',
@@ -87,13 +108,11 @@ router.post('/clientRegistration', guestJWT, async (req, res, next) => {
         code: 400,
       });
 
-    const T = new Date();
-
-    const commonParams = req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS);
-    const clients = req.app.locals.client.db(DB).collection(COLLECTIONS.CLIENTS);
-    const users = req.app.locals.client.db(DB).collection(COLLECTIONS.USERS);
-
-    const i = await getNextSequenceValue('clientNextSequenceValue', commonParams);
+    const [commonParams, clients, users] = [
+      req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS),
+      req.app.locals.client.db(DB).collection(COLLECTIONS.CLIENTS),
+      req.app.locals.client.db(DB).collection(COLLECTIONS.USERS),
+    ];
 
     const clientPromise = clients.findOne({ email: email });
     const userPromise = users.findOne({ email: email });
@@ -113,29 +132,26 @@ router.post('/clientRegistration', guestJWT, async (req, res, next) => {
       return;
     }
 
+    const i = await getNextSequenceValue('clientNextSequenceValue', commonParams);
+    const T = new Date();
+
     const newclient = await clients.insertOne({
       email,
       password,
       T,
       i,
+      role: 'client',
     });
 
     if (!newclient?.insertedId) {
-      res.json({
-        status: false,
-        error: 'client not created',
+      throw new ExtendedError({
+        messageLog: 'Client not created',
+        messageJson: 'Помилка сервера. Не вдалося створити клієнта.',
+        code: 400,
       });
-      return;
     }
 
-    // const responseData = {
-    //   status: true,
-    //   accessToken: jwt.sign({ _id: newclient.insertedId, email: login, role: 'client' }, process.env.CLIENT_SECRET),
-    // };
-
-    // res.status(200).json(responseData);
-
-    const secretOrPrivateKey = process.env.CLIENT_SECRET;
+    const secretOrPrivateKey = process.env.TOKEN_SECRET;
     const encryptionOfPersonalData = { _id: newclient.insertedId, email, role: 'client' };
 
     const responseData = {
