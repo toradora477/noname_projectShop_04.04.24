@@ -16,8 +16,6 @@ const guestJWT = (req, res, next, role = ROLES.guest) => {
         }
         req.user = user;
 
-        // const verifiedUser = allUsersExport().find((u) => u._id + '' === user._id + '');
-        // req.user.p = verifiedUser.p;
         const correctRole = ROLES[user.role] <= role;
 
         if (correctRole) next();
@@ -41,9 +39,11 @@ const authenticateJWT = (req, res, next, role = ROLES.client) => {
       }
       req.user = user;
 
-      const verifiedUser = allUsersExport().find((u) => u._id + '' === user._id + '');
+      if (ROLES[user.role] < ROLES.client) {
+        const verifiedUser = allUsersExport().find((u) => u._id + '' === user._id + '');
+        req.user.password = verifiedUser.password;
+      }
 
-      req.user.p = verifiedUser.p;
       const correctRole = ROLES[user.role] <= role;
 
       if (correctRole) next();

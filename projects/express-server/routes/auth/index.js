@@ -2,7 +2,7 @@ const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 const { authenticateJWT, guestJWT } = require('../../middlewares/jwtAudit');
-const { updateUser } = require('./actions');
+const { updateAccounts } = require('./actions');
 const { ExtendedError, getNextSequenceValue } = require('../../tools');
 
 router.post('/login', guestJWT, async (req, res, next) => {
@@ -29,7 +29,7 @@ router.post('/login', guestJWT, async (req, res, next) => {
     if (!user && !client) {
       res.status(200).json({
         status: true,
-        noConsumer: true,
+        noAccount: true,
       });
       req.loggingData = {
         log: 'Login is not possible because there is no such customer in the database',
@@ -39,13 +39,13 @@ router.post('/login', guestJWT, async (req, res, next) => {
       return;
     }
 
-    const consumer = client ?? user;
+    const account = client ?? user;
 
     const secretOrPrivateKey = process.env.TOKEN_SECRET;
     const encryptionOfPersonalData = {
-      _id: consumer._id,
-      email: consumer.email,
-      role: consumer.role,
+      _id: account._id,
+      email: account.email,
+      role: account.role,
     };
 
     const responseData = {
@@ -66,7 +66,7 @@ router.post('/login', guestJWT, async (req, res, next) => {
   }
 });
 
-router.post('/editUser', authenticateJWT, (req, res, next) => {
+router.post('/editAccount', authenticateJWT, (req, res, next) => {
   try {
     const { _id } = req.user;
 
@@ -77,17 +77,19 @@ router.post('/editUser', authenticateJWT, (req, res, next) => {
         code: 400,
       });
 
+    const { role } = req.user;
+
     req.body._id = _id;
 
-    const result = updateUser(req, req.body);
+    const result = updateAccounts(req, req.body, role === 'client' ? COLLECTIONS.CLIENTS : COLLECTIONS.USERS);
 
     const transportationData = {
       status: true,
     };
 
     req.loggingData = {
-      log: 'editUser',
-      operation: 'updateOne for collection USERS',
+      log: 'Edit account',
+      operation: 'updateOne for collection USERS or CLIENTS',
       'req.body': req.body,
       result: result,
     };

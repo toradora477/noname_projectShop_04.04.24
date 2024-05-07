@@ -14,18 +14,18 @@ const prepareAllUsers = async (client) => {
   users = await requestAllUsers(client);
 };
 
-const updateUser = async (req, data) => {
+const updateAccounts = async (req, data, collectionName) => {
   const _body = { ...data };
 
   delete _body._id;
-  const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.USERS);
+  const collection = req.app.locals.client.db(DB).collection(collectionName);
   const result = await collection.updateOne({ _id: new ObjectId(data._id) }, { $set: { ..._body } });
-  await prepareAllUsers(req.app.locals.client);
+  if (collectionName === COLLECTIONS.USERS) await prepareAllUsers(req.app.locals.client);
   return result;
 };
 
 module.exports = {
   allUsersExport,
   prepareAllUsers,
-  updateUser,
+  updateAccounts,
 };

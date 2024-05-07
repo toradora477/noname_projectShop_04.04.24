@@ -66,7 +66,7 @@ const CardAccount = () => {
     const filteredBody = Object.fromEntries(Object.entries(body).filter(([key, value]) => value !== ''));
 
     request.post(
-      '/auth/editUser',
+      '/auth/editAccount',
       filteredBody,
       (response) => {
         console.log('Дані успішно відправлені:', response);
@@ -76,17 +76,6 @@ const CardAccount = () => {
       },
     );
   };
-
-  // request.post(
-  //   '/api/getNovaPoshtaBranches',
-  //   {},
-  //   (response) => {
-  //     console.log('Дані успішно відправлені:', response);
-  //   },
-  //   (error) => {
-  //     console.error('Помилка відправлення даних:', error);
-  //   },
-  // );
 
   return (
     <div>
