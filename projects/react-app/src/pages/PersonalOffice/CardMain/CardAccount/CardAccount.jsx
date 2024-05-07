@@ -53,7 +53,7 @@ const CardAccount = () => {
 
   const onSubmit = () => {
     const body = {
-      username: email,
+      email: email,
       password: password,
       firstName: firstName,
       lastName: lastName,

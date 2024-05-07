@@ -4,6 +4,7 @@ const COLLECTIONS = {
   PRODUCTS: 'products',
   USERS: 'users',
   COMMON_PARAMS: 'common_params',
+  CLIENTS: 'clients',
 };
 
 const OPERATION = {

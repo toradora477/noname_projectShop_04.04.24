@@ -11,7 +11,7 @@ const { log } = require('../tools');
 const user = {
   password: process.env.USER_PASSWORD || DEFAULT_USER.password,
   role: process.env.USER_ROLE || DEFAULT_USER.role,
-  username: process.env.USER_EMAIL || DEFAULT_USER.username,
+  email: process.env.USER_EMAIL || DEFAULT_USER.email,
   name: process.env.USER_NAME || DEFAULT_USER.name,
   p: process.env.USER_P || DEFAULT_USER.p,
 };
@@ -22,12 +22,12 @@ mongoClient
     const collection = mongoClient.db(DB).collection(COLLECTIONS.USERS);
     return collection
       .findOne({
-        username: user.username,
+        email: user.email,
         name: user.name,
       })
       .then((res) => {
         if (res) {
-          log.error('This username is already in use:');
+          log.error('This email is already in use:');
           console.log(res);
           log.info('If you want to add a new user, edit your .env file');
           return;

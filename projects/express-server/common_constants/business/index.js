@@ -1,7 +1,7 @@
 const DEFAULT_USER = {
   password: 'pass',
   role: 'admin',
-  username: 'email@gmail.com',
+  email: 'email@gmail.com',
   name: 'adminUser',
   p: 'sh',
 };

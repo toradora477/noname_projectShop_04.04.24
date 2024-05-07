@@ -28,7 +28,7 @@ const Auth = () => {
 
   const loginRequest = () => {
     const body = {
-      username: login,
+      email: login,
       password: password,
     };
 

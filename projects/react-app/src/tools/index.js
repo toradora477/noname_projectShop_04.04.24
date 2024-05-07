@@ -5,7 +5,7 @@ const prepareUsers = (list) => {
   window.users = {};
   const _users = {};
   list.forEach?.((i) => {
-    window.users[i.username] = i;
+    window.users[i.email] = i;
     _users[i._id] = i;
   });
   return _users;

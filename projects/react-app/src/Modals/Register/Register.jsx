@@ -26,7 +26,7 @@ const Register = () => {
       password: password,
     };
 
-    request.post('/auth/register', body, (res) => {
+    request.post('/auth/clientRegistration', body, (res) => {
       if (res.error) {
         console.error('Registration failed:', res.error);
       } else {
