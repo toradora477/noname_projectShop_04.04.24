@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { request, getTokenData } from '../../tools';
 import { setModal, setUserAuth } from '../../store/commonReducer';
 import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../components';
+import { REGISTER } from '../../common_constants/modals';
+
 import './Auth.scss';
 
 const Auth = () => {
@@ -42,6 +44,8 @@ const Auth = () => {
     });
   };
 
+  const registerOpen = () => dispatch(setModal({ name: REGISTER }));
+
   return (
     <Modal position="center" btnClose={false}>
       <div className="auth-modal">
@@ -78,7 +82,7 @@ const Auth = () => {
         </Box>
         <FlexBox mt={106} className="signup-group">
           <Typography>Не маєте акаунта?</Typography> &nbsp;
-          <button className="btn-signup">
+          <button className="btn-signup" onClick={registerOpen}>
             <Typography color="primary">Зареєструватися</Typography>
           </button>
         </FlexBox>
