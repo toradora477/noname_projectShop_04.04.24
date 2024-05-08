@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addBasket } from '../../store/commonReducer';
+import { addBasket, removeBasket } from '../../store/commonReducer';
 import { Link } from 'react-router-dom';
 import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { ROUTES } from '../../common_constants/routes';
@@ -21,6 +21,12 @@ const Product = ({ item }) => {
     setLoading(false);
   };
 
+  const onDelInBasket = () => {
+    setLoading(true);
+    dispatch(removeBasket(item._id));
+    setLoading(false);
+  };
+
   const handleLikeProduct = () => {
     console.log(item._id);
   };
@@ -38,6 +44,7 @@ const Product = ({ item }) => {
         <h3>{item.n}</h3>
         <p>${item.p}</p>
         <PrimaryButton children="ДОДАТИ В КОШИК" onClick={onPutInBasket} />
+        <PrimaryButton children="ВИДАЛИТИ ОДИН" onClick={onDelInBasket} />
       </Spin>
     </div>
   );
