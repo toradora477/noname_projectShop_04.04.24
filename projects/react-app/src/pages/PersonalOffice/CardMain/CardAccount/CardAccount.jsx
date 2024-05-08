@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
+import { useSelector } from 'react-redux';
 import { PrimaryButton, Typography, Box, FlexBox } from '../../../../components';
+import { ROLES } from '../../../../common_constants/business';
 import { request } from '../../../../tools';
+
 import '../../PersonalOffice.scss';
 
 const CardAccount = () => {
+  const userAuth = useSelector((state) => state.common.userAuth),
+    { role = 'guest' } = userAuth,
+    isClient = ROLES[role] === ROLES.client;
+
   const [Title, Label] = [
     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
@@ -138,36 +145,41 @@ const CardAccount = () => {
           <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
         </Box>
       </FlexBox>
-      <Title mt={32} children="Доставка" />
-      <FlexBox mt={12}>
-        <Box className="input-group">
-          <Label>Місто</Label>
-          <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
-        </Box>
-        &nbsp;&nbsp;
-        <Box className="input-group">
-          <Label>Область</Label>
-          <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
-        </Box>
-      </FlexBox>
+      {isClient && (
+        <Fragment>
+          <Title mt={32} children="Доставка" />
+          <FlexBox mt={12}>
+            <Box className="input-group">
+              <Label>Місто</Label>
+              <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
+            </Box>
+            &nbsp;&nbsp;
+            <Box className="input-group">
+              <Label>Область</Label>
+              <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
+            </Box>
+          </FlexBox>
 
-      <Box className="input-group">
-        <Label>Відділення Нової Пошти</Label>
-        <select
-          aria-label="novaPoshtaBranch"
-          id="novaPoshtaBranch"
-          name="novaPoshtaBranch"
-          value={selectedNovaPoshtaBranch}
-          onChange={handleNovaPoshtaBranchChange}
-        >
-          <option value="">Оберіть відділення Нової Пошти</option>
-          {novaPoshtaBranches.map((branch) => (
-            <option key={branch.id} value={branch.name}>
-              {branch.name}
-            </option>
-          ))}
-        </select>
-      </Box>
+          <Box className="input-group">
+            <Label>Відділення Нової Пошти</Label>
+            <select
+              aria-label="novaPoshtaBranch"
+              id="novaPoshtaBranch"
+              name="novaPoshtaBranch"
+              value={selectedNovaPoshtaBranch}
+              onChange={handleNovaPoshtaBranchChange}
+            >
+              <option value="">Оберіть відділення Нової Пошти</option>
+              {novaPoshtaBranches.map((branch) => (
+                <option key={branch.id} value={branch.name}>
+                  {branch.name}
+                </option>
+              ))}
+            </select>
+          </Box>
+        </Fragment>
+      )}
+
       <PrimaryButton onClick={onSubmit} mt={32}>
         Зберегти зміни
       </PrimaryButton>

@@ -21,10 +21,16 @@ const Product = ({ item }) => {
     setLoading(false);
   };
 
+  const handleLikeProduct = () => {
+    console.log(item._id);
+  };
+
   return (
     <div className="product">
       <Spin spinning={loading}>
-        <img src={isLikeProduct} alt="svg like" className="product-like-icon " />
+        <button className="btn-first product-like-icon" onClick={handleLikeProduct}>
+          <img src={isLikeProduct} alt="btn menu" />
+        </button>
 
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           <img src={validImageProduct} alt="product" className="product-main-image" />

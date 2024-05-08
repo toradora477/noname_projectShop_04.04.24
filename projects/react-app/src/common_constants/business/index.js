@@ -1,4 +1,4 @@
-const COMPANY_NAME = '“Назва компанії”'; // ! Змінити на реальні дані
+const COMPANY_NAME = 'The Dressery Store'; // TODO Змінити на реальні дані
 
 const WORKING_HOURS = {
   START_DAY: '11:00',
