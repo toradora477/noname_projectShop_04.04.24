@@ -87,8 +87,20 @@ router.post('/editAccount', authenticateJWT, (req, res, next) => {
 
     const result = updateAccounts(req, req.body, role === 'client' ? COLLECTIONS.CLIENTS : COLLECTIONS.USERS);
 
+    if (!result) {
+      throw new ExtendedError({
+        messageLog: 'Account not edit',
+        messageJson: 'Помилка сервера. Не вдалося оновити акаунт.',
+        code: 400,
+      });
+    }
+
+    const _data = { ...req.body };
+    delete _data._id;
+
     const transportationData = {
       status: true,
+      data: _data,
     };
 
     req.loggingData = {
@@ -101,7 +113,7 @@ router.post('/editAccount', authenticateJWT, (req, res, next) => {
   } catch (err) {
     next(err);
   }
-}); // TODO Доробити для обох колекцій
+});
 
 router.post('/clientRegistration', guestJWT, async (req, res, next) => {
   try {

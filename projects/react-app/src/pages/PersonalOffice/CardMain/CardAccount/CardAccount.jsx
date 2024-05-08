@@ -1,5 +1,7 @@
 import React, { useState, Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { updateUserAuth } from '../../../../store/commonReducer';
 import { PrimaryButton, Typography, Box, FlexBox } from '../../../../components';
 import { ROLES } from '../../../../common_constants/business';
 import { request } from '../../../../tools';
@@ -7,6 +9,8 @@ import { request } from '../../../../tools';
 import '../../PersonalOffice.scss';
 
 const CardAccount = () => {
+  const dispatch = useDispatch();
+
   const userAuth = useSelector((state) => state.common.userAuth),
     { role = 'guest' } = userAuth,
     isClient = ROLES[role] === ROLES.client;
@@ -16,47 +20,27 @@ const CardAccount = () => {
     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
   ];
 
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [city, setCity] = useState('');
-  const [region, setRegion] = useState('');
-  const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
-  const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
+  const [password, setPassword] = useState(userAuth?.password ?? '');
+  const [email, setEmail] = useState(userAuth?.password ?? '');
+  const [firstName, setFirstName] = useState(userAuth?.firstName ?? '');
+  const [lastName, setLastName] = useState(userAuth?.lastName ?? '');
+  const [phoneNumber, setPhoneNumber] = useState(userAuth?.phoneNumber ?? '');
+  const [city, setCity] = useState(userAuth?.city ?? '');
+  const [region, setRegion] = useState(userAuth?.region ?? '');
+  // const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
+  // const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
+  const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
+  const handleCityChange = (e) => setCity(e.target.value);
+  const handleRegionChange = (e) => setRegion(e.target.value);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
-  };
-
-  const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
-  };
-
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
-  };
-
-  const handleRegionChange = (e) => {
-    setRegion(e.target.value);
-  };
-
-  const handleNovaPoshtaBranchChange = (e) => {
-    setSelectedNovaPoshtaBranch(e.target.value);
-  };
+  // const handleNovaPoshtaBranchChange = (e) => {
+  //   setSelectedNovaPoshtaBranch(e.target.value);
+  // };
 
   const onSubmit = () => {
     const body = {
@@ -67,7 +51,7 @@ const CardAccount = () => {
       phoneNumber: phoneNumber,
       city: city,
       region: region,
-      novaPoshtaBranch: selectedNovaPoshtaBranch,
+      // novaPoshtaBranch: selectedNovaPoshtaBranch,
     };
 
     const filteredBody = Object.fromEntries(Object.entries(body).filter(([key, value]) => value !== ''));
@@ -75,8 +59,8 @@ const CardAccount = () => {
     request.post(
       '/auth/editAccount',
       filteredBody,
-      (response) => {
-        console.log('Дані успішно відправлені:', response);
+      (res) => {
+        dispatch(updateUserAuth(res.data));
       },
       (error) => {
         console.error('Помилка відправлення даних:', error);
@@ -160,7 +144,7 @@ const CardAccount = () => {
             </Box>
           </FlexBox>
 
-          <Box className="input-group">
+          {/* <Box className="input-group">
             <Label>Відділення Нової Пошти</Label>
             <select
               aria-label="novaPoshtaBranch"
@@ -176,7 +160,7 @@ const CardAccount = () => {
                 </option>
               ))}
             </select>
-          </Box>
+          </Box> */}
         </Fragment>
       )}
 
