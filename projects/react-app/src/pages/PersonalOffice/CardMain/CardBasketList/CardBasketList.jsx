@@ -10,7 +10,7 @@ const CardBasketList = () => {
   const Title = ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />;
 
   const filteredProducts = products.filter((product) => basket.includes(product._id));
-  console.log(filteredProducts);
+  // console.log(filteredProducts);
   return (
     <div>
       <Title mt={8} children="Вибрані товари" />
@@ -29,6 +29,8 @@ const CardBasketList = () => {
             }
             return acc;
           }, [])}
+
+          <br />
         </Fragment>
       ) : (
         <Empty description="Кошик порожній" w={350} h={250} />

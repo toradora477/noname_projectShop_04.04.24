@@ -4,6 +4,7 @@ const { DB, COLLECTIONS } = require('../../common_constants/db');
 const { authenticateJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const { updateAccounts } = require('./actions');
 const { ExtendedError, getNextSequenceValue } = require('../../tools');
+const { ObjectId } = require('mongodb');
 
 router.post('/login', guestJWT, async (req, res, next) => {
   try {
@@ -21,8 +22,10 @@ router.post('/login', guestJWT, async (req, res, next) => {
         code: 400,
       });
 
-    const clientPromise = clients.findOne({ email, password });
-    const userPromise = users.findOne({ email, password });
+    const findBD = { email, password };
+
+    const clientPromise = clients.findOne(findBD);
+    const userPromise = users.findOne(findBD);
 
     const [client, user] = await Promise.all([clientPromise, userPromise]);
 
@@ -116,8 +119,10 @@ router.post('/clientRegistration', guestJWT, async (req, res, next) => {
       req.app.locals.client.db(DB).collection(COLLECTIONS.USERS),
     ];
 
-    const clientPromise = clients.findOne({ email: email });
-    const userPromise = users.findOne({ email: email });
+    const findBD = { email };
+
+    const clientPromise = clients.findOne(findBD);
+    const userPromise = users.findOne(findBD);
 
     const [client, user] = await Promise.all([clientPromise, userPromise]);
 
@@ -169,6 +174,56 @@ router.post('/clientRegistration', guestJWT, async (req, res, next) => {
     };
 
     res.status(200).json(responseData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/getAccountInfo', authenticateJWT, async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+
+    if (!_id)
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
+
+    const [clients, users] = [
+      req.app.locals.client.db(DB).collection(COLLECTIONS.CLIENTS),
+      req.app.locals.client.db(DB).collection(COLLECTIONS.USERS),
+    ];
+
+    const findBD = { _id: new ObjectId(_id) };
+
+    const clientPromise = clients.findOne(findBD);
+    const userPromise = users.findOne(findBD);
+
+    const [client, user] = await Promise.all([clientPromise, userPromise]);
+
+    if (!user && !client) {
+      res.status(400).json({ status: true });
+      req.loggingData = {
+        log: 'Error find collection',
+        operation: 'findOne for collection CLIENTS and USERS',
+      };
+      return;
+    }
+
+    const account = client ?? user;
+
+    const transportationData = {
+      status: true,
+      data: account,
+    };
+
+    req.loggingData = {
+      log: 'Find info data account',
+      operation: 'find for collection CLIENTS or USERS',
+      dataRes: transportationData.data,
+    };
+    res.status(200).json(transportationData);
   } catch (err) {
     next(err);
   }
