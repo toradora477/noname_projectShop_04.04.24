@@ -39,7 +39,7 @@ const Auth = () => {
       window.localStorage.setItem('accessToken', res.accessToken);
       setNoAccount(null);
 
-      dispatch(setUserAuth(getTokenData(res.accessToken)));
+      dispatch(setUserAuth({ ...(getTokenData(res.accessToken) ?? {}), ...(res.data ?? {}) }));
       dispatch(setModal());
     });
   };

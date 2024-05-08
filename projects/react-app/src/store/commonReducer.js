@@ -45,9 +45,15 @@ export const commonSlice = createSlice({
     setUserAuth: (state, action) => {
       state.userAuth = action.payload;
     },
+    updateUserAuth: (state, action) => {
+      const { payload } = action;
+      if (!payload || typeof payload !== 'object') return;
+
+      state.userAuth = { ...(state.userAuth || {}), ...payload };
+    },
   },
 });
 
-export const { setProducts, addProduct, addBasket, setModal, setUserAuth, removeBasket } = commonSlice.actions;
+export const { setProducts, addProduct, addBasket, setModal, setUserAuth, updateUserAuth, removeBasket } = commonSlice.actions;
 
 export default commonSlice.reducer;

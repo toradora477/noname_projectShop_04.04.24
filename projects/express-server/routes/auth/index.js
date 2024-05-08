@@ -54,6 +54,7 @@ router.post('/login', guestJWT, async (req, res, next) => {
     const responseData = {
       status: true,
       accessToken: jwt.sign(encryptionOfPersonalData, secretOrPrivateKey),
+      data: account,
     };
 
     req.loggingData = {
