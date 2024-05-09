@@ -99,7 +99,7 @@ router.delete('/:id', adminJWT, async (req, res, next) => {
 
     const findDB = { _id: new ObjectId(id) };
 
-    const result = collection.findOneAndDelete(findDB);
+    const result = await collection.findOneAndDelete(findDB);
 
     if (!result)
       throw new ExtendedError({

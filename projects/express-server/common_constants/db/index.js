@@ -5,6 +5,7 @@ const COLLECTIONS = {
   USERS: 'users',
   COMMON_PARAMS: 'common_params',
   CLIENTS: 'clients',
+  ORDERS: 'orders',
 };
 
 const OPERATION = {
