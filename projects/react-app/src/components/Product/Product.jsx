@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { addBasket, removeBasket } from '../../store/commonReducer';
 import { Link, useLocation } from 'react-router-dom';
 
-import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
+// import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_gray, img_test_murder } from '../../images';
 import { Spin } from '../';
 import './Product.scss';
+
+import { PrimaryButton } from '../';
 
 const Product = ({ item }) => {
   const dispatch = useDispatch();
@@ -16,6 +18,7 @@ const Product = ({ item }) => {
   const [loading, setLoading] = useState(false);
 
   const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE;
+  const isPageProductAdmin = pathname === ROUTES.PRODUCTS_ADMIN;
   const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_gray;
   const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
   const textAddBtnDynamic = isPagePersonalOffice ? 'ДОДАТИ ЩЕ ОДИН' : 'ДОДАТИ В КОШИК';
@@ -36,19 +39,32 @@ const Product = ({ item }) => {
     console.log(item._id);
   };
 
+  const productEditing = (
+    <Fragment>
+      {/* <PrimaryButton color="blue" children="Додаткова інформація" /> */}
+      {/* <PrimaryButton mt={8} color="orange" children="Редагувати" /> */}
+      <PrimaryButton mt={8} color="red" children="Видалити" />
+    </Fragment>
+  );
+
+  const removeItemsBasket = <PrimaryButton className="danger" mt={8} children="ВИДАЛИТИ ОДИН" onClick={onDelInBasket} />;
+
   return (
     <div className="product">
       <Spin spinning={loading}>
-        <button className="btn-first product-like-icon" onClick={handleLikeProduct}>
-          <img src={isLikeProduct} alt="btn menu" />
-        </button>
+        {!isPageProductAdmin && (
+          <button className="btn-first product-like-icon" onClick={handleLikeProduct}>
+            <img src={isLikeProduct} alt="btn menu" />
+          </button>
+        )}
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           <img src={validImageProduct} alt="product" className="product-main-image" />
         </Link>
         <h3>{item.n}</h3>
         <p>${item.p}</p>
-        <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />
-        {isPagePersonalOffice && <PrimaryButton className="danger" mt={8} children="ВИДАЛИТИ ОДИН" onClick={onDelInBasket} />}
+        {!isPageProductAdmin && <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />}
+        {isPagePersonalOffice && removeItemsBasket}
+        {isPageProductAdmin && productEditing}
       </Spin>
     </div>
   );

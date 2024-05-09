@@ -40,9 +40,9 @@ const MenuMain = () => {
         <PrimaryButton children="Товари" color="gradient_main" />
       </Link>
       &nbsp;&nbsp;&nbsp;&nbsp;
-      <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
+      {/* <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
         <PrimaryButton children="Статистика" color="gradient_main" />
-      </Link>
+      </Link> */}
     </div>
   );
 
