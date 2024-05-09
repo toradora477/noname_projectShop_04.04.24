@@ -6,22 +6,6 @@ const { adminJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 
-router.post('/info', (req, res, next) => {
-  try {
-    console.log('test 1');
-    console.log('test 2', req.body);
-
-    const transportationData = {
-      status: true,
-      library: 'test 3',
-    };
-
-    res.json(transportationData);
-  } catch (err) {
-    next(err);
-  }
-}); // TODO тестовий, прибрати
-
 router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   try {
     const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
@@ -91,6 +75,46 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
     req.loggingData = {
       log: 'Add new products',
       operation: 'insertOne for collection PRODUCTS',
+      'req.body': req.body,
+      result: transportationData.data,
+    };
+    res.status(200).json(transportationData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/:id', adminJWT, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id)
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
+
+    const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
+
+    const findDB = { _id: new ObjectId(id) };
+
+    const result = collection.findOneAndDelete(findDB);
+
+    if (!result)
+      throw new ExtendedError({
+        messageLog: 'Poor collection findOneAndDelete result.',
+        messageJson: 'Помилка сервера. Не вдалося видалити продукт.',
+      });
+
+    const transportationData = {
+      status: true,
+      data: id,
+    };
+
+    req.loggingData = {
+      log: 'Deleted products',
+      operation: 'findOneAndDelete for collection PRODUCTS',
       'req.body': req.body,
       result: transportationData.data,
     };

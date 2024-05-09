@@ -1,9 +1,10 @@
 import React, { useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
-import { addBasket, removeBasket } from '../../store/commonReducer';
+import { addBasket, deleteProduct, removeBasket } from '../../store/commonReducer';
 import { Link, useLocation } from 'react-router-dom';
 
 // import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
+import { request } from '../../tools';
 import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_gray, img_test_murder } from '../../images';
 import { Spin } from '../';
@@ -39,11 +40,25 @@ const Product = ({ item }) => {
     console.log(item._id);
   };
 
+  const onBtnClickRemoveProduct = async () => {
+    setLoading(true);
+
+    await request.delete('/products/', item._id, (res) => {
+      console.log('Товар успішно додано', res);
+      // if (res?.data) dispatch(addProduct(res.data));
+      // dispatch(setModal());
+      console.log(res.data);
+      dispatch(deleteProduct(res.data));
+    });
+
+    setLoading(false);
+  };
+
   const productEditing = (
     <Fragment>
       {/* <PrimaryButton color="blue" children="Додаткова інформація" /> */}
       {/* <PrimaryButton mt={8} color="orange" children="Редагувати" /> */}
-      <PrimaryButton mt={8} color="red" children="Видалити" />
+      <PrimaryButton mt={8} color="red" children="Видалити" onClick={onBtnClickRemoveProduct} />
     </Fragment>
   );
 
