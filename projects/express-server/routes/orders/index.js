@@ -1,9 +1,36 @@
 const router = require('express').Router();
 
 const { DB, COLLECTIONS } = require('../../common_constants/db');
-const { guestJWT } = require('../../middlewares/jwtAudit');
+const { guestJWT, adminJWT } = require('../../middlewares/jwtAudit');
 const { ExtendedError, getNextSequenceValue } = require('../../tools');
 const { ObjectId } = require('mongodb');
+
+router.get('/getListOrder', adminJWT, async (req, res, next) => {
+  try {
+    const orders = req.app.locals.client.db(DB).collection(COLLECTIONS.ORDERS);
+    const resultFind = await orders.find({}).toArray();
+
+    if (!resultFind?.length || !Array.isArray(resultFind))
+      throw new ExtendedError({
+        messageLog: 'Poor collection find result.',
+        messageJson: 'Помилка сервера. Не вдалося вивантажити список замовлень.',
+      });
+
+    const transportationData = {
+      status: true,
+      data: resultFind,
+    };
+
+    req.loggingData = {
+      log: 'Get all list orders',
+      operation: 'find for collection ORDERS',
+      dataLength: resultFind?.length ?? null,
+    };
+    res.status(200).json(transportationData);
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.post('/addOrder', guestJWT, async (req, res, next) => {
   try {

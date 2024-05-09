@@ -11,3 +11,4 @@ export { default as Card } from './Card';
 export { default as Spin } from './Spin';
 export { default as PrymaryIconBackground } from './PrymaryIconBackground';
 export { default as Empty } from './Empty';
+export { default as List } from './List';
