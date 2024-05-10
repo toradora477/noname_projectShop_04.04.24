@@ -2,6 +2,7 @@ import React, { useState, Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { request } from '../../tools';
 import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin, Card, List } from '../../components';
+import OrderAdminItem from './OrderAdminItem';
 import './OrderAdmin.scss';
 
 const OrderAdmin = () => {
@@ -30,11 +31,7 @@ const OrderAdmin = () => {
       <Spin spinning={loading}>
         <Card pl={16}>
           <Title mt={8} children="Список замовлень" />
-          {listOrders?.length > 0 ? (
-            <List dataSource={listOrders} renderItem={(item) => 'dddd'} />
-          ) : (
-            <Empty description="Список порожній" w={350} h={250} />
-          )}
+          <List dataSource={listOrders} renderItem={(item) => <OrderAdminItem item={item} />} />
         </Card>
       </Spin>
     </div>

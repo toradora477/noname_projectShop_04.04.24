@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { HTTP_METHODS } from '../common_constants/business';
 
+const { getFormattedDateWithRelativeDays } = require('./dateUtils');
+const { useClientViewData } = require('./hooks');
+
 const prepareUsers = (list) => {
   window.users = {};
   const _users = {};
@@ -82,4 +85,4 @@ const request = {
   },
 };
 
-export { request, prepareUsers, getTokenData };
+export { request, prepareUsers, getTokenData, getFormattedDateWithRelativeDays, useClientViewData };

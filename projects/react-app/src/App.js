@@ -2,7 +2,7 @@ import React from 'react';
 import RouterSwitch from './configs/RouterSwitch';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { MenuMain, SideMenu, Footer } from './components';
-import { useClientViewData } from './tools/hooks';
+import { useClientViewData } from './tools';
 import Modals from './Modals';
 import './App.scss';
 import './common_constants/styles/textStyle.scss';
