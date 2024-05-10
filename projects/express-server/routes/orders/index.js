@@ -8,23 +8,46 @@ const { ObjectId } = require('mongodb');
 router.get('/getListOrder', adminJWT, async (req, res, next) => {
   try {
     const orders = req.app.locals.client.db(DB).collection(COLLECTIONS.ORDERS);
-    const resultFind = await orders.find({}).toArray();
 
-    if (!resultFind?.length || !Array.isArray(resultFind))
+    const pipeline = [
+      {
+        $lookup: {
+          from: COLLECTIONS.CLIENTS,
+          localField: 'a',
+          foreignField: '_id',
+          as: 'authorInfo',
+        },
+      },
+      {
+        $set: {
+          authorInfo: {
+            $cond: {
+              if: { $gt: [{ $size: '$authorInfo' }, 0] },
+              then: { $arrayElemAt: ['$authorInfo', 0] },
+              else: null,
+            },
+          },
+        },
+      },
+    ];
+
+    const resultAggregation = await orders.aggregate(pipeline).toArray();
+
+    if (!resultAggregation?.length || !Array.isArray(resultAggregation))
       throw new ExtendedError({
-        messageLog: 'Poor collection find result.',
+        messageLog: 'Poor collection aggregation result.',
         messageJson: 'Помилка сервера. Не вдалося вивантажити список замовлень.',
       });
 
     const transportationData = {
       status: true,
-      data: resultFind,
+      data: resultAggregation,
     };
 
     req.loggingData = {
       log: 'Get all list orders',
-      operation: 'find for collection ORDERS',
-      dataLength: resultFind?.length ?? null,
+      operation: 'aggregation for collection ORDERS with CLIENTS',
+      dataLength: resultAggregation?.length ?? null,
     };
     res.status(200).json(transportationData);
   } catch (err) {
@@ -54,7 +77,7 @@ router.post('/addOrder', guestJWT, async (req, res, next) => {
       t: new Date(),
       i: await getNextSequenceValue('orderNextSequenceValue', commonParams),
       l: listID.map((id) => (id = new ObjectId(id))),
-      ...(userID ? { а: new ObjectId(userID) } : {}),
+      ...(userID ? { a: new ObjectId(userID) } : {}),
     };
 
     const resultInsertOne = await orders.insertOne(bodyOrder);

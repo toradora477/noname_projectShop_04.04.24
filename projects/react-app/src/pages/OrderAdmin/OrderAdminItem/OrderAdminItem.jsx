@@ -30,16 +30,23 @@ const OrderAdminItem = ({ item }) => {
   //   getListOrder();
   // }, []);
 
-  console.table(item);
+  console.table(item.authorInfo);
 
   return (
     <div className="order-list-item">
       <Spin spinning={loading}>
         <Card pl={16} className="order-info-card ">
           <div className="order-info">
-            <CardInfo label="Дата" text={getFormattedDateWithRelativeDays(item.t)} />
+            <CardInfo label="Дата:" text={getFormattedDateWithRelativeDays(item.t)} />
+            <CardInfo label="Номер:" text={item.i} />
+            <CardInfo label="Клієнт:" text={item.a} />
             <CardInfo label="Номер" text={item.i} />
-            <CardInfo label="Дата" text={getFormattedDateWithRelativeDays(item.t)} />
+          </div>
+          <hr />
+          <div className="order-info">
+            <CardInfo label="Дата:" text={getFormattedDateWithRelativeDays(item.t)} />
+            <CardInfo label="Номер:" text={item.i} />
+            <CardInfo label="Клієнт:" text={item.a} />
             <CardInfo label="Номер" text={item.i} />
           </div>
         </Card>
