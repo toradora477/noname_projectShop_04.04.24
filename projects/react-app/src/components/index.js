@@ -12,3 +12,4 @@ export { default as Spin } from './Spin';
 export { default as PrymaryIconBackground } from './PrymaryIconBackground';
 export { default as Empty } from './Empty';
 export { default as List } from './List';
+export { default as Divider } from './Divider';

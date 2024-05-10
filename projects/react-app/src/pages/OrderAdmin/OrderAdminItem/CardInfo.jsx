@@ -3,7 +3,8 @@ import { Typography } from '../../../components';
 import '../OrderAdmin.scss';
 
 const CardInfo = ({ label, text }) => {
-  if (![typeof label === 'string', typeof text === 'string' || typeof text === 'number'].every(Boolean)) return null;
+  if (![typeof label === 'string', (typeof text === 'string' && text.trim() !== '' && text !== '-') || typeof text === 'number'].every(Boolean))
+    return null;
 
   return (
     <div className="order-info-row">
