@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Typography, FlexBox } from '../../components';
@@ -22,7 +22,8 @@ const PersonalOffice = () => {
 
   const userAuth = useSelector((state) => state.common.userAuth),
     { role = 'guest' } = userAuth,
-    isClientOrAbove = ROLES[role] <= ROLES.client;
+    isClientOrAbove = ROLES[role] <= ROLES.client,
+    isNotAdmin = ROLES[role] !== ROLES.admin;
 
   const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 
@@ -52,22 +53,26 @@ const PersonalOffice = () => {
             />
           )}
 
-          <CardSelected
-            selectedCard={selectedCard}
-            handleCardClick={handleCardClick}
-            iconSelected={icon_heart_empty_white}
-            iconUnselected={icon_heart_empty_gray}
-            cardId={NAME_SELECT.WISHLIST}
-            text="Вподобані товари"
-          />
-          <CardSelected
-            selectedCard={selectedCard}
-            handleCardClick={handleCardClick}
-            iconSelected={shopping_bag_color_white}
-            iconUnselected={shopping_bag_color_gray}
-            cardId={NAME_SELECT.BASKETLIST}
-            text="Вибрані товари"
-          />
+          {isNotAdmin && (
+            <Fragment>
+              <CardSelected
+                selectedCard={selectedCard}
+                handleCardClick={handleCardClick}
+                iconSelected={icon_heart_empty_white}
+                iconUnselected={icon_heart_empty_gray}
+                cardId={NAME_SELECT.WISHLIST}
+                text="Вподобані товари"
+              />
+              <CardSelected
+                selectedCard={selectedCard}
+                handleCardClick={handleCardClick}
+                iconSelected={shopping_bag_color_white}
+                iconUnselected={shopping_bag_color_gray}
+                cardId={NAME_SELECT.BASKETLIST}
+                text="Вибрані товари"
+              />
+            </Fragment>
+          )}
         </div>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div className="select-menu">

@@ -5,10 +5,11 @@ let users = [];
 const requestAllUsers = (client) => {
   const collection = client.db(DB).collection(COLLECTIONS.USERS);
 
-  return collection.find({}, { projection: { activityJournal: 0 } }).toArray();
+  return collection.find({}).toArray();
 };
 
 const allUsersExport = () => users || [];
+
 
 const prepareAllUsers = async (client) => {
   users = await requestAllUsers(client);

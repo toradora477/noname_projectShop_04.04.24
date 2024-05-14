@@ -58,7 +58,7 @@ const Product = ({ item }) => {
     <Fragment>
       {/* <PrimaryButton color="blue" children="Додаткова інформація" /> */}
       {/* <PrimaryButton mt={8} color="orange" children="Редагувати" /> */}
-      <PrimaryButton mt={8} color="red" children="Видалити" onClick={onBtnClickRemoveProduct} />
+      <PrimaryButton mt={8} className="danger" children="Видалити" onClick={onBtnClickRemoveProduct} />
     </Fragment>
   );
 

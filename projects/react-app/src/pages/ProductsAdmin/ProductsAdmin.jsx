@@ -28,7 +28,7 @@ const ProductsAdmin = () => {
 
   return (
     <div className="products-admin">
-      <PrimaryButton onClick={onBtnClickAddProduct} children="Додати новий продукт" color="blue" className="products-btn-add" />
+      <PrimaryButton onClick={onBtnClickAddProduct} children="Додати новий продукт" className="products-btn-add" />
       <br />
       <div className="product-list">
         {currentProducts.map((item) => (
