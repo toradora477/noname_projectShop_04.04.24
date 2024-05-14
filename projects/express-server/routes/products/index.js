@@ -11,31 +11,9 @@ const { uploadFileToStorage, downloadFileFromStorage } = require('../../services
 
 router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   try {
-    // Указываем путь к файлу в Firebase Storage
-    // const filePath = 'products/Screenshot_20.png'; // Пример пути к файлу
+    const fileID = undefined; // TODO тестове
 
-    // // Создаем временный файл для сохранения загруженного файла
-    // const tempFilePath = './temp'; // Пример временного пути к файлу
-    // const currentDir = process.cwd();
-    // const tempFilePath2 = path.join(currentDir);
-
-    // // Загружаем файл из Firebase Storage с помощью функции
-    // await downloadFileFromStorage(filePath, tempFilePath2);
-
-    // // Путь к текущей рабочей директории
-
-    // // Путь к временному файлу, используя текущую рабочую директорию
-
-    // console.log(currentDir);
-    // console.log(tempFilePath2);
-
-    // В основном файле, где вы вызываете функцию downloadFileFromStorage
-    const currentDir = process.cwd();
-    const filePath = 'products/Screenshot_20.png'; // Пример пути к файлу
-    const tempFileName = 'temp.png'; // Пример имени временного файла
-    const tempFilePath = path.join(currentDir, tempFileName);
-
-    await downloadFileFromStorage(COLLECTIONS.PRODUCTS, filePath, tempFilePath, currentDir);
+    await downloadFileFromStorage(COLLECTIONS.PRODUCTS, fileID);
 
     const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
     const resultFind = await collection.find({}).toArray();
@@ -62,6 +40,11 @@ router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   }
 });
 
+router.get('/getFilePreview', guestJWT, async (req, res) => {
+  const fileID = undefined;
+  downloadFileFromStorage(req, res, COLLECTIONS.PRODUCTS, fileID);
+});
+
 router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).array('files', 20), async (req, res, next) => {
   try {
     const { productName, description, price, colors } = req.body;
@@ -79,6 +62,17 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS),
     ];
 
+    if (req.files) {
+      console.log(req.files);
+      req.loggingData = {
+        arrFile: req.files,
+      };
+
+      for (const file of req.files) {
+        await uploadFileToStorage(COLLECTIONS.PRODUCTS, file);
+      }
+    }
+
     const newBodyProduct = {
       ...(productName ? { n: productName } : {}),
       ...(price ? { p: price } : {}),
@@ -95,27 +89,6 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
         messageLog: 'Poor collection insertOne result.',
         messageJson: 'Помилка сервера. Не вдалося завантажити новий продукт.',
       });
-
-    if (req.files) {
-      console.log(req.files);
-      req.loggingData = {
-        arrFile: req.files,
-      };
-
-      // for (const file of req.files) {
-      //   const filePath = `${COLLECTIONS.PRODUCTS}/${file.originalname}`;
-      //   const fileContent = fs.readFileSync(file.path);
-      //   await uploadFileToStorage(filePath, fileContent);
-      //   fs.unlinkSync(file.path);
-      // }
-
-      for (const file of req.files) {
-        // const filePath = `${COLLECTIONS.PRODUCTS}/${file.originalname}`;
-        // const fileContent = fs.readFileSync(file.path);
-        await uploadFileToStorage(COLLECTIONS.PRODUCTS, file);
-        // fs.unlinkSync(file.path);
-      }
-    }
 
     const transportationData = {
       status: true,

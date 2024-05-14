@@ -16,20 +16,18 @@ const initializeFirebase = () => {
 
 const uploadFileToStorage = async (folder, file) => {
   try {
-    if (!file || !file.originalname || !file.path) {
+    if (![folder, file, file.originalname, file.path].every(Boolean)) {
       throw new ExtendedError({
         messageLog: 'Invalid file for upload.',
         code: 400,
-        messageJson: 'Некорректный файл для загрузки.',
+        messageJson: 'Некоректний файл для завантаження на хмару.',
       });
     }
 
-    const fileName = `${folder}/${file.originalname}`;
+    const fileId = uuidv4();
+    const fileName = `${folder}/${fileId}_${file.originalname}`;
 
     const fileContent = fs.readFileSync(file.path);
-
-    console.log('Загружаемый файл:', file);
-    console.log('Полный путь к файлу:', fileName);
 
     const storage = admin.storage();
     const storageFile = storage.bucket().file(fileName);
@@ -50,9 +48,9 @@ const uploadFileToStorage = async (folder, file) => {
     await new Promise((resolve, reject) => {
       fileWriteStream.on('finish', async () => {
         try {
-          const metadata = await storageFile.getMetadata();
-          const fileId = metadata[0].id;
-          console.log('ID загруженного файла:', fileId);
+          const _metadata = await storageFile.getMetadata();
+          const _fileId = _metadata[0].id;
+          console.log('ID загруженного файла:', _fileId); //? noname-shop-84557.appspot.com/products/9bc06894-c268-49a1-94d6-c1884ac0de50_Screenshot_53.png/1715717849699824
           resolve();
         } catch (error) {
           reject(error);
@@ -63,80 +61,56 @@ const uploadFileToStorage = async (folder, file) => {
 
     fs.unlinkSync(file.path);
 
-    console.log('Файл успешно загружен в Firebase Storage.');
+    console.log('Файл успішно завантажений у Firebase Storage.');
   } catch (error) {
     throw error;
   }
 };
 
-// // Функция для загрузки файла из Firebase Storage
-const downloadFileFromStorage = async (folder, filePath2) => {
-  const storage = admin.storage();
+const downloadFileFromStorage = async (
+  folder,
+  fileId = 'noname-shop-84557.appspot.com/products/9bc06894-c268-49a1-94d6-c1884ac0de50_Screenshot_53.png/1715717849699824',
+) => {
+  try {
+    if (![folder, fileId].every(Boolean)) {
+      throw new ExtendedError({
+        messageLog: 'Invalid file for upload.',
+        code: 400,
+        messageJson: 'Некоректний файл для завантаження на сервер.',
+      });
+    }
 
-  // Получаем путь к папке, где находится текущий модуль
-  const currentDir = __dirname;
+    const storage = admin.storage();
 
-  const filePath = `${folder}/Screenshot_41.png`;
-  console.log(filePath);
+    const [files] = await storage.bucket().getFiles({ prefix: folder });
 
-  // Определяем путь для сохранения файла
-  const tempFileName = 'temp.png'; // Пример имени временного файла
-  const tempFilePath = path.join(currentDir, tempFileName);
+    // Ищем файл по его ID
+    const file = files.find((file) => {
+      const id = file?.metadata?.id;
 
-  // Загружаем файл из Firebase Storage
-  await storage.bucket().file(filePath).download({
-    destination: tempFilePath,
-  });
+      return id === fileId;
+    });
 
-  console.log('Файл успешно загружен из Firebase Storage.');
-  console.log('Путь к текущей рабочей директории:', currentDir);
+    if (!file) {
+      throw new ExtendedError({
+        messageLog: 'File not found in storage.',
+        code: 404,
+        messageJson: 'Файл не знайдено у сховищі.',
+      });
+    }
 
-  /////////////////////////////
+    const currentDir = __dirname;
+    const tempFileName = 'temp.png';
+    const tempFilePath = path.join(currentDir, tempFileName);
 
-  // Получаем список файлов в папке
-  const [files] = await storage.bucket().getFiles({ prefix: folder });
+    await file.download({
+      destination: tempFilePath,
+    });
 
-  console.log(files?.[0]?.metadata);
-
-  // Ищем файл по его ID
-  // const file = files.find((file) => file.metadata?.id === fileId);
+    console.log('Файл успішно завантажений на сервер.');
+  } catch (error) {
+    throw error;
+  }
 };
-
-// Функция для загрузки файла из Firebase Storage
-// async function downloadFileFromStorage(filePath, tempFilePath, currentDir) {
-//   const storage = admin.storage();
-
-//   // Загружаем файл из Firebase Storage
-//   await storage.bucket().file(filePath).download({
-//     destination: tempFilePath,
-//   });
-
-//   console.log('Файл успешно загружен из Firebase Storage.');
-//   console.log('Путь к текущей рабочей директории:', currentDir);
-// }
-
-// async function downloadFileFromStorage(filePath, res) {
-//   try {
-//     const storage = admin.storage();
-
-//     // Определяем временное местоположение для сохранения файла
-//     const tempFileName = 'temp.png'; // Пример имени временного файла
-//     const tempFilePath = path.join(__dirname, tempFileName);
-
-//     // Загружаем файл из Firebase Storage
-//     await storage.bucket().file(filePath).download({
-//       destination: tempFilePath,
-//     });
-
-//     console.log('Файл успешно загружен из Firebase Storage.');
-//     console.log('Путь к текущей рабочей директории:', __dirname);
-
-//     // Отправляем файл в ответ на запрос
-//     res.sendFile(tempFilePath);
-//   } catch (error) {
-//     console.error('Ошибка загрузки файла из Firebase Storage:', error);
-//     res.status(500).json({ status: false, message: 'Ошибка загрузки файла из Firebase Storage' });
-//   }
-// }
 
 module.exports = { initializeFirebase, uploadFileToStorage, downloadFileFromStorage };

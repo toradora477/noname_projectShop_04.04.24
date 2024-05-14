@@ -24,6 +24,10 @@ const getNextSequenceValue = async (sequenceName, collection) => {
 const runInitialSettings = () => {
   if (!process.env.TOKEN_SECRET) log.errorServer('TOKEN_SECRET empty');
   if (!process.env.MONGO_URL) log.errorServer('MONGO_URL empty');
+
+  logger.setSymbols({
+    ok: '[server]',
+  });
 };
 
 const log = {
@@ -31,7 +35,7 @@ const log = {
     logger.success('Success: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
   },
   successServer: (rest) => {
-    logger.success(rest);
+    logger.ok(rest);
   },
   debug: (rest) => {
     logger.debug('Debug: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
