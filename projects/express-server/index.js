@@ -12,10 +12,12 @@ const mongoClient = new MongoClient(process.env.MONGO_URL);
 
 const { runInitialSettings, log } = require('./tools');
 const { prepareAllUsers } = require('./routes/auth/actions');
+const { initializeFirebase } = require('./services/fileUtils');
 
 const app = express();
 
 runInitialSettings();
+initializeFirebase();
 
 app.use(cors());
 app.use(express.json({ limit: '500mb' }));

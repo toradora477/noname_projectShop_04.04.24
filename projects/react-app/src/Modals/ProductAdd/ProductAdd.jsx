@@ -63,10 +63,17 @@ const ProductAdd = () => {
     body.append('productName', formData.productName);
     body.append('description', formData.description);
     body.append('price', formData.price);
+    // formData.colors.forEach((color, index) => {
+    //   body.append(`colors[${index}][colorName]`, color.colorName);
+    //   color.images.forEach((image) => {
+    //     body.append(`colors[${index}][images]`, image);
+    //   });
+    // });
+
+    // Добавляем все файлы в поле files
     formData.colors.forEach((color, index) => {
-      body.append(`colors[${index}][colorName]`, color.colorName);
       color.images.forEach((image) => {
-        body.append(`colors[${index}][images]`, image);
+        body.append('files', image); // Добавляем файл в поле files
       });
     });
 

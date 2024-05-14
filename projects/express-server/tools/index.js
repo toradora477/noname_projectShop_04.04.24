@@ -90,6 +90,7 @@ class ExtendedError extends Error {
     return jsonError;
   }
 }
+
 module.exports = {
   log,
   ExtendedError,
