@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { request } from '../../tools';
 import { Spin } from '../';
-
+import { ERROR_IMAGE_URL } from '../../common_constants/business';
 import './PreviewImage.scss';
 
 const PreviewImage = ({ fileID }) => {
-  const [red, green, blue] = ['#f5222d', '#52c41a', '#1677ff'];
-
   const core_megaState = {
-      loading: true, //* Downloaded images
+      loading: true,
       url: '',
-      status: blue,
     },
     [megaState, setMegaState] = useState(core_megaState);
 
@@ -22,11 +19,10 @@ const PreviewImage = ({ fileID }) => {
       };
 
       request.getImage('/products/getFilePreview', body, (res) => {
-        console.log('/products/getFilePreview', res);
         const blob = res;
         const url = URL.createObjectURL(blob);
 
-        setMegaState((prev) => ({ ...prev, url: url, status: green.primary, loading: false }));
+        setMegaState((prev) => ({ ...prev, url: url, loading: false }));
       });
 
       setMegaState((prev) => ({ ...prev, loading: false }));
@@ -44,11 +40,9 @@ const PreviewImage = ({ fileID }) => {
   );
 
   return megaState.loading && megaState.err ? (
-    <p style={{ color: 'red' }}>Error loading file</p>
+    <img src={ERROR_IMAGE_URL} className="img-drive" alt="file view" />
   ) : (
-    <div className="preview-image" style={{ borderColor: megaState.status }}>
-      {imgDrive}
-    </div>
+    <div className="preview-image">{imgDrive}</div>
   );
 };
 

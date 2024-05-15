@@ -26,6 +26,8 @@ const ROLES = {
   guest: 999,
 };
 
+const ERROR_IMAGE_URL = `https://via.placeholder.com/150?text=Product`;
+
 const PRODUCT_CATEGORIES = [
   {
     value: 0,
@@ -96,4 +98,5 @@ module.exports = {
   ROLES,
   PRODUCT_CATEGORIES,
   NAME_SELECT,
+  ERROR_IMAGE_URL,
 };
