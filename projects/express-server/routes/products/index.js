@@ -24,11 +24,11 @@ router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
       data: resultFind,
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Get all list products',
       operation: 'find for collection PRODUCTS',
       dataLength: resultFind?.length ?? null,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);
@@ -65,9 +65,10 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
 
     if (req.files) {
       console.log(req.files);
-      req.loggingData = {
+
+      req.setLoggingData({
         arrFile: req.files,
-      };
+      });
 
       for (const file of req.files) {
         const fileId = await uploadFileToStorage(COLLECTIONS.PRODUCTS, file); // Получаем идентификатор файла
@@ -98,12 +99,12 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       data: { ...newBodyProduct, _id: resultInsertOne.insertedId },
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Add new products',
       operation: 'insertOne for collection PRODUCTS',
       'req.body': req.body,
       result: transportationData.data,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);
@@ -138,12 +139,12 @@ router.delete('/:id', adminJWT, async (req, res, next) => {
       data: id,
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Deleted products',
       operation: 'findOneAndDelete for collection PRODUCTS',
       'req.body': req.body,
       result: transportationData.data,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);

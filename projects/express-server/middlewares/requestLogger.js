@@ -5,6 +5,11 @@ const { HTTP_METHODS } = require('../common_constants/business');
 const requestLogger = (req, res, next) => {
   const startTime = dayjs();
 
+  req.setLoggingData = function (data) {
+    if (Object.prototype.toString.call(data) === '[object Object]' && Object.keys(data).length > 0)
+      this.loggingData = { ...(this.loggingData ??= {}), ...data };
+  };
+
   res.on('finish', () => {
     const endTime = dayjs();
     const duration = (endTime.diff(startTime) / 1000).toFixed(3);
@@ -14,7 +19,8 @@ const requestLogger = (req, res, next) => {
     const statusCategory = Math.floor(status / 100).toString();
     const initiator = `${req.user?.role ?? 'guest'} - ${req.user?.email ?? 'anonymous'}`;
 
-    let customLogInfo = req.loggingData || null;
+    let customLogInfo =
+      Object.prototype.toString.call(req.loggingData) === '[object Object]' && Object.keys(req.loggingData).length > 0 ? req.loggingData : null;
 
     if (customLogInfo?.stack) {
       const match = customLogInfo.stack?.match(/.*[\\\/]([^\\\/]+)[\\\/]([^\\\/]+\.js):(\d+):\d+/);

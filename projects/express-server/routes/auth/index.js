@@ -34,11 +34,11 @@ router.post('/login', guestJWT, async (req, res, next) => {
         status: true,
         noAccount: true,
       });
-      req.loggingData = {
+      req.setLoggingData({
         log: 'Login is not possible because there is no such customer in the database',
         operation: 'findOne for collection CLIENTS and USERS',
         email,
-      };
+      });
       return;
     }
 
@@ -57,12 +57,12 @@ router.post('/login', guestJWT, async (req, res, next) => {
       data: account,
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Logging and encryption of personal data in JWT',
       operation: 'findOne for collection USERS',
       personalData: encryptionOfPersonalData,
       createJwt: responseData?.accessToken,
-    };
+    });
 
     res.status(200).json(responseData);
   } catch (err) {
@@ -103,12 +103,12 @@ router.post('/editAccount', authenticateJWT, (req, res, next) => {
       data: _data,
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Edit account',
       operation: 'updateOne for collection USERS or CLIENTS',
       'req.body': req.body,
       result: result,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);
@@ -144,11 +144,11 @@ router.post('/clientRegistration', guestJWT, async (req, res, next) => {
         status: true,
         exists: true,
       });
-      req.loggingData = {
+      req.setLoggingData({
         log: 'Registration is not possible, because such mail is already registered in the system',
         operation: 'findOne for collection CLIENTS and USERS',
         email,
-      };
+      });
       return;
     }
 
@@ -179,12 +179,12 @@ router.post('/clientRegistration', guestJWT, async (req, res, next) => {
       accessToken: jwt.sign(encryptionOfPersonalData, secretOrPrivateKey),
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Register, logging and encryption of personal data in JWT',
       operation: 'insertOne for collection CLIENT',
       personalData: encryptionOfPersonalData,
       createJwt: responseData?.accessToken,
-    };
+    });
 
     res.status(200).json(responseData);
   } catch (err) {
@@ -217,10 +217,10 @@ router.get('/getAccountInfo', authenticateJWT, async (req, res, next) => {
 
     if (!user && !client) {
       res.status(400).json({ status: true });
-      req.loggingData = {
+      req.setLoggingData({
         log: 'Error find collection',
         operation: 'findOne for collection CLIENTS and USERS',
-      };
+      });
       return;
     }
 
@@ -231,11 +231,11 @@ router.get('/getAccountInfo', authenticateJWT, async (req, res, next) => {
       data: account,
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Find info data account',
       operation: 'find for collection CLIENTS or USERS',
       dataRes: transportationData.data,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);
