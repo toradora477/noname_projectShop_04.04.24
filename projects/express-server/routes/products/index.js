@@ -6,7 +6,7 @@ const { adminJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 
-const { uploadFileToStorage, downloadFileFromStorage } = require('../../services/fileUtils');
+const { uploadFileToStorage, downloadFileFromStorage, deleteFileFromStorage } = require('../../services/fileUtils');
 
 router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   try {
@@ -63,9 +63,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
 
     const fileIdArray = [];
 
-    if (req.files) {
-      console.log(req.files);
-
+    if (Array.isArray(req.files) && req.files?.length > 0) {
       req.setLoggingData({
         arrFile: req.files,
       });
@@ -127,6 +125,11 @@ router.delete('/:id', adminJWT, async (req, res, next) => {
     const findDB = { _id: new ObjectId(id) };
 
     const result = await collection.findOneAndDelete(findDB);
+
+    if (Array.isArray(result?.f) && result?.f?.length > 0)
+      for (const fileID of result?.f) {
+        await deleteFileFromStorage(COLLECTIONS.PRODUCTS, fileID);
+      }
 
     if (!result)
       throw new ExtendedError({

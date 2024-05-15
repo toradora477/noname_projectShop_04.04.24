@@ -50,7 +50,6 @@ const uploadFileToStorage = async (folder, file) => {
 
     const _metadata = await storageFile.getMetadata();
     const _fileId = _metadata[0].id;
-    console.log('ID завантаженого файлу:', _fileId);
 
     try {
       fs.unlinkSync(file.path);
@@ -103,4 +102,41 @@ const downloadFileFromStorage = async (res, folder, fileId) => {
   }
 };
 
-module.exports = { initializeFirebase, uploadFileToStorage, downloadFileFromStorage };
+const deleteFileFromStorage = async (folder, fileId) => {
+  try {
+    if (!folder || !fileId) {
+      throw new ExtendedError({
+        messageLog: 'Invalid folder or fileId for deletion.',
+        code: 400,
+        messageJson: 'Некоректна тека або ідентифікатор файлу для видалення.',
+      });
+    }
+
+    const storage = admin.storage();
+
+    const [files] = await storage.bucket().getFiles({ prefix: folder });
+
+    const file = files.find((file) => {
+      const id = file.metadata.id;
+      return id === fileId;
+    });
+
+    if (!file) {
+      throw new ExtendedError({
+        messageLog: 'File not found.',
+        code: 404,
+        messageJson: 'Файл не знайдено.',
+      });
+    }
+
+    await file.delete();
+
+    console.log('Файл успішно видалений з Firebase Storage.');
+
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { initializeFirebase, uploadFileToStorage, downloadFileFromStorage, deleteFileFromStorage };
