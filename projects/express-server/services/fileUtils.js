@@ -9,7 +9,7 @@ const { ExtendedError } = require('../tools');
 const initializeFirebase = () => {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'noname-shop-84557.appspot.com', // TODO в env
+    storageBucket: process.env.STORAGE_BUCKET,
   });
 };
 

@@ -1,5 +1,5 @@
 const logger = require('log-beautify');
-
+const fs = require('fs');
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
@@ -22,12 +22,22 @@ const getNextSequenceValue = async (sequenceName, collection) => {
 };
 
 const runInitialSettings = () => {
-  if (!process.env.TOKEN_SECRET) log.errorServer('TOKEN_SECRET empty');
-  if (!process.env.MONGO_URL) log.errorServer('MONGO_URL empty');
-
   logger.setSymbols({
     ok: '[server]',
+    warning: '[server]',
   });
+  logger.setColors({
+    warning: 'orangered',
+  });
+
+  if (!fs.existsSync('firebase-adminsdk.json')) log.errorServer('firebase-adminsdk.json missing');
+  if (fs.existsSync('.env')) {
+    if (!process.env.TOKEN_SECRET) log.errorServer('TOKEN_SECRET empty');
+    if (!process.env.MONGO_URL) log.errorServer('MONGO_URL empty');
+    if (!process.env.STORAGE_BUCKET) log.errorServer('STORAGE_BUCKET empty');
+  } else {
+    log.errorServer('.env missing');
+  }
 };
 
 const log = {
@@ -50,7 +60,7 @@ const log = {
     logger.error('Error: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
   },
   errorServer: (rest) => {
-    logger.error(rest);
+    logger.warning(rest);
   },
   show: (rest) => {
     logger.show(rest);
