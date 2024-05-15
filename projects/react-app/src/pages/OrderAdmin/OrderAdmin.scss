@@ -5,4 +5,28 @@
   align-items: center;
   padding-top: 68px;
   padding-bottom: 60px;
+
+  .order-list-item {
+    .order-info-card {
+      min-width: 350px;
+    }
+    .order-info {
+      display: flex;
+      flex-wrap: wrap;
+
+      &-row {
+        width: 50%; /* Делаем каждый ряд на половину ширины */
+        display: flex;
+      }
+
+      &-label {
+        width: 50%; /* Задаем ширину для заголовка */
+        font-weight: bold;
+      }
+
+      &-text {
+        width: 50%; /* Задаем ширину для текста */
+      }
+    }
+  }
 }

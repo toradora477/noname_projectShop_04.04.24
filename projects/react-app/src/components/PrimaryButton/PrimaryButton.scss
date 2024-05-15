@@ -48,4 +48,10 @@
   &.gradient_main {
     background: $gradient_main;
   }
+
+  &.danger {
+    background: transparent;
+    border: 2px solid $red;
+    color: $red;
+  }
 }

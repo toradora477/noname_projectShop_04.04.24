@@ -1,0 +1,19 @@
+.list-component {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  .list-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s;
+  }
+
+  .list-item:last-child {
+    border-bottom: none;
+  }
+
+  .list-item:last-child:hover {
+    background-color: #fafafa;
+  }
+}

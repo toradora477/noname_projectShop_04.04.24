@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { request, getTokenData } from '../../tools';
 import { setModal, setUserAuth } from '../../store/commonReducer';
 import { PrimaryButton, Modal, Typography, Box, FlexBox } from '../../components';
+import { REGISTER } from '../../common_constants/modals';
+
 import './Auth.scss';
 
 const Auth = () => {
@@ -15,6 +17,7 @@ const Auth = () => {
 
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [noAccount, setNoAccount] = useState(null);
 
   const handleLoginChange = (e) => {
     setLogin(e.target.value);
@@ -26,21 +29,22 @@ const Auth = () => {
 
   const loginRequest = () => {
     const body = {
-      username: login,
+      email: login,
       password: password,
     };
 
     request.post('/auth/login', body, (res) => {
-      if (res.noAccess) {
-        console.error('res.noAccess', res.noAccess);
-      } else {
-        window.localStorage.setItem('accessToken', res.accessToken);
-        console.log('res.accessToken', res.accessToken);
-        dispatch(setUserAuth(getTokenData(res.accessToken)));
-        dispatch(setModal());
-      }
+      if (res.noAccount) return setNoAccount(true);
+
+      window.localStorage.setItem('accessToken', res.accessToken);
+      setNoAccount(null);
+
+      dispatch(setUserAuth({ ...(getTokenData(res.accessToken) ?? {}), ...(res.data ?? {}) }));
+      dispatch(setModal());
     });
   };
+
+  const registerOpen = () => dispatch(setModal({ name: REGISTER }));
 
   return (
     <Modal position="center" btnClose={false}>
@@ -70,6 +74,8 @@ const Auth = () => {
           </FlexBox>
 
           <PrimaryButton mt={40} children="УВІЙТИ" onClick={loginRequest} />
+
+          {noAccount && <Typography fs={12} fw={500} mt={8} color="red" children="Помилка. Користувач з такими параметрами не існує" />}
         </form>
         <Box mt={28} className="signup-group ">
           <button className="btn-signup">
@@ -78,7 +84,7 @@ const Auth = () => {
         </Box>
         <FlexBox mt={106} className="signup-group">
           <Typography>Не маєте акаунта?</Typography> &nbsp;
-          <button className="btn-signup">
+          <button className="btn-signup" onClick={registerOpen}>
             <Typography color="primary">Зареєструватися</Typography>
           </button>
         </FlexBox>

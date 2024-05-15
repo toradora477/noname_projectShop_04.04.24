@@ -5,13 +5,7 @@ import { Modal } from '../../components';
 
 const BasketOfGoods = () => {
   const onSubmit = () => {
-    const body = {
-      actualization: true,
-    };
-
-    request.post('/products/info', body, () => {
-      console.log('true');
-    }); // TODO Тестове для api
+    console.log('true');
   };
 
   return (

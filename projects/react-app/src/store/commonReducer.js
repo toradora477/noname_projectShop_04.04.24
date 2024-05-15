@@ -21,13 +21,23 @@ export const commonSlice = createSlice({
       state.products.sort((a, b) => b.i - a.i);
     },
     addProduct: (state, action) => {
-      (state.products ??= []).unshift(action.payload);
+      (state.products ?? []).unshift(action.payload);
+    },
+    deleteProduct: (state, action) => {
+      state.products = (state.products ?? []).filter((item) => item._id !== action.payload);
     },
     // setBasket: (state, action) => {
     //   state.basket = action.payload;
     // },
     addBasket: (state, action) => {
       (state.basket ??= []).unshift(action.payload);
+    },
+    removeBasket: (state, action) => {
+      const indexToRemove = state.basket.findIndex((item) => item === action.payload);
+
+      if (indexToRemove !== -1) {
+        (state.basket ?? []).splice(indexToRemove, 1);
+      }
     },
     setModal: (state, action) => {
       state.modal = {
@@ -38,9 +48,15 @@ export const commonSlice = createSlice({
     setUserAuth: (state, action) => {
       state.userAuth = action.payload;
     },
+    updateUserAuth: (state, action) => {
+      const { payload } = action;
+      if (!payload || typeof payload !== 'object') return;
+
+      state.userAuth = { ...(state.userAuth || {}), ...payload };
+    },
   },
 });
 
-export const { setProducts, addProduct, addBasket, setModal, setUserAuth } = commonSlice.actions;
+export const { setProducts, addProduct, deleteProduct, addBasket, setModal, setUserAuth, updateUserAuth, removeBasket } = commonSlice.actions;
 
 export default commonSlice.reducer;

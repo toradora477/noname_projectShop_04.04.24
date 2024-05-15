@@ -2,27 +2,13 @@ const router = require('express').Router();
 const multer = require('multer');
 const { getNextSequenceValue, ExtendedError } = require('../../tools');
 const { ObjectId } = require('mongodb');
-const { adminJWT } = require('../../middlewares/jwtAudit');
+const { adminJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 
-router.post('/info', (req, res, next) => {
-  try {
-    console.log('test 1');
-    console.log('test 2', req.body);
+const { uploadFileToStorage, downloadFileFromStorage } = require('../../services/fileUtils');
 
-    const transportationData = {
-      status: true,
-      library: 'test 3',
-    };
-
-    res.json(transportationData);
-  } catch (err) {
-    next(err);
-  }
-}); // TODO тестовий, прибрати
-
-router.get('/getListAllProducts', async (req, res, next) => {
+router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   try {
     const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
     const resultFind = await collection.find({}).toArray();
@@ -49,7 +35,16 @@ router.get('/getListAllProducts', async (req, res, next) => {
   }
 });
 
-router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).single('file'), async (req, res, next) => {
+router.get('/getFilePreview', guestJWT, async (req, res, next) => {
+  try {
+    const { fileID } = req.query;
+    await downloadFileFromStorage(res, COLLECTIONS.PRODUCTS, fileID);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).array('files', 20), async (req, res, next) => {
   try {
     const { productName, description, price, colors } = req.body;
     const { _id: userID } = req.user;
@@ -66,6 +61,20 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS),
     ];
 
+    const fileIdArray = [];
+
+    if (req.files) {
+      console.log(req.files);
+      req.loggingData = {
+        arrFile: req.files,
+      };
+
+      for (const file of req.files) {
+        const fileId = await uploadFileToStorage(COLLECTIONS.PRODUCTS, file); // Получаем идентификатор файла
+        fileIdArray.push(fileId); // Добавляем идентификатор файла в массив
+      }
+    }
+
     const newBodyProduct = {
       ...(productName ? { n: productName } : {}),
       ...(price ? { p: price } : {}),
@@ -73,6 +82,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       а: new ObjectId(userID),
       t: new Date(),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
+      ...(Array.isArray(fileIdArray) && fileIdArray.length > 0 ? { f: fileIdArray } : {}),
     };
 
     const resultInsertOne = await collection.insertOne(newBodyProduct);
@@ -91,6 +101,46 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
     req.loggingData = {
       log: 'Add new products',
       operation: 'insertOne for collection PRODUCTS',
+      'req.body': req.body,
+      result: transportationData.data,
+    };
+    res.status(200).json(transportationData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete('/:id', adminJWT, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id)
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
+
+    const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
+
+    const findDB = { _id: new ObjectId(id) };
+
+    const result = await collection.findOneAndDelete(findDB);
+
+    if (!result)
+      throw new ExtendedError({
+        messageLog: 'Poor collection findOneAndDelete result.',
+        messageJson: 'Помилка сервера. Не вдалося видалити продукт.',
+      });
+
+    const transportationData = {
+      status: true,
+      data: id,
+    };
+
+    req.loggingData = {
+      log: 'Deleted products',
+      operation: 'findOneAndDelete for collection PRODUCTS',
       'req.body': req.body,
       result: transportationData.data,
     };

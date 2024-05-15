@@ -12,6 +12,7 @@ const requestLogger = (req, res, next) => {
     const url = method === HTTP_METHODS.GET?.toUpperCase() ? req.originalUrl.split('?')[0] : req.originalUrl;
     const status = res.statusCode;
     const statusCategory = Math.floor(status / 100).toString();
+    const initiator = `${req.user?.role ?? 'guest'} - ${req.user?.email ?? 'anonymous'}`;
 
     let customLogInfo = req.loggingData || null;
 
@@ -39,6 +40,7 @@ const requestLogger = (req, res, next) => {
       method,
       status,
       duration: `${duration} seconds`,
+      initiator,
       ...(customLogInfo ? { [logLevel]: customLogInfo } : {}),
     };
 

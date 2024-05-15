@@ -1,0 +1,19 @@
+@import '../../common_constants/styles/colors.scss';
+
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.empty-icon {
+  margin-bottom: 16px;
+}
+
+.empty-description {
+  font-size: 16px;
+  color: $dark_gray;
+  text-align: center;
+}

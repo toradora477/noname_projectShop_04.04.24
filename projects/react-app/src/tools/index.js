@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { HTTP_METHODS } from '../common_constants/business';
 
+const { getFormattedDateWithRelativeDays } = require('./dateUtils');
+const { useClientViewData } = require('./hooks');
+
 const prepareUsers = (list) => {
   window.users = {};
   const _users = {};
   list.forEach?.((i) => {
-    window.users[i.username] = i;
+    window.users[i.email] = i;
     _users[i._id] = i;
   });
   return _users;
@@ -36,6 +39,13 @@ const request_platform = async (checkType, url, dataDynamic, callback, onError) 
           params: dataDynamic,
         });
         break;
+      case HTTP_METHODS.GET_IMAGE:
+        response = await axios.get(`${process.env.REACT_APP_API}${url}`, {
+          headers: headers,
+          params: dataDynamic,
+          responseType: 'blob',
+        });
+        break;
       case HTTP_METHODS.PUT:
         response = await axios.put(`${process.env.REACT_APP_API}${url}`, dataDynamic, {
           headers: headers,
@@ -50,7 +60,7 @@ const request_platform = async (checkType, url, dataDynamic, callback, onError) 
         break;
     }
 
-    if (!response.data.status) {
+    if (!response.data.status && !HTTP_METHODS.GET_IMAGE) {
       if (typeof onError === 'function') onError('', '', response.data);
       else {
         console.error(response.data.errorMessage, response.data);
@@ -74,6 +84,9 @@ const request = {
   async get(url, params, callback, onError) {
     await request_platform(HTTP_METHODS.GET, url, params, callback, onError);
   },
+  async getImage(url, params, callback, onError) {
+    await request_platform(HTTP_METHODS.GET_IMAGE, url, params, callback, onError);
+  },
   async put(url, data, callback, onError) {
     await request_platform(HTTP_METHODS.PUT, url, data, callback, onError);
   },
@@ -82,4 +95,4 @@ const request = {
   },
 };
 
-export { request, prepareUsers, getTokenData };
+export { request, prepareUsers, getTokenData, getFormattedDateWithRelativeDays, useClientViewData };

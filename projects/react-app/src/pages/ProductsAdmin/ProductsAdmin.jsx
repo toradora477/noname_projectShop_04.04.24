@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setModal } from '../../store/commonReducer';
 import ReactPaginate from 'react-paginate';
 import './ProductsAdmin.scss';
-import ProductAdminItem from './ProductAdminItem';
-import { PrimaryButton } from '../../components';
+
+import { PrimaryButton, Product } from '../../components';
 import { PRODUCT_ADD } from '../../common_constants/modals';
 
 const ProductsAdmin = () => {
@@ -28,11 +28,12 @@ const ProductsAdmin = () => {
 
   return (
     <div className="products-admin">
-      <PrimaryButton onClick={onBtnClickAddProduct} children="Додати новий продукт" color="blue" className="products-btn-add" />
+      <PrimaryButton onClick={onBtnClickAddProduct} children="Додати новий продукт" className="products-btn-add" />
       <br />
       <div className="product-list">
         {currentProducts.map((item) => (
-          <ProductAdminItem key={item._id} item={item} />
+          // <ProductAdminItem key={item._id} item={item} />
+          <Product key={item._id} item={item} />
         ))}
       </div>
       <br />

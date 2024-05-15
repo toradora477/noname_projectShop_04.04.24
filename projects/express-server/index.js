@@ -6,13 +6,18 @@ const { MongoClient } = require('mongodb');
 require('dotenv').config({ path: '.env' });
 
 const isDev = process.env.DEV === 'true';
-const getPort = process.env.PORT || 3005;
+const getPort = process.env.PORT || 80;
+const getDomen = process.env.DOMEN;
 const mongoClient = new MongoClient(process.env.MONGO_URL);
 
-const { log } = require('./tools');
+const { runInitialSettings, log } = require('./tools');
 const { prepareAllUsers } = require('./routes/auth/actions');
+const { initializeFirebase } = require('./services/fileUtils');
 
 const app = express();
+
+runInitialSettings();
+initializeFirebase();
 
 app.use(cors());
 app.use(express.json({ limit: '500mb' }));
@@ -22,22 +27,26 @@ app.use(require('./middlewares/requestLogger'));
 app.use(require('./configs/routesConfig'));
 app.use(require('./middlewares/handlersError'));
 
+app.get('/', (_, res) => {
+  res.send('hi');
+});
+
 mongoClient
   .connect()
   .then((mongoClient) => {
-    log.success('MongoDB connected successfully');
+    log.successServer('MongoDB connected successfully');
 
     prepareAllUsers(mongoClient);
 
     if (isDev) {
       app.listen(getPort, () => {
-        log.success(`The server is running on the port ${getPort}`);
-      }); // Listening port after successfully connecting to MongoDB
+        log.successServer(`The server is running on the port ${getPort}`);
+      });
     } else {
-      // https.createServer(getCredentials(defaultCredentialsPath), app).listen(getPort, () => {
-      //   log.success(`API service started on port ${getPort}`);
-      // });
-      // TODO тут треба перехід на продакшен
+      app.listen(getPort, getDomen, () => {
+        log.successServer(`The server is running on the port ${getPort}`);
+      });
+      // TODO тут треба перехід на продакшен + використати сервер AWS
     }
 
     app.locals.client = mongoClient;
@@ -45,4 +54,4 @@ mongoClient
   .catch((err) => {
     log.error('Error connecting to MongoDB:', err);
     process.exit(1);
-  }); // Connect to MongoDB when the server starts
+  });

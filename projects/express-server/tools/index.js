@@ -21,9 +21,21 @@ const getNextSequenceValue = async (sequenceName, collection) => {
   return sequenceDocument.value;
 };
 
+const runInitialSettings = () => {
+  if (!process.env.TOKEN_SECRET) log.errorServer('TOKEN_SECRET empty');
+  if (!process.env.MONGO_URL) log.errorServer('MONGO_URL empty');
+
+  logger.setSymbols({
+    ok: '[server]',
+  });
+};
+
 const log = {
   success: (rest) => {
-    logger.success(rest);
+    logger.success('Success: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
+  },
+  successServer: (rest) => {
+    logger.ok(rest);
   },
   debug: (rest) => {
     logger.debug('Debug: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
@@ -36,6 +48,9 @@ const log = {
   },
   error: (rest) => {
     logger.error('Error: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
+  },
+  errorServer: (rest) => {
+    logger.error(rest);
   },
   show: (rest) => {
     logger.show(rest);
@@ -79,8 +94,10 @@ class ExtendedError extends Error {
     return jsonError;
   }
 }
+
 module.exports = {
   log,
   ExtendedError,
   getNextSequenceValue,
+  runInitialSettings,
 };

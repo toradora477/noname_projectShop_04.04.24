@@ -1,92 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { updateUserAuth } from '../../../../store/commonReducer';
 import { PrimaryButton, Typography, Box, FlexBox } from '../../../../components';
+import { ROLES } from '../../../../common_constants/business';
 import { request } from '../../../../tools';
+
 import '../../PersonalOffice.scss';
 
 const CardAccount = () => {
+  const dispatch = useDispatch();
+
+  const userAuth = useSelector((state) => state.common.userAuth),
+    { role = 'guest' } = userAuth,
+    isClient = ROLES[role] === ROLES.client;
+
   const [Title, Label] = [
     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
   ];
 
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [city, setCity] = useState('');
-  const [region, setRegion] = useState('');
-  const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
-  const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
+  const [password, setPassword] = useState(userAuth?.password ?? '');
+  const [email, setEmail] = useState(userAuth?.password ?? '');
+  const [firstName, setFirstName] = useState(userAuth?.firstName ?? '');
+  const [lastName, setLastName] = useState(userAuth?.lastName ?? '');
+  const [phoneNumber, setPhoneNumber] = useState(userAuth?.phoneNumber ?? '');
+  const [city, setCity] = useState(userAuth?.city ?? '');
+  const [region, setRegion] = useState(userAuth?.region ?? '');
+  // const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
+  // const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
+  const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
+  const handleCityChange = (e) => setCity(e.target.value);
+  const handleRegionChange = (e) => setRegion(e.target.value);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
-  };
-
-  const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
-  };
-
-  const handleCityChange = (e) => {
-    setCity(e.target.value);
-  };
-
-  const handleRegionChange = (e) => {
-    setRegion(e.target.value);
-  };
-
-  const handleNovaPoshtaBranchChange = (e) => {
-    setSelectedNovaPoshtaBranch(e.target.value);
-  };
+  // const handleNovaPoshtaBranchChange = (e) => {
+  //   setSelectedNovaPoshtaBranch(e.target.value);
+  // };
 
   const onSubmit = () => {
     const body = {
-      username: email,
+      email: email,
       password: password,
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
       city: city,
       region: region,
-      novaPoshtaBranch: selectedNovaPoshtaBranch,
+      // novaPoshtaBranch: selectedNovaPoshtaBranch,
     };
 
     const filteredBody = Object.fromEntries(Object.entries(body).filter(([key, value]) => value !== ''));
 
     request.post(
-      '/auth/editUser',
+      '/auth/editAccount',
       filteredBody,
-      (response) => {
-        console.log('Дані успішно відправлені:', response);
+      (res) => {
+        dispatch(updateUserAuth(res.data));
       },
       (error) => {
         console.error('Помилка відправлення даних:', error);
       },
     );
   };
-
-  // request.post(
-  //   '/api/getNovaPoshtaBranches',
-  //   {},
-  //   (response) => {
-  //     console.log('Дані успішно відправлені:', response);
-  //   },
-  //   (error) => {
-  //     console.error('Помилка відправлення даних:', error);
-  //   },
-  // );
 
   return (
     <div>
@@ -149,36 +129,41 @@ const CardAccount = () => {
           <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
         </Box>
       </FlexBox>
-      <Title mt={32} children="Доставка" />
-      <FlexBox mt={12}>
-        <Box className="input-group">
-          <Label>Місто</Label>
-          <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
-        </Box>
-        &nbsp;&nbsp;
-        <Box className="input-group">
-          <Label>Область</Label>
-          <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
-        </Box>
-      </FlexBox>
+      {isClient && (
+        <Fragment>
+          <Title mt={32} children="Доставка" />
+          <FlexBox mt={12}>
+            <Box className="input-group">
+              <Label>Місто</Label>
+              <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
+            </Box>
+            &nbsp;&nbsp;
+            <Box className="input-group">
+              <Label>Область</Label>
+              <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
+            </Box>
+          </FlexBox>
 
-      <Box className="input-group">
-        <Label>Відділення Нової Пошти</Label>
-        <select
-          aria-label="novaPoshtaBranch"
-          id="novaPoshtaBranch"
-          name="novaPoshtaBranch"
-          value={selectedNovaPoshtaBranch}
-          onChange={handleNovaPoshtaBranchChange}
-        >
-          <option value="">Оберіть відділення Нової Пошти</option>
-          {novaPoshtaBranches.map((branch) => (
-            <option key={branch.id} value={branch.name}>
-              {branch.name}
-            </option>
-          ))}
-        </select>
-      </Box>
+          {/* <Box className="input-group">
+            <Label>Відділення Нової Пошти</Label>
+            <select
+              aria-label="novaPoshtaBranch"
+              id="novaPoshtaBranch"
+              name="novaPoshtaBranch"
+              value={selectedNovaPoshtaBranch}
+              onChange={handleNovaPoshtaBranchChange}
+            >
+              <option value="">Оберіть відділення Нової Пошти</option>
+              {novaPoshtaBranches.map((branch) => (
+                <option key={branch.id} value={branch.name}>
+                  {branch.name}
+                </option>
+              ))}
+            </select>
+          </Box> */}
+        </Fragment>
+      )}
+
       <PrimaryButton onClick={onSubmit} mt={32}>
         Зберегти зміни
       </PrimaryButton>

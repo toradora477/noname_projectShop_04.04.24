@@ -1,0 +1,15 @@
+@import '../../common_constants/styles/colors.scss';
+
+.divider-container {
+  display: flex;
+  align-items: center;
+
+  .divider-line {
+    flex-grow: 1;
+    border-bottom: 1px solid $dark_gray;
+  }
+
+  .divider-text {
+    padding: 0 10px;
+  }
+}

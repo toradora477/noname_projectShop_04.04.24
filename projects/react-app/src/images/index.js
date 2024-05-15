@@ -27,3 +27,4 @@ export { default as icons8_like_96 } from './icons8_like_96.png';
 export { default as icons8_pants_96 } from './icons8_pants_96.png';
 export { default as icons8_shoes_96 } from './icons8_shoes_96.png';
 export { default as icons8_t_shirt_96 } from './icons8_t_shirt_96.png';
+export { default as icon_empty_box } from './icon_empty_box.svg';
