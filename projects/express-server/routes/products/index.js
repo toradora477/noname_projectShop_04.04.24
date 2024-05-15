@@ -5,16 +5,11 @@ const { ObjectId } = require('mongodb');
 const { adminJWT, guestJWT } = require('../../middlewares/jwtAudit');
 const path = require('path');
 const { DB, COLLECTIONS } = require('../../common_constants/db');
-const fs = require('fs');
 
 const { uploadFileToStorage, downloadFileFromStorage } = require('../../services/fileUtils');
 
 router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   try {
-    const fileID = undefined; // TODO тестове
-
-    await downloadFileFromStorage(COLLECTIONS.PRODUCTS, fileID);
-
     const collection = req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS);
     const resultFind = await collection.find({}).toArray();
 
@@ -40,9 +35,13 @@ router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
   }
 });
 
-router.get('/getFilePreview', guestJWT, async (req, res) => {
-  const fileID = undefined;
-  downloadFileFromStorage(req, res, COLLECTIONS.PRODUCTS, fileID);
+router.get('/getFilePreview', guestJWT, async (req, res, next) => {
+  try {
+    const { fileID } = req.query;
+    await downloadFileFromStorage(res, COLLECTIONS.PRODUCTS, fileID);
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).array('files', 20), async (req, res, next) => {
@@ -62,6 +61,8 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS),
     ];
 
+    const fileIdArray = [];
+
     if (req.files) {
       console.log(req.files);
       req.loggingData = {
@@ -69,7 +70,8 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       };
 
       for (const file of req.files) {
-        await uploadFileToStorage(COLLECTIONS.PRODUCTS, file);
+        const fileId = await uploadFileToStorage(COLLECTIONS.PRODUCTS, file); // Получаем идентификатор файла
+        fileIdArray.push(fileId); // Добавляем идентификатор файла в массив
       }
     }
 
@@ -80,6 +82,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       а: new ObjectId(userID),
       t: new Date(),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
+      ...(Array.isArray(fileIdArray) && fileIdArray.length > 0 ? { f: fileIdArray } : {}),
     };
 
     const resultInsertOne = await collection.insertOne(newBodyProduct);

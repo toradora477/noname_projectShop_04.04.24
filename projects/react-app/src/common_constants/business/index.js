@@ -17,6 +17,7 @@ const HTTP_METHODS = {
   GET: 'get',
   PUT: 'put',
   PATCH: 'patch',
+  GET_IMAGE: 'getImage', // get
 };
 
 const ROLES = {

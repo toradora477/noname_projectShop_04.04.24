@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { request } from '../../tools';
 import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_gray, img_test_murder } from '../../images';
-import { Spin } from '../';
+import { Spin, PreviewImage } from '../';
 import './Product.scss';
 
 import { PrimaryButton } from '../';
@@ -74,6 +74,7 @@ const Product = ({ item }) => {
         )}
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           <img src={validImageProduct} alt="product" className="product-main-image" />
+          <PreviewImage fileID={item?.f?.[0]} />
         </Link>
         <h3>{item.n}</h3>
         <p>${item.p}</p>

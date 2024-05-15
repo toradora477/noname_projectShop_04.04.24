@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { request } from '../../tools';
 import { Spin } from '../';
 
 import './PreviewImage.scss';
 
-const PreviewImage = ({ item, formatFile, nameZone }) => {
-  const token = window.localStorage.getItem('clientAccessToken');
-
-  const params = useParams();
-  const clientInfo = useSelector((state) => state.common.clientInfo) ?? [];
-
+const PreviewImage = ({ fileID }) => {
   const [red, green, blue] = ['#f5222d', '#52c41a', '#1677ff'];
 
   const core_megaState = {
@@ -22,13 +15,15 @@ const PreviewImage = ({ item, formatFile, nameZone }) => {
     [megaState, setMegaState] = useState(core_megaState);
 
   useEffect(() => {
+    if (!fileID) return setMegaState((prev) => ({ ...prev, err: true, loading: true }));
     const timerId = setTimeout(() => {
-      const transactionData = {
-        fileId: item,
+      const body = {
+        fileID: fileID,
       };
 
-      request.get('/getFilePreview/', item._id, (res) => {
-        const blob = res.blob();
+      request.getImage('/products/getFilePreview', body, (res) => {
+        console.log('/products/getFilePreview', res);
+        const blob = res;
         const url = URL.createObjectURL(blob);
 
         setMegaState((prev) => ({ ...prev, url: url, status: green.primary, loading: false }));

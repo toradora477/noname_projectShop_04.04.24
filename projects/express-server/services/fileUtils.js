@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('../firebase-adminsdk.json');
-const path = require('path');
 const { Readable } = require('stream');
 const mime = require('mime-types');
 const { v4: uuidv4 } = require('uuid');
@@ -42,41 +41,38 @@ const uploadFileToStorage = async (folder, file) => {
     const bufferStream = new Readable();
     bufferStream.push(fileContent);
     bufferStream.push(null);
-
     bufferStream.pipe(fileWriteStream);
 
     await new Promise((resolve, reject) => {
-      fileWriteStream.on('finish', async () => {
-        try {
-          const _metadata = await storageFile.getMetadata();
-          const _fileId = _metadata[0].id;
-          console.log('ID загруженного файла:', _fileId); //? noname-shop-84557.appspot.com/products/9bc06894-c268-49a1-94d6-c1884ac0de50_Screenshot_53.png/1715717849699824
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      });
+      fileWriteStream.on('finish', resolve);
       fileWriteStream.on('error', reject);
     });
 
-    fs.unlinkSync(file.path);
+    const _metadata = await storageFile.getMetadata();
+    const _fileId = _metadata[0].id;
+    console.log('ID завантаженого файлу:', _fileId);
 
-    console.log('Файл успішно завантажений у Firebase Storage.');
+    try {
+      fs.unlinkSync(file.path);
+      console.log('Файл успішно видалений.');
+    } catch (error) {
+      console.error('Помилка при видаленні файлу:', error);
+    }
+
+    console.log('Файл успішно завантажений в Firebase Storage.');
+    return _fileId;
   } catch (error) {
     throw error;
   }
 };
 
-const downloadFileFromStorage = async (
-  folder,
-  fileId = 'noname-shop-84557.appspot.com/products/9bc06894-c268-49a1-94d6-c1884ac0de50_Screenshot_53.png/1715717849699824',
-) => {
+const downloadFileFromStorage = async (res, folder, fileId) => {
   try {
     if (![folder, fileId].every(Boolean)) {
       throw new ExtendedError({
-        messageLog: 'Invalid file for upload.',
+        messageLog: 'Invalid file for download.',
         code: 400,
-        messageJson: 'Некоректний файл для завантаження на сервер.',
+        messageJson: 'Некоректний файл для завантаження з сервера.',
       });
     }
 
@@ -84,10 +80,8 @@ const downloadFileFromStorage = async (
 
     const [files] = await storage.bucket().getFiles({ prefix: folder });
 
-    // Ищем файл по его ID
     const file = files.find((file) => {
       const id = file?.metadata?.id;
-
       return id === fileId;
     });
 
@@ -99,15 +93,11 @@ const downloadFileFromStorage = async (
       });
     }
 
-    const currentDir = __dirname;
-    const tempFileName = 'temp.png';
-    const tempFilePath = path.join(currentDir, tempFileName);
+    const fileStream = file.createReadStream();
 
-    await file.download({
-      destination: tempFilePath,
-    });
+    res.setHeader('Content-Type', 'image/png');
 
-    console.log('Файл успішно завантажений на сервер.');
+    fileStream.pipe(res);
   } catch (error) {
     throw error;
   }
