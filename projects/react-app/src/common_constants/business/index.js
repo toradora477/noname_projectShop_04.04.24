@@ -1,4 +1,6 @@
-const COMPANY_NAME = 'The Dressery Store'; // TODO Змінити на реальні дані
+const { icons8_t_shirt_96, icons8_shoes_96, icons8_pants_96, icons8_cap_96 } = require('../../images');
+
+const COMPANY_NAME = 'The Dressery Store';
 
 const WORKING_HOURS = {
   START_DAY: '11:00',
@@ -32,6 +34,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 0,
     label: 'Верхній одяг',
+    img: icons8_t_shirt_96,
     subcategories: [
       // ТЕПЛИЙ ОДЯГ
       { value: 0, label: 'Куртки' },
@@ -48,6 +51,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 1,
     label: 'Нижній одяг',
+    img: icons8_pants_96,
     subcategories: [
       // ПОВСЯКДЕННИЙ ОДЯГ
       { value: 0, label: 'Штани' },
@@ -59,6 +63,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 2,
     label: 'Взуття',
+    img: icons8_shoes_96,
     subcategories: [
       // ВЗУТТЯ
       { value: 0, label: 'Кросівки' },
@@ -70,6 +75,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 3,
     label: 'Аксесуари',
+    img: icons8_cap_96,
     subcategories: [
       // ГОЛОВНІ УБОРИ
       { value: 0, label: 'Кепки' },

@@ -34,17 +34,17 @@ app.get('/', (_, res) => {
 mongoClient
   .connect()
   .then((mongoClient) => {
-    log.successServer('MongoDB connected successfully');
+    log.serverSuccess('MongoDB connected successfully');
 
     prepareAllUsers(mongoClient);
 
     if (isDev) {
       app.listen(getPort, () => {
-        log.successServer(`The server is running on the port ${getPort}`);
+        log.serverSuccess(`The server is running on the port ${getPort}`);
       });
     } else {
       app.listen(getPort, getDomen, () => {
-        log.successServer(`The server is running on the port ${getPort}`);
+        log.serverSuccess(`The server is running on the port ${getPort}`);
       });
       // TODO тут треба перехід на продакшен + використати сервер AWS
     }
@@ -52,6 +52,6 @@ mongoClient
     app.locals.client = mongoClient;
   })
   .catch((err) => {
-    log.error('Error connecting to MongoDB:', err);
+    log.serverError('Error connecting to MongoDB:', err);
     process.exit(1);
   });
