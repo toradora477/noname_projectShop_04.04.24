@@ -24,4 +24,11 @@
   .product-second-image {
     margin-bottom: 10px; /* добавляем отступ между изображениями */
   }
+
+  .btn-no-border {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
 }

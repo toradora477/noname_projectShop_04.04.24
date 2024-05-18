@@ -95,6 +95,11 @@ const NAME_SELECT = {
   BASKETLIST: 'Кошик',
 };
 
+const ACTION = {
+  ADD: 'add',
+  REMOVE: 'remove',
+};
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
@@ -105,4 +110,5 @@ module.exports = {
   PRODUCT_CATEGORIES,
   NAME_SELECT,
   ERROR_IMAGE_URL,
+  ACTION,
 };

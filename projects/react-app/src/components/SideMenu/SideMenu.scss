@@ -1,37 +1,5 @@
 @import '../../common_constants/styles/colors.scss';
 
-// .side-menu {
-//   left: 0;
-//   top: 0;
-//   bottom: 0;
-//   border-right: 1px solid $light_primary;
-
-//   .container {
-//     margin: 20px 10px;
-//     display: flex;
-//     flex-direction: column;
-
-//     .btn-first {
-//       background-color: transparent;
-//       border: none;
-//       padding: 0;
-//       margin: 0px 0px 30px 0px;
-//       cursor: pointer;
-//     }
-//   }
-//   width: 60px;
-
-//   -webkit-transition: width 0.3s ease;
-//   -moz-transition: width 0.3s ease;
-//   -ms-transition: width 0.3s ease;
-//   -o-transition: width 0.3s ease;
-//   transition: width 0.3s ease;
-// }
-
-// .side-menu.expanded {
-//   width: 200px; /* Ширина меню після розширення */
-// }
-
 .side-menu {
   left: 0;
   top: 0;
