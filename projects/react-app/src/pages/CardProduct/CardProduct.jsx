@@ -17,6 +17,10 @@ const CardProduct = () => {
   const [loadingBuyNow, setLoadingBuyNow] = useState(false);
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
 
+  const accessRoles = useSelector((state) => state.common.accessRoles);
+
+  console.log(accessRoles);
+
   const products = useSelector((state) => state.common.products) ?? [];
 
   const item = products.find((item) => item._id === productId);

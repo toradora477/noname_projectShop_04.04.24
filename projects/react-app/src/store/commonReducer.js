@@ -1,15 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ACCESS_TOKEN } from '../common_constants/business';
 import { getTokenData } from '../tools';
+import { ROLES } from '../common_constants/business';
 
 const userToken = window.localStorage.getItem(ACCESS_TOKEN);
 const userAuth = getTokenData(userToken);
+
+const getAccessRoles = (role) => {
+  const normalizedRole = role || ROLES.guest;
+  return {
+    isAdmin: ROLES[normalizedRole] === ROLES.admin,
+    isNotAdmin: ROLES[normalizedRole] !== ROLES.admin,
+    isClientOrAbove: ROLES[normalizedRole] <= ROLES.client,
+  };
+};
 
 const initialState = {
   modal: { name: '', data: {} },
   basket: null,
   products: null,
   userAuth: userAuth && { ...userAuth, token: userToken },
+  accessRoles: userAuth ? getAccessRoles(userAuth.role) : getAccessRoles(ROLES.guest),
 };
 
 export const commonSlice = createSlice({
@@ -47,12 +58,14 @@ export const commonSlice = createSlice({
     },
     setUserAuth: (state, action) => {
       state.userAuth = action.payload;
+      state.accessRoles = getAccessRoles(action.payload?.role);
     },
     updateUserAuth: (state, action) => {
       const { payload } = action;
       if (!payload || typeof payload !== 'object') return;
 
       state.userAuth = { ...(state.userAuth || {}), ...payload };
+      state.accessRoles = getAccessRoles(payload.role);
     },
   },
 });
