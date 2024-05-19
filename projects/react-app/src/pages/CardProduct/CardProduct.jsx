@@ -161,7 +161,7 @@ const CardProduct = () => {
           {isClient && (
             <Spin spinning={loadingPutWishList}>
               <button className="btn-no-border" onClick={onPutWishList}>
-                <BtnText>Додати до списку бажань</BtnText>
+                <BtnText>Додати до списку бажань {item.isFavorite ? '(так)' : '(ні)'}</BtnText>
               </button>
             </Spin>
           )}

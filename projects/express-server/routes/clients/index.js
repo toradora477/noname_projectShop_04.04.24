@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { DB, COLLECTIONS } = require('../../common_constants/db');
 const { authenticateJWT } = require('../../middlewares/jwtAudit');
-const { ExtendedError, getNextSequenceValue } = require('../../tools');
+const { ExtendedError } = require('../../tools');
 const { ObjectId } = require('mongodb');
 const { ACTION } = require('../../common_constants/business');
 
