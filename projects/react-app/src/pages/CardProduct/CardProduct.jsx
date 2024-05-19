@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
-import { addBasket } from '../../store/commonReducer';
+import { addFavoriteProduct, addBasket, removeFavoriteProduct } from '../../store/commonReducer';
 import './CardProduct.scss';
 import { Card, Typography, FlexBox, PrimaryButton, Spin } from '../../components';
 import { ACTION } from '../../common_constants/business';
@@ -17,13 +17,31 @@ const CardProduct = () => {
   const [loadingBuyNow, setLoadingBuyNow] = useState(false);
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
 
-  const accessRoles = useSelector((state) => state.common.accessRoles);
-
-  console.log(accessRoles);
+  const { isClient } = useSelector((state) => state.common.accessRoles);
 
   const products = useSelector((state) => state.common.products) ?? [];
+  const userAuth = useSelector((state) => state.common.userAuth);
 
-  const item = products.find((item) => item._id === productId);
+  // const item = products.find((item) => item._id === productId);
+  // if (item) {
+  //   item.isFavorite = userAuth?.fav?.includes(item._id) ?? false;
+  // }
+
+  // Добавляем свойство isFavorite ко всем продуктам
+  const productsWithFavoriteStatus = products.map((product) => ({
+    ...product,
+    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
+  }));
+
+  // Находим нужный продукт с уже обновленным свойством isFavorite
+  const item = productsWithFavoriteStatus.find((item) => item._id === productId);
+
+  //  const productsWithFavoriteStatus = products.map((product) => ({
+  //    ...product,
+  //    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
+  //  }));
+
+  console.log('item', item);
 
   if (!item) {
     history.push(ROUTES.ERROR404);
@@ -77,8 +95,14 @@ const CardProduct = () => {
   const onPutWishList = () => {
     setLoadingPutWishList(true);
     console.log('on Put Wish List');
-    handleToFavorites(item._id, ACTION.ADD);
-    handleToFavorites(item._id, ACTION.REMOVE);
+
+    handleToFavorites(
+      item._id,
+
+      // item.isFavorite ? ACTION.ADD : ACTION.REMOVE,
+      ACTION[item.isFavorite ? 'REMOVE' : 'ADD'],
+    );
+    // handleToFavorites(item._id, ACTION.REMOVE);
     setLoadingPutWishList(false);
   };
 
@@ -90,6 +114,8 @@ const CardProduct = () => {
       data,
       (response) => {
         console.log('Added to favorites:', response);
+        if (action === ACTION.ADD) dispatch(addFavoriteProduct(productId));
+        else if (action === ACTION.REMOVE) dispatch(removeFavoriteProduct(productId));
       },
       (error) => {
         console.error('Error adding to favorites:', error);
@@ -132,11 +158,13 @@ const CardProduct = () => {
           <Spin spinning={loadingAddBasket}>
             <PrimaryButton className="primary" mt={8} children="Додати в кошик" onClick={onPutBasket} />
           </Spin>
-          <Spin spinning={loadingPutWishList}>
-            <button className="btn-no-border" onClick={onPutWishList}>
-              <BtnText>Додати до списку бажань</BtnText>
-            </button>
-          </Spin>
+          {isClient && (
+            <Spin spinning={loadingPutWishList}>
+              <button className="btn-no-border" onClick={onPutWishList}>
+                <BtnText>Додати до списку бажань</BtnText>
+              </button>
+            </Spin>
+          )}
         </Card>
       </FlexBox>
       <br />

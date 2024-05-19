@@ -12,6 +12,7 @@ const getAccessRoles = (role) => {
     isAdmin: ROLES[normalizedRole] === ROLES.admin,
     isNotAdmin: ROLES[normalizedRole] !== ROLES.admin,
     isClientOrAbove: ROLES[normalizedRole] <= ROLES.client,
+    isClient: ROLES[role] === ROLES.client,
   };
 };
 
@@ -67,9 +68,34 @@ export const commonSlice = createSlice({
       state.userAuth = { ...(state.userAuth || {}), ...payload };
       state.accessRoles = getAccessRoles(payload.role);
     },
+    addFavoriteProduct: (state, action) => {
+      const productId = action.payload;
+      if (!state.userAuth) return;
+      if (!state.userAuth.fav) {
+        state.userAuth.fav = [productId];
+      } else if (!state.userAuth.fav.includes(productId)) {
+        state.userAuth.fav.push(productId);
+      }
+    },
+    removeFavoriteProduct: (state, action) => {
+      const productId = action.payload;
+      if (!state.userAuth || !state.userAuth.fav) return;
+      state.userAuth.fav = state.userAuth.fav.filter((id) => id !== productId);
+    },
   },
 });
 
-export const { setProducts, addProduct, deleteProduct, addBasket, setModal, setUserAuth, updateUserAuth, removeBasket } = commonSlice.actions;
+export const {
+  setProducts,
+  addProduct,
+  deleteProduct,
+  addBasket,
+  setModal,
+  setUserAuth,
+  updateUserAuth,
+  removeBasket,
+  addFavoriteProduct,
+  removeFavoriteProduct,
+} = commonSlice.actions;
 
 export default commonSlice.reducer;

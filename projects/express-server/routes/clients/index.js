@@ -5,7 +5,7 @@ const { ExtendedError, getNextSequenceValue } = require('../../tools');
 const { ObjectId } = require('mongodb');
 const { ACTION } = require('../../common_constants/business');
 
-router.get('/changeFavorites', authenticateJWT, async (req, res, next) => {
+router.patch('/changeFavorites', authenticateJWT, async (req, res, next) => {
   try {
     const { productId, action } = req.body;
 
@@ -53,7 +53,7 @@ router.get('/changeFavorites', authenticateJWT, async (req, res, next) => {
     req.setLoggingData({
       log: `${action} favorites product`,
       operation: 'update for collection CLIENTS',
-      dataLength: result ?? null,
+      result: result ?? null,
     });
     res.status(200).json(transportationData);
   } catch (err) {
