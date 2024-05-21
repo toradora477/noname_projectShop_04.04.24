@@ -14,3 +14,5 @@ export { default as Empty } from './Empty';
 export { default as List } from './List';
 export { default as Divider } from './Divider';
 export { default as PreviewImage } from './PreviewImage';
+export { default as SizeSquare } from './SizeSquare';
+export { default as ColorSquare } from './ColorSquare';

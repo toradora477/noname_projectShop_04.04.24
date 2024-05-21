@@ -4,10 +4,55 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
 import { addFavoriteProduct, addBasket, removeFavoriteProduct } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin } from '../../components';
+import { Card, Typography, FlexBox, PrimaryButton, Spin, SizeSquare, ColorSquare } from '../../components';
 import { ACTION } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request } from '../../tools';
+
+import { SketchPicker } from 'react-color';
+
+const ColorPicker = ({ initialColor, onChange }) => {
+  const [color, setColor] = useState(initialColor);
+  const [showPicker, setShowPicker] = useState(false);
+
+  const handleChangeComplete = (color) => {
+    setColor(color.hex);
+    if (onChange) {
+      onChange(color.hex);
+    }
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          width: '36px',
+          height: '14px',
+          borderRadius: '2px',
+          backgroundColor: color,
+          border: '1px solid #000',
+          cursor: 'pointer',
+        }}
+        onClick={() => setShowPicker(!showPicker)}
+      />
+      {showPicker && (
+        <div style={{ position: 'absolute', zIndex: 2 }}>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            }}
+            onClick={() => setShowPicker(false)}
+          />
+          <SketchPicker color={color} onChangeComplete={handleChangeComplete} />
+        </div>
+      )}
+    </div>
+  );
+};
 
 const CardProduct = () => {
   const dispatch = useDispatch();
@@ -16,6 +61,7 @@ const CardProduct = () => {
   const [loadingAddBasket, setLoadingAddBasket] = useState(false);
   const [loadingBuyNow, setLoadingBuyNow] = useState(false);
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
+  const [selectedColor, setSelectedColor] = useState('#1890ff');
 
   const { isClient } = useSelector((state) => state.common.accessRoles);
 
@@ -70,11 +116,13 @@ const CardProduct = () => {
   const sizeProduct = (
     <Fragment>
       <Text mt={8}>Розмір:&nbsp;</Text>
+      <SizeSquare />
     </Fragment>
   );
   const colorProduct = (
     <Fragment>
       <Text mt={8}>Колір:&nbsp;</Text>
+      <ColorSquare />
     </Fragment>
   );
 
@@ -139,10 +187,12 @@ const CardProduct = () => {
   //   });
   // };
 
+  const handleColorChange = (newColor) => {
+    setSelectedColor(newColor);
+  };
+
   return (
     <div className="card-product">
-      <br />
-      Інфо товару
       <FlexBox>
         <GroupImage />
         <Card pl={35}>
@@ -165,6 +215,11 @@ const CardProduct = () => {
               </button>
             </Spin>
           )}
+          <div style={{ padding: '20px' }}>
+            <h1>Custom Color Picker</h1>
+            <ColorPicker initialColor={selectedColor} onChange={handleColorChange} />
+            <p>Selected Color: {selectedColor}</p>
+          </div>
         </Card>
       </FlexBox>
       <br />

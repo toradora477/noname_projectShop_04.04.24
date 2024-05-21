@@ -7,27 +7,44 @@ const userToken = window.localStorage.getItem(ACCESS_TOKEN);
 const userAuth = getTokenData(userToken);
 
 const getAccessRoles = (role) => {
-  const normalizedRole = role || ROLES.guest;
+  const normalizedRole = role || 'guest';
   return {
     isAdmin: ROLES[normalizedRole] === ROLES.admin,
     isNotAdmin: ROLES[normalizedRole] !== ROLES.admin,
     isClientOrAbove: ROLES[normalizedRole] <= ROLES.client,
-    isClient: ROLES[role] === ROLES.client,
+    isClient: ROLES[normalizedRole] === ROLES.client,
   };
 };
 
 const initialState = {
   modal: { name: '', data: {} },
+  userAuth: userAuth && { ...userAuth, token: userToken },
+  accessRoles: userAuth ? getAccessRoles(userAuth.role) : getAccessRoles('guest'),
   basket: null,
   products: null,
-  userAuth: userAuth && { ...userAuth, token: userToken },
-  accessRoles: userAuth ? getAccessRoles(userAuth.role) : getAccessRoles(ROLES.guest),
 };
 
 export const commonSlice = createSlice({
   name: 'common',
   initialState,
   reducers: {
+    setModal: (state, action) => {
+      state.modal = {
+        ...action.payload,
+        prev: action.payload?.prev || (state.modal.name ? state.modal : undefined),
+      };
+    },
+    setUserAuth: (state, action) => {
+      state.userAuth = action.payload;
+      state.accessRoles = getAccessRoles(action.payload?.role);
+    },
+    updateUserAuth: (state, action) => {
+      const { payload } = action;
+      if (!payload || typeof payload !== 'object') return;
+
+      state.userAuth = { ...(state.userAuth || {}), ...payload };
+      state.accessRoles = getAccessRoles(payload.role);
+    },
     setProducts: (state, action) => {
       state.products = action.payload;
       state.products.sort((a, b) => b.i - a.i);
@@ -51,23 +68,6 @@ export const commonSlice = createSlice({
         (state.basket ?? []).splice(indexToRemove, 1);
       }
     },
-    setModal: (state, action) => {
-      state.modal = {
-        ...action.payload,
-        prev: action.payload?.prev || (state.modal.name ? state.modal : undefined),
-      };
-    },
-    setUserAuth: (state, action) => {
-      state.userAuth = action.payload;
-      state.accessRoles = getAccessRoles(action.payload?.role);
-    },
-    updateUserAuth: (state, action) => {
-      const { payload } = action;
-      if (!payload || typeof payload !== 'object') return;
-
-      state.userAuth = { ...(state.userAuth || {}), ...payload };
-      state.accessRoles = getAccessRoles(payload.role);
-    },
     addFavoriteProduct: (state, action) => {
       const productId = action.payload;
       if (!state.userAuth) return;
@@ -86,13 +86,13 @@ export const commonSlice = createSlice({
 });
 
 export const {
+  setModal,
+  setUserAuth,
+  updateUserAuth,
   setProducts,
   addProduct,
   deleteProduct,
   addBasket,
-  setModal,
-  setUserAuth,
-  updateUserAuth,
   removeBasket,
   addFavoriteProduct,
   removeFavoriteProduct,
