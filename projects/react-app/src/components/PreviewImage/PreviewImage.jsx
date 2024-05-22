@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { request } from '../../tools';
 import { Spin } from '../';
+import clsx from 'clsx';
 import { ERROR_IMAGE_URL } from '../../common_constants/business';
 import './PreviewImage.scss';
 
-const PreviewImage = ({ fileID }) => {
+const PreviewImage = ({ fileID, style, className }) => {
   const core_megaState = {
       loading: true,
       url: '',
@@ -32,17 +33,19 @@ const PreviewImage = ({ fileID }) => {
   }, []);
 
   const imgDrive = megaState.loading ? (
-    <div className="loading-spinner">
+    <div style={{ ...style }} className={clsx('loading-spinner', className)}>
       <Spin spinning={megaState.loading} />
     </div>
   ) : (
-    <img src={megaState.url} className="img-drive" alt="file view" />
+    <img style={{ ...style }} src={megaState.url} className={clsx('img-drive', className)} alt="file view" />
   );
 
   return megaState.loading && megaState.err ? (
-    <img src={ERROR_IMAGE_URL} className="img-drive" alt="file view" />
+    <img style={{ ...style }} src={ERROR_IMAGE_URL} className={clsx('img-drive', className)} alt="file view" />
   ) : (
-    <div className="preview-image">{imgDrive}</div>
+    <div style={{ ...style }} className={clsx('preview-image', className)}>
+      {imgDrive}
+    </div>
   );
 };
 

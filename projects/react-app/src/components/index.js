@@ -16,3 +16,4 @@ export { default as Divider } from './Divider';
 export { default as PreviewImage } from './PreviewImage';
 export { default as SizeSquare } from './SizeSquare';
 export { default as ColorSquare } from './ColorSquare';
+export { default as ColorPicker } from './ColorPicker';

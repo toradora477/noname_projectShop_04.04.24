@@ -30,7 +30,8 @@ const RouterSwitch = () => {
       <Route exact path={`${ROUTES.CARD_PRODUCT}/:productId`} component={CardProduct} />
       <Route exact path={ROUTES.ERROR404} component={Error404} />
 
-      <Route component={Error404} />
+      {/* <Route component={Error404} /> */}
+      {/* // TODO Виключив ерор на час розробки */}
     </Switch>
   );
 };

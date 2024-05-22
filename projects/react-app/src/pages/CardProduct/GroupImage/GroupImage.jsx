@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import '../CardProduct.scss';
-import { FlexBox } from '../../../components';
-import { img_test_murder } from '../../../images';
+import { FlexBox, PreviewImage } from '../../../components';
 
 const GroupImage = () => {
   const { productId } = useParams();
@@ -12,16 +11,19 @@ const GroupImage = () => {
   const products = useSelector((state) => state.common.products) ?? [];
 
   const item = products.find((item) => item._id === productId);
-  const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
 
   return (
     <FlexBox>
       <div className="product-group-second-image">
+        {/* <img src={validImageProduct} alt="product" className="product-second-image" />
         <img src={validImageProduct} alt="product" className="product-second-image" />
-        <img src={validImageProduct} alt="product" className="product-second-image" />
-        <img src={validImageProduct} alt="product" className="product-second-image" />
+        <img src={validImageProduct} alt="product" className="product-second-image" /> */}
+        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]} />
+        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]} />
+        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]} />
       </div>
-      <img src={validImageProduct} alt="product" className="product-main-image" />
+      <PreviewImage alt="product" className="product-main-image" fileID={item?.f?.[0]} />
+      {/* <img src={validImageProduct} alt="product" className="product-main-image" /> */}
     </FlexBox>
   );
 };

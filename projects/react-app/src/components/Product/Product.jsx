@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 // import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { request } from '../../tools';
 import { ROUTES } from '../../common_constants/routes';
-import { icon_heart_empty_red, icon_heart_empty_gray, img_test_murder } from '../../images';
+import { icon_heart_empty_red, icon_heart_empty_gray } from '../../images';
 import { Spin, PreviewImage } from '../';
 import './Product.scss';
 
@@ -21,7 +21,7 @@ const Product = ({ item }) => {
   const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE;
   const isPageProductAdmin = pathname === ROUTES.PRODUCTS_ADMIN;
   const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_gray;
-  const validImageProduct = img_test_murder ?? item.imageUrl; // TODO тестове
+
   const textAddBtnDynamic = isPagePersonalOffice ? 'ДОДАТИ ЩЕ ОДИН' : 'ДОДАТИ В КОШИК';
 
   const onPutInBasket = () => {
