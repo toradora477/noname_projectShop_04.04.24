@@ -1,26 +1,27 @@
 import React, { useState, Fragment } from 'react';
-import { useDispatch } from 'react-redux';
-import { addBasket, deleteProduct, removeBasket } from '../../store/commonReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, removeBasket } from '../../store/commonReducer';
 import { Link, useLocation } from 'react-router-dom';
 
 // import PrimaryButton from '../PrimaryButton/PrimaryButton.jsx';
 import { request } from '../../tools';
 import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_gray } from '../../images';
-import { Spin, PreviewImage } from '../';
+import { Spin, PreviewImage, PrimaryButton } from '../';
+import { ACTION } from '../../common_constants/business';
 import './Product.scss';
-
-import { PrimaryButton } from '../';
 
 const Product = ({ item }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
+  const { isClient } = useSelector((state) => state.common.accessRoles);
 
+  const [loadingPutWishList, setLoadingPutWishList] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE;
   const isPageProductAdmin = pathname === ROUTES.PRODUCTS_ADMIN;
-  const isLikeProduct = item.likeProduct ? icon_heart_empty_red : icon_heart_empty_gray;
+  const isLikeProduct = item.isFavorite ? icon_heart_empty_red : icon_heart_empty_gray;
 
   const textAddBtnDynamic = isPagePersonalOffice ? 'ДОДАТИ ЩЕ ОДИН' : 'ДОДАТИ В КОШИК';
 
@@ -54,6 +55,37 @@ const Product = ({ item }) => {
     setLoading(false);
   };
 
+  const onPutWishList = () => {
+    setLoadingPutWishList(true);
+    console.log('on Put Wish List');
+
+    handleToFavorites(
+      item._id,
+
+      // item.isFavorite ? ACTION.ADD : ACTION.REMOVE,
+      ACTION[item.isFavorite ? 'REMOVE' : 'ADD'],
+    );
+    // handleToFavorites(item._id, ACTION.REMOVE);
+    setLoadingPutWishList(false);
+  };
+
+  async function handleToFavorites(productId, action) {
+    const data = { productId, action: action };
+
+    await request.patch(
+      '/clients/changeFavorites',
+      data,
+      (response) => {
+        console.log('Added to favorites:', response);
+        if (action === ACTION.ADD) dispatch(addFavoriteProduct(productId));
+        else if (action === ACTION.REMOVE) dispatch(removeFavoriteProduct(productId));
+      },
+      (error) => {
+        console.error('Error adding to favorites:', error);
+      },
+    );
+  }
+
   const productEditing = (
     <Fragment>
       {/* <PrimaryButton color="blue" children="Додаткова інформація" /> */}
@@ -71,6 +103,14 @@ const Product = ({ item }) => {
           <button className="btn-first product-like-icon" onClick={handleLikeProduct}>
             <img src={isLikeProduct} alt="btn menu" />
           </button>
+        )}
+
+        {isClient && (
+          <Spin spinning={loadingPutWishList}>
+            <button className="btn-no-border" onClick={onPutWishList}>
+              <img src={isLikeProduct} alt="btn menu" />
+            </button>
+          </Spin>
         )}
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           {/* <img src={validImageProduct} alt="product" className="product-main-image" /> */}

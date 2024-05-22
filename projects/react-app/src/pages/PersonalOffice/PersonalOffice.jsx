@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Typography, FlexBox } from '../../components';
-import { NAME_SELECT, ROLES } from '../../common_constants/business';
+import { NAME_SELECT } from '../../common_constants/business';
 import CardSelected from './CardSelected';
 import CardMain from './CardMain';
 
@@ -20,10 +20,7 @@ const PersonalOffice = () => {
   const location = useLocation();
   const selectParam = location.state?.selectParam;
 
-  const userAuth = useSelector((state) => state.common.userAuth),
-    { role = 'guest' } = userAuth,
-    isClientOrAbove = ROLES[role] <= ROLES.client,
-    isNotAdmin = ROLES[role] !== ROLES.admin;
+  const { isNotAdmin, isClientOrAbove } = useSelector((state) => state.common.accessRoles);
 
   const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 

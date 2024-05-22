@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../common_constants/routes';
 import { AUTH } from '../../common_constants/modals';
-import { NAME_SELECT, ROLES } from '../../common_constants/business';
+import { NAME_SELECT } from '../../common_constants/business';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
 import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_color_green_gradient } from '../../images';
@@ -13,10 +13,8 @@ import { PrimaryButton } from '../';
 const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
-  const userAuth = useSelector((state) => state.common.userAuth),
-    { role = 'guest' } = userAuth,
-    isClientOrAbove = ROLES[role] <= ROLES.client,
-    isAdmin = ROLES[role] === ROLES.admin;
+  const userAuth = useSelector((state) => state.common.userAuth);
+  const { isAdmin, isClientOrAbove } = useSelector((state) => state.common.accessRoles);
 
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));

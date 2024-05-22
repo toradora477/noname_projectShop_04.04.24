@@ -9,11 +9,23 @@ const userAuth = getTokenData(userToken);
 const getAccessRoles = (role) => {
   const normalizedRole = role || 'guest';
   return {
-    isAdmin: ROLES[normalizedRole] === ROLES.admin,
-    isNotAdmin: ROLES[normalizedRole] !== ROLES.admin,
     isClientOrAbove: ROLES[normalizedRole] <= ROLES.client,
+
+    isAdmin: ROLES[normalizedRole] === ROLES.admin,
     isClient: ROLES[normalizedRole] === ROLES.client,
+
+    isNotAdmin: ROLES[normalizedRole] !== ROLES.admin,
+    isNotClient: ROLES[normalizedRole] !== ROLES.client,
   };
+};
+
+const patchProductsIsFavoriteStatus = (state) => {
+  if (!Array.isArray(state.products) || !state.userAuth || !state.accessRoles || state.accessRoles?.isNotClient) return;
+
+  state.products = state.products.map((product) => ({
+    ...product,
+    isFavorite: state.userAuth?.fav?.includes(product._id) ?? false,
+  }));
 };
 
 const initialState = {
@@ -37,6 +49,8 @@ export const commonSlice = createSlice({
     setUserAuth: (state, action) => {
       state.userAuth = action.payload;
       state.accessRoles = getAccessRoles(action.payload?.role);
+
+      patchProductsIsFavoriteStatus(state);
     },
     updateUserAuth: (state, action) => {
       const { payload } = action;
@@ -44,20 +58,25 @@ export const commonSlice = createSlice({
 
       state.userAuth = { ...(state.userAuth || {}), ...payload };
       state.accessRoles = getAccessRoles(payload.role);
+
+      patchProductsIsFavoriteStatus(state);
     },
     setProducts: (state, action) => {
       state.products = action.payload;
       state.products.sort((a, b) => b.i - a.i);
+
+      patchProductsIsFavoriteStatus(state);
     },
     addProduct: (state, action) => {
+      if (state.accessRoles?.isNotAdmin) return;
+
       (state.products ?? []).unshift(action.payload);
     },
     deleteProduct: (state, action) => {
+      if (state.accessRoles?.isNotAdmin) return;
+
       state.products = (state.products ?? []).filter((item) => item._id !== action.payload);
     },
-    // setBasket: (state, action) => {
-    //   state.basket = action.payload;
-    // },
     addBasket: (state, action) => {
       (state.basket ??= []).unshift(action.payload);
     },
@@ -69,18 +88,24 @@ export const commonSlice = createSlice({
       }
     },
     addFavoriteProduct: (state, action) => {
+      if (state.accessRoles?.isNotClient || !state.userAuth) return;
+
       const productId = action.payload;
-      if (!state.userAuth) return;
-      if (!state.userAuth.fav) {
+      if (!state.userAuth?.fav) {
         state.userAuth.fav = [productId];
-      } else if (!state.userAuth.fav.includes(productId)) {
+      } else if (!state.userAuth?.fav?.includes(productId)) {
         state.userAuth.fav.push(productId);
       }
+
+      patchProductsIsFavoriteStatus(state);
     },
     removeFavoriteProduct: (state, action) => {
+      if (state.accessRoles?.isNotClient || !state.userAuth || !state.userAuth?.fav) return;
+
       const productId = action.payload;
-      if (!state.userAuth || !state.userAuth.fav) return;
       state.userAuth.fav = state.userAuth.fav.filter((id) => id !== productId);
+
+      patchProductsIsFavoriteStatus(state);
     },
   },
 });
