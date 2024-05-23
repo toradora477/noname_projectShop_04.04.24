@@ -1,11 +1,22 @@
 import React from 'react';
-import './SubcategoryCard.scss'; // Подключаем стили
+import { Link } from 'react-router-dom';
 
-const SubcategoryCard = ({ label, imageSrc }) => {
+import { ROUTES } from '../../common_constants/routes';
+import { subcategory_jackets } from '../../images';
+import './SubcategoryCard.scss';
+
+const SubcategoryCard = ({ item }) => {
   return (
     <div className="subcategory-card">
-      <img src={imageSrc} alt="subCategory" className="subcategory-image" />
-      <div className="subcategory-label">{label}</div>
+      <Link
+        to={{
+          pathname: `${ROUTES.SHOP}`,
+          search: `?category=${item.categoryIndex}&subcategory=${item.value}`,
+        }}
+      >
+        <div className="subcategory-label">{item.label}</div>
+        <img src={item.img ?? subcategory_jackets} alt="subCategory" className="subcategory-image" />
+      </Link>
     </div>
   );
 };

@@ -1,4 +1,5 @@
-const { icons8_t_shirt_96, icons8_shoes_96, icons8_pants_96, icons8_cap_96 } = require('../../images');
+// const { icons8_t_shirt_96, icons8_shoes_96, icons8_pants_96, icons8_cap_96, subcategory_jackets } = require('../../images');
+const IMAGES = require('../../images');
 
 const COMPANY_NAME = 'The Dressery Store';
 
@@ -34,11 +35,11 @@ const PRODUCT_CATEGORIES = [
   {
     value: 0,
     label: 'Верхній одяг',
-    img: icons8_t_shirt_96,
+    img: IMAGES.icons8_t_shirt_96,
     subcategories: [
       // ТЕПЛИЙ ОДЯГ
-      { value: 0, label: 'Куртки' },
-      { value: 1, label: 'Зимові куртки' },
+      { value: 0, label: 'Куртки', img: IMAGES.subcategory_jackets },
+      { value: 1, label: 'Зимові куртки', img: IMAGES.subcategory_winter_jackets },
       { value: 2, label: 'Худі' },
       { value: 3, label: 'Светри' },
       { value: 4, label: 'Світшоти' },
@@ -51,7 +52,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 1,
     label: 'Нижній одяг',
-    img: icons8_pants_96,
+    img: IMAGES.icons8_pants_96,
     subcategories: [
       // ПОВСЯКДЕННИЙ ОДЯГ
       { value: 0, label: 'Штани' },
@@ -63,7 +64,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 2,
     label: 'Взуття',
-    img: icons8_shoes_96,
+    img: IMAGES.icons8_shoes_96,
     subcategories: [
       // ВЗУТТЯ
       { value: 0, label: 'Кросівки' },
@@ -75,7 +76,7 @@ const PRODUCT_CATEGORIES = [
   {
     value: 3,
     label: 'Аксесуари',
-    img: icons8_cap_96,
+    img: IMAGES.icons8_cap_96,
     subcategories: [
       // ГОЛОВНІ УБОРИ
       { value: 0, label: 'Кепки' },
