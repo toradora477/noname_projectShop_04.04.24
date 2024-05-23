@@ -89,6 +89,13 @@ const PRODUCT_CATEGORIES = [
   },
 ];
 
+const PRODUCT_SUBCATEGORIES = PRODUCT_CATEGORIES.flatMap((category, categoryIndex) =>
+  category.subcategories.map((subcategory) => ({
+    categoryIndex,
+    ...subcategory,
+  })),
+);
+
 const NAME_SELECT = {
   ACCOUNT: 'Акаунт',
   WISHLIST: 'Список бажань',
@@ -108,6 +115,7 @@ module.exports = {
   HTTP_METHODS,
   ROLES,
   PRODUCT_CATEGORIES,
+  PRODUCT_SUBCATEGORIES,
   NAME_SELECT,
   ERROR_IMAGE_URL,
   ACTION,

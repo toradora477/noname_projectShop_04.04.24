@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import './Card.scss';
 import clsx from 'clsx';
-import { Typography, FlexBox, Product } from '../';
+import { Typography, FlexBox, Product, SubcategoryCard } from '../';
 
-const Card = ({ title, list, mt, style, children, pl, className }) => {
+const Card = ({ listProducts, listCategories, children, title, mt, pl, style, className }) => {
+  const _list = listProducts ?? listCategories ?? null;
   return (
     <div
       className={clsx('card-component', className)}
@@ -18,15 +19,16 @@ const Card = ({ title, list, mt, style, children, pl, className }) => {
           <Typography fs={20} fw={500} children={title} />
         </div>
       )}
-      {list?.length > 0 && (
+
+      {_list?.length > 0 && (
         <Fragment>
-          {list.reduce((acc, item, index) => {
+          {_list.reduce((acc, _, index) => {
             if (index % 5 === 0) {
               acc.push(
                 <FlexBox key={`flexbox-${index}`} style={{ flexWrap: 'wrap' }}>
-                  {list.slice(index, index + 5).map((product) => (
-                    <Product key={product._id} item={product} />
-                  ))}
+                  {_list
+                    .slice(index, index + 5)
+                    .map((item, _index) => (listProducts ? <Product key={item._id} item={item} /> : <SubcategoryCard key={_index} item={item} />))}
                 </FlexBox>,
               );
               acc.push(<br key={`br-${index}`} />);
@@ -35,6 +37,7 @@ const Card = ({ title, list, mt, style, children, pl, className }) => {
           }, [])}
         </Fragment>
       )}
+
       {children}
     </div>
   );
