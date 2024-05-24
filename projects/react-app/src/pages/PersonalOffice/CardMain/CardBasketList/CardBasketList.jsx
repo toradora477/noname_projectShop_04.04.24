@@ -1,10 +1,15 @@
 import React, { useState, Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { request } from '../../../../tools';
 import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin } from '../../../../components';
+
+import { PLACING_AN_ORDER } from '../../../../common_constants/modals';
+import { setModal } from '../../../../store/commonReducer';
 import '../../PersonalOffice.scss';
 
 const CardBasketList = () => {
+  const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
   const [loading, setLoading] = useState(false);
@@ -14,19 +19,22 @@ const CardBasketList = () => {
   // console.log(filteredProducts);
 
   const textAdd = `Купити${filteredProducts?.length > 1 ? '  все' : ''}`;
-  const onClickAddOrder = () => {
-    console.log('onClickAddOrder');
-    setLoading(true);
+  // const onClickAddOrder = () => {
+  //   console.log('onClickAddOrder');
+  //   setLoading(true);
 
-    const listID = filteredProducts.map((i) => (i = i._id));
-    const body = { listID };
+  //   const listID = filteredProducts.map((i) => (i = i._id));
+  //   const body = { listID };
 
-    request.post('/orders/addOrder', body, (res) => {
-      console.log('res', res);
-    });
+  //   request.post('/orders/addOrder', body, (res) => {
+  //     console.log('res', res);
+  //   });
 
-    setLoading(false);
-  };
+  //   setLoading(false);
+  // };
+
+  const onClickAddOrder = () => dispatch(setModal({ name: PLACING_AN_ORDER }));
+
   return (
     <div>
       <Spin spinning={loading}>

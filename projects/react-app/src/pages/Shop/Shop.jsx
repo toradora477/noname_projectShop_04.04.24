@@ -65,8 +65,13 @@ const Shop = () => {
 
   return (
     <div className="shop-page">
-      <div className="billboard-label">{titleBillboard}</div>
-      <img src={billboard_subcategory} alt="billboard" />
+      {/* <div className="billboard-label">{titleBillboard}</div>
+      <img src={billboard_subcategory} alt="billboard" /> */}
+
+      <div className="billboard-container">
+        <div className="billboard-label">{titleBillboard}</div>
+        <img src={billboard_subcategory} alt="billboard" className="billboard-image" />
+      </div>
       <div className="product-list">
         {currentProducts.map((item) => (
           <Product key={item._id} item={item} />

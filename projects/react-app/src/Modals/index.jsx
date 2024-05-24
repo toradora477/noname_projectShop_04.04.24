@@ -7,6 +7,7 @@ import BasketOfGoods from './BasketOfGoods';
 import Auth from './Auth';
 import ProductAdd from './ProductAdd';
 import Register from './Register';
+import PlacingAnOrder from './PlacingAnOrder';
 
 const Modals = () => {
   const name = useSelector((state) => state.common.modal?.name);
@@ -18,6 +19,7 @@ const Modals = () => {
       [MODALS.AUTH]: <Auth />,
       [MODALS.PRODUCT_ADD]: <ProductAdd />,
       [MODALS.REGISTER]: <Register />,
+      [MODALS.PLACING_AN_ORDER]: <PlacingAnOrder />,
     }[name];
 
   return modalComponent || null;

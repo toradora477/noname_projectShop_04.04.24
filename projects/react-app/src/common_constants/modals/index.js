@@ -3,6 +3,7 @@ const configModal = {
   AUTH: 'Auth',
   PRODUCT_ADD: 'ProductAdd',
   REGISTER: 'Register',
+  PLACING_AN_ORDER: 'PlacingAnOrder',
 };
 
 module.exports = configModal;
