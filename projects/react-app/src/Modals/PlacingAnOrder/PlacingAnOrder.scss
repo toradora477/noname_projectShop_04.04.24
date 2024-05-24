@@ -1,35 +1,43 @@
 // @import '../../common_constants/styles/colors.scss';
 
-.product-form-add {
+.order-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 20px;
+  width: 100%;
 
-  .form-label {
-    margin: 10px 0;
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .form-input {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    width: 300px;
-    margin-top: 5px;
+  .product-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .product-image {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      -webkit-border-radius: 12px;
+      -moz-border-radius: 12px;
+      -ms-border-radius: 12px;
+      -o-border-radius: 12px;
+      border-radius: 12px;
+    }
   }
 
-  .textarea {
-    height: 100px;
-  }
-
-  .form-button {
+  select,
+  input {
+    width: 100%;
     padding: 10px;
-    margin-top: 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
     border-radius: 5px;
-    cursor: pointer;
-    width: 200px;
-    font-size: 16px;
   }
 }

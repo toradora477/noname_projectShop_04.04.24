@@ -1,117 +1,109 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addProduct, setModal } from '../../store/commonReducer';
+import { useDispatch, useSelector } from 'react-redux';
 import { request } from '../../tools';
-import { Modal } from '../../components';
+import { Modal, PrimaryButton, Typography, FlexBox, Input, TextArea, PreviewImage, Card } from '../../components';
+import { setModal } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
 
 const PlacingAnOrder = () => {
   const dispatch = useDispatch();
+  const basket = useSelector((state) => state.common.basket) ?? [];
+  const products = useSelector((state) => state.common.products) ?? [];
+  const filteredProducts = products.filter((product) => basket.includes(product._id));
+
   const [formData, setFormData] = useState({
-    productName: '',
-    description: '',
-    price: '',
-    colors: [{ colorName: '', images: [] }],
+    contactName: '',
+    city: '',
+    address: '',
+    deliveryMethod: 'Самовивіз з Нової Пошти',
+    paymentMethod: 'Оплата під час отримання товару',
+    recipientName: '',
   });
 
-  const handleChange = (e, index) => {
-    const { name, value, files } = e.target;
-    if (name === 'colorName') {
-      const updatedColors = [...formData.colors];
-      updatedColors[index] = { ...updatedColors[index], colorName: value };
-      setFormData({ ...formData, colors: updatedColors });
-    } else if (name === 'colorImage') {
-      const updatedColors = [...formData.colors];
-      const images = updatedColors[index].images.concat([...files]);
-      updatedColors[index] = { ...updatedColors[index], images };
-      setFormData({ ...formData, colors: updatedColors });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const handleAddColor = () => {
-    setFormData({
-      ...formData,
-      colors: [...formData.colors, { colorName: '', images: [] }],
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const body = new FormData();
-    body.append('productName', formData.productName);
-    body.append('description', formData.description);
-    body.append('price', formData.price);
+    const orderData = {
+      ...formData,
+      products: filteredProducts.map((product) => ({
+        productId: product._id,
+        quantity: 1, // Assuming quantity is 1 for simplicity; adjust as needed
+      })),
+    };
 
-    formData.colors.forEach((color, index) => {
-      color.images.forEach((image) => {
-        body.append('files', image);
-      });
-    });
-
-    request.post('/products/addProduct', body, (res) => {
-      console.log('Товар успішно додано', res);
-      if (res?.data) dispatch(addProduct(res.data));
+    request.post('/orders/addOrder', orderData, (res) => {
+      console.log('Order successfully placed', res);
       dispatch(setModal());
     });
   };
 
   return (
     <Modal position="center">
-      Оформлення замовлення
-      <br />
-      -----------------------
-      <br />
-      Ваші контактні дані
-      <br />
-      ----------------
-      <br />
-      Замовлення
-      <br />
-      ----------------
-      <br />
-      Доставка
-      <br />
-      ----------------
-      <br />
-      Оплата
-      <br />
-      ----------------
-      <br />
-      Отримувач
-      <form onSubmit={handleSubmit} className="product-form-add">
-        <label className="form-label">
-          Назва товару:
-          <input type="text" name="productName" value={formData.productName} onChange={handleChange} className="form-input" required />
-        </label>
-        <label className="form-label">
-          Опис:
-          <textarea name="description" value={formData.description} onChange={handleChange} className="form-input textarea" required />
-        </label>
-        <label className="form-label">
-          Ціна:
-          <input type="number" name="price" value={formData.price} onChange={handleChange} className="form-input" required />
-        </label>
-        {formData.colors.map((color, index) => (
-          <div key={index}>
-            <label className="form-label">
-              Колір:
-              <input type="text" name="colorName" value={color.colorName} onChange={(e) => handleChange(e, index)} className="form-input" required />
-            </label>
-            <label className="form-label">
-              Зображення для кольору "{color.colorName}":
-              <input type="file" name="colorImage" onChange={(e) => handleChange(e, index)} multiple accept="image/*" className="form-input" />
-            </label>
-          </div>
-        ))}
-        <button type="button" onClick={handleAddColor} className="form-button">
-          Додати колір
-        </button>
-        <button type="submit" className="form-button">
-          Додати товар
-        </button>
+      <Typography sz={24} fw={700}>
+        Оформлення замовлення
+      </Typography>
+      <form onSubmit={handleSubmit} className="order-form">
+        <div className="section">
+          <Typography sz={18} fw={600}>
+            Ваші контактні дані
+          </Typography>
+          <input aria-label="name input" label="Ім'я" name="contactName" value={formData.contactName} onChange={handleChange} required />
+          <input aria-label="city input" label="Місто" name="city" value={formData.city} onChange={handleChange} required />
+        </div>
+
+        <div className="section">
+          <Typography sz={18} fw={600}>
+            Замовлення
+          </Typography>
+          {filteredProducts.map((product) => {
+            console.log(product);
+
+            return (
+              <Card pl={7} key={product._id} className="product-item">
+                <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]} className="product-image" />
+                <div>
+                  <Typography>{product.n}</Typography>
+                  <Typography>{product.p} ₴</Typography>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        <div className="section">
+          <Typography sz={18} fw={600}>
+            Доставка
+          </Typography>
+          <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange} required>
+            <option value="Самовивіз з Нової Пошти">Самовивіз з Нової Пошти</option>
+            {/* Add more options as needed */}
+          </select>
+          <input aria-label="address input" label="Адреса" name="address" value={formData.address} onChange={handleChange} required />
+        </div>
+
+        <div className="section">
+          <Typography sz={18} fw={600}>
+            Оплата
+          </Typography>
+          <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} required>
+            <option value="Оплата під час отримання товару">Оплата під час отримання товару</option>
+            {/* Add more options as needed */}
+          </select>
+        </div>
+
+        <div className="section">
+          <Typography sz={18} fw={600}>
+            Отримувач
+          </Typography>
+          <input aria-label="name input" label="Ім'я" name="recipientName" value={formData.recipientName} onChange={handleChange} required />
+        </div>
+
+        <PrimaryButton type="submit">Замовлення підтверджую</PrimaryButton>
       </form>
     </Modal>
   );
