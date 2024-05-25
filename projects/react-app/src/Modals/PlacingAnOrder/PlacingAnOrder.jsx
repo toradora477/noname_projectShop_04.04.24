@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { request } from '../../tools';
-import { Modal, PrimaryButton, Typography, FlexBox, Input, TextArea, PreviewImage, Card } from '../../components';
+import { Modal, PrimaryButton, Typography, PreviewImage, Card } from '../../components';
 import { setModal } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
 
@@ -12,12 +12,12 @@ const PlacingAnOrder = () => {
   const filteredProducts = products.filter((product) => basket.includes(product._id));
 
   const [formData, setFormData] = useState({
-    contactName: '',
-    city: '',
+    contactName: 'Яна Іваненко',
+    city: 'Бровари',
     address: '',
     deliveryMethod: 'Самовивіз з Нової Пошти',
     paymentMethod: 'Оплата під час отримання товару',
-    recipientName: '',
+    recipientName: 'Яна Іваненко',
   });
 
   const handleChange = (e) => {
@@ -32,12 +32,12 @@ const PlacingAnOrder = () => {
       ...formData,
       products: filteredProducts.map((product) => ({
         productId: product._id,
-        quantity: 1, // Assuming quantity is 1 for simplicity; adjust as needed
+        quantity: 1, // Припустимо, що кількість 1 для спрощення; змінюйте за потреби
       })),
     };
 
     request.post('/orders/addOrder', orderData, (res) => {
-      console.log('Order successfully placed', res);
+      console.log('Замовлення успішно оформлене', res);
       dispatch(setModal());
     });
   };
@@ -52,27 +52,33 @@ const PlacingAnOrder = () => {
           <Typography sz={18} fw={600}>
             Ваші контактні дані
           </Typography>
-          <input aria-label="name input" label="Ім'я" name="contactName" value={formData.contactName} onChange={handleChange} required />
-          <input aria-label="city input" label="Місто" name="city" value={formData.city} onChange={handleChange} required />
+          <div className="editable-field">
+            <Typography>{formData.contactName}</Typography>
+            <button type="button" onClick={() => alert("Змінити ім'я")}>
+              Змінити
+            </button>
+          </div>
+          <div className="editable-field">
+            <Typography>{formData.city}</Typography>
+            <button type="button" onClick={() => alert('Змінити місто')}>
+              Змінити
+            </button>
+          </div>
         </div>
 
         <div className="section">
           <Typography sz={18} fw={600}>
             Замовлення
           </Typography>
-          {filteredProducts.map((product) => {
-            console.log(product);
-
-            return (
-              <Card pl={7} key={product._id} className="product-item">
-                <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]} className="product-image" />
-                <div>
-                  <Typography>{product.n}</Typography>
-                  <Typography>{product.p} ₴</Typography>
-                </div>
-              </Card>
-            );
-          })}
+          {filteredProducts.map((product) => (
+            <Card pl={7} key={product._id} className="product-item">
+              <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]} className="product-image" />
+              <div>
+                <Typography>{product.n}</Typography>
+                <Typography>{product.p} ₴</Typography>
+              </div>
+            </Card>
+          ))}
         </div>
 
         <div className="section">
@@ -81,9 +87,16 @@ const PlacingAnOrder = () => {
           </Typography>
           <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange} required>
             <option value="Самовивіз з Нової Пошти">Самовивіз з Нової Пошти</option>
-            {/* Add more options as needed */}
+            {/* Додайте більше варіантів за потреби */}
           </select>
-          <input aria-label="address input" label="Адреса" name="address" value={formData.address} onChange={handleChange} required />
+          <input
+            aria-label="address input"
+            placeholder="Виберіть відповідну адресу"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="section">
@@ -92,7 +105,7 @@ const PlacingAnOrder = () => {
           </Typography>
           <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} required>
             <option value="Оплата під час отримання товару">Оплата під час отримання товару</option>
-            {/* Add more options as needed */}
+            {/* Додайте більше варіантів за потреби */}
           </select>
         </div>
 
@@ -100,10 +113,24 @@ const PlacingAnOrder = () => {
           <Typography sz={18} fw={600}>
             Отримувач
           </Typography>
-          <input aria-label="name input" label="Ім'я" name="recipientName" value={formData.recipientName} onChange={handleChange} required />
+          <div className="editable-field">
+            <Typography>{formData.recipientName}</Typography>
+            <button type="button" onClick={() => alert("Змінити ім'я отримувача")}>
+              Змінити
+            </button>
+          </div>
         </div>
 
-        <PrimaryButton type="submit">Замовлення підтверджую</PrimaryButton>
+        <div className="total-section">
+          <Card pl={7} className="product-item">
+            <Typography sz={18} fw={700}>
+              Разом
+            </Typography>
+            <Typography sz={16}>1 товар на суму</Typography>
+            <Typography sz={16}>{filteredProducts.reduce((acc, item) => acc + item.p, 0)} ₴</Typography>
+            <PrimaryButton type="submit">Замовлення підтверджую</PrimaryButton>
+          </Card>
+        </div>
       </form>
     </Modal>
   );
