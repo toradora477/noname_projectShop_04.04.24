@@ -18,11 +18,11 @@ const GroupImage = () => {
         {/* <img src={validImageProduct} alt="product" className="product-second-image" />
         <img src={validImageProduct} alt="product" className="product-second-image" />
         <img src={validImageProduct} alt="product" className="product-second-image" /> */}
-        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]} />
-        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]} />
-        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]} />
+        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]?.files?.[0]} />
+        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]?.files?.[0]} />
+        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]?.files?.[0]} />
       </div>
-      <PreviewImage alt="product" className="product-main-image" fileID={item?.f?.[0]} />
+      <PreviewImage alt="product" className="product-main-image" fileID={item?.f?.[0]?.files?.[0]} />
       {/* <img src={validImageProduct} alt="product" className="product-main-image" /> */}
     </FlexBox>
   );

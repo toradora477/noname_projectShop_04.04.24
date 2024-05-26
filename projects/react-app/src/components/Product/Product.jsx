@@ -114,7 +114,7 @@ const Product = ({ item }) => {
         )}
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           {/* <img src={validImageProduct} alt="product" className="product-main-image" /> */}
-          <PreviewImage fileID={item?.f?.[0]} />
+          <PreviewImage fileID={item?.f?.[0]?.files?.[0]} />
         </Link>
         <h3>{item.n}</h3>
         <p>${item.p}</p>

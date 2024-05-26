@@ -72,7 +72,7 @@ const PlacingAnOrder = () => {
           </Typography>
           {filteredProducts.map((product) => (
             <Card pl={7} key={product._id} className="product-item">
-              <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]} className="product-image" />
+              <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
               <div>
                 <Typography>{product.n}</Typography>
                 <Typography>{product.p} ₴</Typography>
