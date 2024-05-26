@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
-import { Modal } from '../../components';
+import { Modal, ColorPicker } from '../../components';
 import './ProductAdd.scss';
 
 const ProductAdd = () => {
@@ -13,6 +13,11 @@ const ProductAdd = () => {
     price: '',
     colors: [{ colorName: '', images: [] }],
   });
+
+  const [selectedColor, setSelectedColor] = useState('#1890ff');
+  const handleColorChange = (newColor) => {
+    setSelectedColor(newColor);
+  };
 
   const handleChange = (e, index) => {
     const { name, value, files } = e.target;
@@ -79,6 +84,11 @@ const ProductAdd = () => {
               Колір:
               <input type="text" name="colorName" value={color.colorName} onChange={(e) => handleChange(e, index)} className="form-input" required />
             </label>
+            <div style={{ padding: '20px' }}>
+              <h1>Custom Color Picker</h1>
+              <ColorPicker initialColor={selectedColor} onChange={handleColorChange} />
+              <p>Selected Color: {selectedColor}</p>
+            </div>
             <label className="form-label">
               Зображення для кольору "{color.colorName}":
               <input type="file" name="colorImage" onChange={(e) => handleChange(e, index)} multiple accept="image/*" className="form-input" />
