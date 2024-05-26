@@ -1,5 +1,5 @@
 const logger = require('log-beautify');
-
+const fs = require('fs');
 const dayjs = require('dayjs');
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc);
@@ -21,36 +21,88 @@ const getNextSequenceValue = async (sequenceName, collection) => {
   return sequenceDocument.value;
 };
 
-const runInitialSettings = () => {
-  if (!process.env.TOKEN_SECRET) log.errorServer('TOKEN_SECRET empty');
-  if (!process.env.MONGO_URL) log.errorServer('MONGO_URL empty');
+const checkEnvVariables = () => {
+  if (!fs.existsSync('firebase-adminsdk.json')) log.serverError('firebase-adminsdk.json missing');
+  if (fs.existsSync('.env')) {
+    if (!process.env.TOKEN_SECRET) log.serverError('TOKEN_SECRET empty');
+    if (!process.env.MONGO_URL) log.serverError('MONGO_URL empty');
+    if (!process.env.STORAGE_BUCKET) log.serverError('STORAGE_BUCKET empty');
+  } else {
+    log.serverError('.env missing');
+  }
+};
 
+const configureLogger = () => {
   logger.setSymbols({
     ok: '[server]',
+    warning: '[server]',
+  });
+  logger.setColors({
+    warning: 'orangered',
   });
 };
 
+const runInitialSettings = () => {
+  configureLogger();
+  checkEnvVariables();
+};
+
 const log = {
-  success: (rest) => {
-    logger.success('Success: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
-  },
-  successServer: (rest) => {
+  serverSuccess: (rest) => {
     logger.ok(rest);
   },
+  serverError: (rest, err) => {
+    if (err) {
+      let address;
+      const stack = err.stack;
+      const fileAndLineMatch = stack?.match(/.*[\\\/]([^\\\/]+)[\\\/]([^\\\/]+\.js):(\d+):\d+/);
+      const nodeModulesMatch = stack?.match(/.*[\\\/](node_modules[\\\/].*?):(\d+):\d+/);
+
+      if (fileAndLineMatch) {
+        const [_, folderName, fileName] = fileAndLineMatch;
+        address = `\\${folderName}\\${fileName}`;
+      }
+
+      if (stack?.includes('node_modules') && nodeModulesMatch) {
+        address = `${nodeModulesMatch[1]}:${nodeModulesMatch[2]}`;
+      }
+
+      const lineMatch = stack?.match(/.*:(\d+):\d+/);
+      const line = lineMatch ? lineMatch[1] : 'N/A';
+
+      logger.warning({
+        CustomMessage: rest,
+        Address: address ?? 'N/A',
+        Line: line,
+        Name: err.name,
+        ErrorMessage: err.message,
+        'Error Object': err,
+      });
+    } else {
+      logger.warning(rest);
+    }
+  },
+  logWithTimestamp: (level, rest) => {
+    const timestamp = dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss');
+    const capitalizeFirstLetter = (string) => {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+    logger[level](`${capitalizeFirstLetter(level)}: ${timestamp}:`, rest);
+  },
+  success: (rest) => {
+    log.logWithTimestamp('success', rest);
+  },
   debug: (rest) => {
-    logger.debug('Debug: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
+    log.logWithTimestamp('debug', rest);
   },
   info: (rest) => {
-    logger.info('Info: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
+    log.logWithTimestamp('info', rest);
   },
   warn: (rest) => {
-    logger.warn('Warn: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
+    log.logWithTimestamp('warn', rest);
   },
   error: (rest) => {
-    logger.error('Error: ' + dayjs().format('dddd, MMMM D, YYYY [at] HH:mm:ss') + ':', rest);
-  },
-  errorServer: (rest) => {
-    logger.error(rest);
+    log.logWithTimestamp('error', rest);
   },
   show: (rest) => {
     logger.show(rest);

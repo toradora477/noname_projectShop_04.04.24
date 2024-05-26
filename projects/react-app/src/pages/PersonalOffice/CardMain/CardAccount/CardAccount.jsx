@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { updateUserAuth } from '../../../../store/commonReducer';
 import { PrimaryButton, Typography, Box, FlexBox } from '../../../../components';
-import { ROLES } from '../../../../common_constants/business';
+
 import { request } from '../../../../tools';
 
 import '../../PersonalOffice.scss';
@@ -11,9 +11,8 @@ import '../../PersonalOffice.scss';
 const CardAccount = () => {
   const dispatch = useDispatch();
 
-  const userAuth = useSelector((state) => state.common.userAuth),
-    { role = 'guest' } = userAuth,
-    isClient = ROLES[role] === ROLES.client;
+  const userAuth = useSelector((state) => state.common.userAuth);
+  const { isClient } = useSelector((state) => state.common.accessRoles);
 
   const [Title, Label] = [
     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,

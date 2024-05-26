@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { ROUTES } from '../common_constants/routes';
 import { Route, Switch } from 'react-router-dom';
-import { ROLES } from '../common_constants/business';
 
 import HomeDashboard from '../pages/HomeDashboard';
 import Shop from '../pages/Shop';
@@ -14,9 +13,7 @@ import StatisticsAdmin from '../pages/StatisticsAdmin';
 import PersonalOffice from '../pages/PersonalOffice';
 
 const RouterSwitch = () => {
-  const userAuth = useSelector((state) => state.common.userAuth),
-    { role = 'guest' } = userAuth,
-    isAdmin = ROLES[role] === ROLES.admin;
+  const { isAdmin } = useSelector((state) => state.common.accessRoles);
 
   return (
     <Switch>
@@ -28,8 +25,8 @@ const RouterSwitch = () => {
       <Route exact path={ROUTES.PERSONAL_OFFICE} component={PersonalOffice} />
       <Route exact path={ROUTES.SHOP} component={Shop} />
       <Route exact path={`${ROUTES.CARD_PRODUCT}/:productId`} component={CardProduct} />
-      <Route exact path={ROUTES.ERROR404} component={Error404} />
 
+      <Route exact path={ROUTES.ERROR404} component={Error404} />
       <Route component={Error404} />
     </Switch>
   );

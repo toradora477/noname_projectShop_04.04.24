@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 
-import { icons8_t_shirt_96, icons8_shoes_96, icons8_pants_96, icons8_like_96, icons8_cap_96, icons8_bag_96, Icon_menu_sidemenu } from '../../images';
+import { icons8_like_96, icons8_bag_96, Icon_menu_sidemenu } from '../../images';
+import { PRODUCT_CATEGORIES } from '../../common_constants/business';
 import clsx from 'clsx';
 import './SideMenu.scss';
 
 const SideMenu = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const ButtomSideMenu = ({ src, text = 'верхній одяг' }) => {
+  const ButtomSideMenu = ({ item, src, text }) => {
     return (
       <button className="btn-first">
-        <img src={src} alt="btn menu" />
-        {isExpanded && <span className="text">{text}</span>}
+        <img src={src ?? item?.img} alt="btn menu" />
+        {isExpanded && <span className="text">{text ?? item?.label}</span>}
       </button>
     );
   };
@@ -25,13 +26,12 @@ const SideMenu = () => {
     >
       <div className="container">
         <br />
-        <ButtomSideMenu src={Icon_menu_sidemenu} />
-        <ButtomSideMenu src={icons8_bag_96} />
-        <ButtomSideMenu src={icons8_t_shirt_96} />
-        <ButtomSideMenu src={icons8_pants_96} />
-        <ButtomSideMenu src={icons8_shoes_96} />
-        <ButtomSideMenu src={icons8_cap_96} />
-        <ButtomSideMenu src={icons8_like_96} />
+        <ButtomSideMenu src={Icon_menu_sidemenu} text="Меню" />
+        <ButtomSideMenu src={icons8_bag_96} text="Магазин" />
+        {PRODUCT_CATEGORIES.map((item, index) => (
+          <ButtomSideMenu item={item} key={index} />
+        ))}
+        <ButtomSideMenu src={icons8_like_96} text="Лідери продажів" />
       </div>
     </nav>
   );

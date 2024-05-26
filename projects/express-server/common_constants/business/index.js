@@ -20,4 +20,9 @@ const ROLES = {
   guest: 999,
 };
 
-module.exports = { DEFAULT_USER, HTTP_METHODS, ROLES };
+const ACTION = {
+  ADD: 'add',
+  REMOVE: 'remove',
+};
+
+module.exports = { DEFAULT_USER, HTTP_METHODS, ROLES, ACTION };

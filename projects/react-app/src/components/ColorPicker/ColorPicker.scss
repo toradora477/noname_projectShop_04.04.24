@@ -1,0 +1,57 @@
+.color-picker {
+  position: relative;
+  display: inline-block;
+
+  &__selected {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+  }
+
+  &__palette {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__palette-overlay {
+    display: grid;
+    grid-template-columns: repeat(7, 24px);
+    gap: 8px;
+    position: absolute;
+    background: #2c2c2c;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    top: 35px;
+  }
+
+  &__color {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+    }
+
+    // Specific styles for white and black colors to make them more visible
+    &[style*='background-color: #FFFFFF'] {
+      border: 1px solid #ccc;
+    }
+    &[style*='background-color: #000000'] {
+      border: 1px solid #ccc;
+    }
+  }
+}

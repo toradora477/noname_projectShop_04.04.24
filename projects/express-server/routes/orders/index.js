@@ -44,11 +44,11 @@ router.get('/getListOrder', adminJWT, async (req, res, next) => {
       data: resultAggregation,
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Get all list orders',
       operation: 'aggregation for collection ORDERS with CLIENTS',
       dataLength: resultAggregation?.length ?? null,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);
@@ -93,12 +93,12 @@ router.post('/addOrder', guestJWT, async (req, res, next) => {
       data: { ...bodyOrder, _id: resultInsertOne.insertedId },
     };
 
-    req.loggingData = {
+    req.setLoggingData({
       log: 'Add new products',
       operation: 'insertOne for collection PRODUCTS',
       'req.body': req.body,
       result: transportationData.data,
-    };
+    });
     res.status(200).json(transportationData);
   } catch (err) {
     next(err);
