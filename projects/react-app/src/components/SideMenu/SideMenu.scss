@@ -11,6 +11,9 @@
   -o-transition: width 0.3s ease;
   transition: width 0.3s ease;
   width: 60px;
+  position: fixed;
+  z-index: 1000;
+  background-color: $white;
 
   .container {
     margin: 20px 10px;
@@ -18,28 +21,28 @@
     flex-direction: column;
 
     .btn-first {
+      display: flex; /* Используем flexbox */
+      align-items: center; /* Выравниваем по вертикали */
       background-color: transparent;
       border: none;
       padding: 0;
       margin: 0px 0px 30px 0px;
       cursor: pointer;
-      position: relative;
+
+      img {
+        flex-shrink: 0; /* Иконка не сжимается */
+      }
 
       .text {
-        position: absolute;
-        left: 100%;
-        top: 50%;
-        // -webkit-transform: translate(-100%, -50%);
-        // -moz-transform: translate(-100%, -50%);
-        // -ms-transform: translate(-100%, -50%);
-        // -o-transform: translate(-100%, -50%);
-        // transform: translate(-100%, -50%);
+        margin-left: 10px; /* Отступ слева от иконки */
+        white-space: nowrap; /* Запрещаем перенос текста */
+        overflow: hidden; /* Скрываем текст */
+        opacity: 0; /* Делаем текст прозрачным */
         -webkit-transition: opacity 0.9s ease 0.9s;
         -moz-transition: opacity 0.9s ease 0.9s;
         -ms-transition: opacity 0.9s ease 0.9s;
         -o-transition: opacity 0.9s ease 0.9s;
         transition: opacity 0.9s ease 0.9s;
-        opacity: 0;
       }
     }
   }
@@ -48,7 +51,14 @@
     width: 200px;
 
     .btn-first .text {
-      opacity: 1; // Показати текст при розширенні меню
+      opacity: 1; // Показываем текст при расширении меню
     }
   }
+}
+
+.side-block {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 61px;
 }
