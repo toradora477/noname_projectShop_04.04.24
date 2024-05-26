@@ -11,19 +11,20 @@ const ProductAdd = () => {
     productName: '',
     description: '',
     price: '',
-    colors: [{ colorName: '', images: [] }],
+    colors: [{ images: [] }],
   });
 
-  const [selectedColor, setSelectedColor] = useState('#1890ff');
-  const handleColorChange = (newColor) => {
-    setSelectedColor(newColor);
+  const handleColorChange = (newColor, index) => {
+    const updatedColors = [...formData.colors];
+    updatedColors[index] = { ...updatedColors[index], color: newColor };
+    setFormData({ ...formData, colors: updatedColors });
   };
 
   const handleChange = (e, index) => {
     const { name, value, files } = e.target;
     if (name === 'colorName') {
       const updatedColors = [...formData.colors];
-      updatedColors[index] = { ...updatedColors[index], colorName: value };
+      updatedColors[index] = { ...updatedColors[index] };
       setFormData({ ...formData, colors: updatedColors });
     } else if (name === 'colorImage') {
       const updatedColors = [...formData.colors];
@@ -38,7 +39,7 @@ const ProductAdd = () => {
   const handleAddColor = () => {
     setFormData({
       ...formData,
-      colors: [...formData.colors, { colorName: '', images: [] }],
+      colors: [...formData.colors, { images: [] }],
     });
   };
 
@@ -50,7 +51,14 @@ const ProductAdd = () => {
     body.append('description', formData.description);
     body.append('price', formData.price);
 
-    formData.colors.forEach((color, index) => {
+    const colorsInfo = formData.colors.map((color) => ({
+      color: color.color || '#000000',
+      images: color.images.map((image) => image.name), // Store only file names
+    }));
+
+    body.append('colorsInfo', JSON.stringify(colorsInfo));
+
+    formData.colors.forEach((color) => {
       color.images.forEach((image) => {
         body.append('files', image);
       });
@@ -68,38 +76,33 @@ const ProductAdd = () => {
       <form onSubmit={handleSubmit} className="product-form-add">
         <label className="form-label">
           Назва товару:
-          <input type="text" name="productName" value={formData.productName} onChange={handleChange} className="form-input" required />
+          <input type="text" name="productName" value={formData.productName} onChange={(e) => handleChange(e)} className="form-input" required />
         </label>
         <label className="form-label">
           Опис:
-          <textarea name="description" value={formData.description} onChange={handleChange} className="form-input textarea" required />
+          <textarea name="description" value={formData.description} onChange={(e) => handleChange(e)} className="form-input textarea" required />
         </label>
         <label className="form-label">
           Ціна:
-          <input type="number" name="price" value={formData.price} onChange={handleChange} className="form-input" required />
+          <input type="number" name="price" value={formData.price} onChange={(e) => handleChange(e)} className="form-input" required />
         </label>
         {formData.colors.map((color, index) => (
           <div key={index}>
             <label className="form-label">
-              Колір:
-              <input type="text" name="colorName" value={color.colorName} onChange={(e) => handleChange(e, index)} className="form-input" required />
+              Колір товару: <ColorPicker initialColor={color.color || '#000000'} onChange={(newColor) => handleColorChange(newColor, index)} />
             </label>
-            <div style={{ padding: '20px' }}>
-              <h1>Custom Color Picker</h1>
-              <ColorPicker initialColor={selectedColor} onChange={handleColorChange} />
-              <p>Selected Color: {selectedColor}</p>
-            </div>
+            <br />
             <label className="form-label">
-              Зображення для кольору "{color.colorName}":
+              Зображення товару для цього кольору:
               <input type="file" name="colorImage" onChange={(e) => handleChange(e, index)} multiple accept="image/*" className="form-input" />
             </label>
           </div>
         ))}
         <button type="button" onClick={handleAddColor} className="form-button">
-          Додати колір
+          Додати новий колір
         </button>
         <button type="submit" className="form-button">
-          Додати товар
+          Завершити створення товару
         </button>
       </form>
     </Modal>
