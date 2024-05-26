@@ -91,7 +91,7 @@ const Product = ({ item }) => {
           <PreviewImage fileID={item?.f?.[0]?.files?.[0]} />
         </Link>
         <h3>{item.n}</h3>
-        <p>${item.p}</p>
+        <p>{item.p}&nbsp;$</p>
         {!isPageProductAdmin && <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />}
         {isPagePersonalOffice && removeItemsBasket}
         {isPageProductAdmin && productEditing}

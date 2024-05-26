@@ -2,12 +2,13 @@ import React, { Fragment, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
-import { addFavoriteProduct, addBasket, removeFavoriteProduct } from '../../store/commonReducer';
+import { addFavoriteProduct, addBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
 import { Card, Typography, FlexBox, PrimaryButton, Spin, SizeSquare, ColorSquare, ColorPicker, PreviewImage } from '../../components';
-import { ACTION } from '../../common_constants/business';
+import { ACTION, PRODUCT_CATEGORIES } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request } from '../../tools';
+import { PLACING_AN_ORDER } from '../../common_constants/modals';
 
 const CardProduct = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,6 @@ const CardProduct = () => {
   const { isClient } = useSelector((state) => state.common.accessRoles);
 
   const products = useSelector((state) => state.common.products) ?? [];
-  const userAuth = useSelector((state) => state.common.userAuth);
 
   // const item = products.find((item) => item._id === productId);
   // if (item) {
@@ -29,30 +29,41 @@ const CardProduct = () => {
   // }
 
   // Добавляем свойство isFavorite ко всем продуктам
-  const productsWithFavoriteStatus = products.map((product) => ({
-    ...product,
-    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
-  }));
 
   // Находим нужный продукт с уже обновленным свойством isFavorite
-  const item = productsWithFavoriteStatus.find((item) => item._id === productId);
+  const item = products.find((item) => item._id === productId);
 
   //  const productsWithFavoriteStatus = products.map((product) => ({
   //    ...product,
   //    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
   //  }));
 
-  console.log('item', item);
+  console.table(item);
+
+  const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
+    const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
+    if (!category) return null;
+
+    const subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
+    if (!subcategory) return null;
+
+    return {
+      categoryLabel: category.label,
+      subcategoryLabel: subcategory.label,
+    };
+  };
 
   if (!item) {
     history.push(ROUTES.ERROR404);
     return null;
   }
 
+  const resultLabelCategory = getCategoryAndSubcategoryLabel(item.c?.[0], item.c?.[1]);
+
   const text1 = 'ГОЛОВНА'; // ? постійна
   const text2 = 'МАГАЗИН'; // ? постійна
-  const text3 = 'ОДЯГ'; // TODO динамічною повина бути
-  const text4 = 'ФУТБОЛКИ'; // TODO динамічною повина бути
+  const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : 'ОДЯГ';
+  const text4 = typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : 'ОДЯГ';
 
   const [LinkText, TItle, Text, BtnText] = [
     ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
@@ -83,9 +94,10 @@ const CardProduct = () => {
 
   // console.log(item);
 
-  const onBuyNow = () => {
+  const onClickAddOrder = () => {
     setLoadingBuyNow(true);
-    console.log('Buy Now');
+    dispatch(addBasket(item._id));
+    dispatch(setModal({ name: PLACING_AN_ORDER }));
     setLoadingBuyNow(false);
   };
 
@@ -156,13 +168,13 @@ const CardProduct = () => {
           {priceProduct}
           {sizeProduct}
           {colorProduct}
-
-          <Spin spinning={loadingBuyNow}>
-            <PrimaryButton mt={8} children="Купити зараз" onClick={onBuyNow} />
-          </Spin>
           <Spin spinning={loadingAddBasket}>
-            <PrimaryButton className="primary" mt={8} children="Додати в кошик" onClick={onPutBasket} />
+            <PrimaryButton mt={8} children="Додати в кошик" onClick={onPutBasket} />
           </Spin>
+          <Spin spinning={loadingBuyNow}>
+            <PrimaryButton className="primary" mt={8} children="Купити зараз" onClick={onClickAddOrder} />
+          </Spin>
+
           {isClient && (
             <Spin spinning={loadingPutWishList}>
               <button className="btn-no-border" onClick={onPutWishList}>
@@ -183,3 +195,96 @@ const CardProduct = () => {
 };
 
 export default CardProduct;
+
+//  const [LinkText, TItle, Text, BtnText] = [
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} />,
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={600} />,
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={12} fw={600} />,
+//  ];
+
+//  const linkTypeText = (
+//    <LinkText>
+//      {text1} &gt;&gt; {text2} &gt;&gt; {text3} &gt;&gt; <b>{text4}</b>
+//    </LinkText>
+//  );
+
+//  const nameProduct = <TItle children={item.n} mt={8} />;
+//  const priceProduct = <Text mt={8}>{item.p}&nbsp;₴</Text>;
+//  const sizeProduct = (
+//    <Fragment>
+//      <Text mt={8}>Розмір:&nbsp;</Text>
+//      <select className="form-select">
+//        <option value="S">S</option>
+//        <option value="M">M</option>
+//        <option value="L">L</option>
+//        <option value="XL">XL</option>
+//      </select>
+//    </Fragment>
+//  );
+
+//  const colorProduct = (
+//    <Fragment>
+//      <Text mt={8}>Колір:&nbsp;</Text>
+//      <select className="form-select">
+//        <option value="black">Чорний</option>
+//        <option value="white">Білий</option>
+//      </select>
+//    </Fragment>
+//  );
+
+//  const onBuyNow = () => {
+//    setLoadingBuyNow(true);
+//    console.log('Buy Now');
+//    setLoadingBuyNow(false);
+//  };
+
+//  const onPutBasket = () => {
+//    setLoadingAddBasket(true);
+//    dispatch(addBasket(item._id));
+//    setLoadingAddBasket(false);
+//  };
+
+//  const onPutWishList = () => {
+//    setLoadingPutWishList(true);
+//    handleToFavorites(item._id, ACTION[item.isFavorite ? 'REMOVE' : 'ADD']);
+//    setLoadingPutWishList(false);
+//  };
+
+//  <div className="product-details">
+//       <h2>ОПИС</h2>
+//       <p>{item.description}</p>
+//       <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
+//       <table>
+//         <thead>
+//           <tr>
+//             <th>Розмір</th>
+//             <th>Вага</th>
+//             <th>Ріст</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           <tr>
+//             <td>S</td>
+//             <td>55-65</td>
+//             <td>155-165</td>
+//           </tr>
+//           <tr>
+//             <td>M</td>
+//             <td>65-75</td>
+//             <td>165-175</td>
+//           </tr>
+//           <tr>
+//             <td>L</td>
+//             <td>75-85</td>
+//             <td>175-185</td>
+//           </tr>
+//           <tr>
+//             <td>XL</td>
+//             <td>85-95</td>
+//             <td>185-195</td>
+//           </tr>
+//         </tbody>
+//       </table>
+//     </div>
+//     <br />
