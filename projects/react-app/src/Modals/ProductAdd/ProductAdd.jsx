@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { addProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
 import { Modal, ColorPicker } from '../../components';
+import { PRODUCT_CATEGORIES } from '../../common_constants/business';
 import './ProductAdd.scss';
 
 const ProductAdd = () => {
@@ -11,6 +12,8 @@ const ProductAdd = () => {
     productName: '',
     description: '',
     price: '',
+    category: '',
+    subcategory: '',
     colors: [{ images: [] }],
   });
 
@@ -36,6 +39,14 @@ const ProductAdd = () => {
     }
   };
 
+  const handleCategoryChange = (e) => {
+    setFormData({ ...formData, category: e.target.value, subcategory: '' });
+  };
+
+  const handleSubcategoryChange = (e) => {
+    setFormData({ ...formData, subcategory: e.target.value });
+  };
+
   const handleAddColor = () => {
     setFormData({
       ...formData,
@@ -50,10 +61,12 @@ const ProductAdd = () => {
     body.append('productName', formData.productName);
     body.append('description', formData.description);
     body.append('price', formData.price);
+    body.append('category', formData.category);
+    body.append('subcategory', formData.subcategory);
 
     const colorsInfo = formData.colors.map((color) => ({
       color: color.color || '#000000',
-      images: color.images.map((image) => image.name), // Store only file names
+      images: color.images.map((image) => image.name),
     }));
 
     body.append('colorsInfo', JSON.stringify(colorsInfo));
@@ -71,6 +84,8 @@ const ProductAdd = () => {
     });
   };
 
+  const selectedCategory = PRODUCT_CATEGORIES.find((cat) => cat.value === parseInt(formData.category));
+
   return (
     <Modal position="center">
       <form onSubmit={handleSubmit} className="product-form-add">
@@ -86,6 +101,30 @@ const ProductAdd = () => {
           Ціна:
           <input type="number" name="price" value={formData.price} onChange={(e) => handleChange(e)} className="form-input" required />
         </label>
+        <label className="form-label">
+          Категорія:
+          <select name="category" value={formData.category} onChange={handleCategoryChange} className="form-input" required>
+            <option value="">Оберіть категорію</option>
+            {PRODUCT_CATEGORIES.map((cat) => (
+              <option key={cat.value} value={cat.value}>
+                {cat.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        {selectedCategory && (
+          <label className="form-label">
+            Підкатегорія:
+            <select name="subcategory" value={formData.subcategory} onChange={handleSubcategoryChange} className="form-input" required>
+              <option value="">Оберіть підкатегорію</option>
+              {selectedCategory.subcategories.map((subcat) => (
+                <option key={subcat.value} value={subcat.value}>
+                  {subcat.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         {formData.colors.map((color, index) => (
           <div key={index}>
             <label className="form-label">
@@ -94,7 +133,15 @@ const ProductAdd = () => {
             <br />
             <label className="form-label">
               Зображення товару для цього кольору:
-              <input type="file" name="colorImage" onChange={(e) => handleChange(e, index)} multiple accept="image/*" className="form-input" />
+              <input
+                type="file"
+                name="colorImage"
+                onChange={(e) => handleChange(e, index)}
+                multiple
+                accept="image/*"
+                className="form-input"
+                required
+              />
             </label>
           </div>
         ))}

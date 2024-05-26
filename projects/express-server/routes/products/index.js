@@ -44,12 +44,12 @@ router.get('/getFilePreview', guestJWT, async (req, res, next) => {
   }
 });
 
-const upload = multer({ dest: path.join(__dirname, './') });
-
-router.post('/addProduct', adminJWT, upload.array('files', 20), async (req, res, next) => {
+router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).array('files', 20), async (req, res, next) => {
   try {
-    const { productName, description, price, colorsInfo } = req.body;
+    const { productName, description, price, colorsInfo, category, subcategory } = req.body;
     const { _id: userID } = req.user;
+
+    console.log(req.body);
 
     if (![userID, productName, price].every(Boolean)) {
       throw new ExtendedError({
@@ -102,6 +102,7 @@ router.post('/addProduct', adminJWT, upload.array('files', 20), async (req, res,
       t: new Date(),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
       f: fileIdAndColorArray,
+      c: [category, subcategory],
     };
 
     const resultInsertOne = await collection.insertOne(newBodyProduct);
