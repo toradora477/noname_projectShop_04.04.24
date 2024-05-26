@@ -6,6 +6,15 @@ import './SideMenu.scss';
 
 const SideMenu = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsExpanded(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsExpanded(false);
+  };
+
   const ButtomSideMenu = ({ item, src, text, ml = 10 }) => {
     return (
       <button style={{ marginLeft: ml }} className="btn-first">
@@ -18,12 +27,13 @@ const SideMenu = () => {
   return (
     <Fragment>
       <div className="side-block" />
+      <div className={clsx('screen-dim', { visible: isExpanded })} />
       <nav
         className={clsx('side-menu', {
           expanded: isExpanded,
         })}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <div className="container">
           <br />
