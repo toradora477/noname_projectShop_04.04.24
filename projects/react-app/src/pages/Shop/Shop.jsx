@@ -54,7 +54,7 @@ const Shop = () => {
       setTitleBillboard(labels.subcategoryLabel);
 
       const filtered = products.filter((product) => {
-        return (!category || product.category === category) && (!subcategory || product.subcategory === subcategory);
+        return product.c?.[0] === category && product.c?.[1] === subcategory;
       });
       setFilteredProducts(filtered);
     } else {
@@ -73,7 +73,7 @@ const Shop = () => {
         <img src={billboard_subcategory} alt="billboard" className="billboard-image" />
       </div>
       <div className="product-list">
-        {currentProducts.map((item) => (
+        {filteredProducts.map((item) => (
           <Product key={item._id} item={item} />
         ))}
       </div>
