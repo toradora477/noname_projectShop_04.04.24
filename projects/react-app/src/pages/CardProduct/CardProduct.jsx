@@ -23,22 +23,7 @@ const CardProduct = () => {
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
 
-  // const item = products.find((item) => item._id === productId);
-  // if (item) {
-  //   item.isFavorite = userAuth?.fav?.includes(item._id) ?? false;
-  // }
-
-  // Добавляем свойство isFavorite ко всем продуктам
-
-  // Находим нужный продукт с уже обновленным свойством isFavorite
   const item = products.find((item) => item._id === productId);
-
-  //  const productsWithFavoriteStatus = products.map((product) => ({
-  //    ...product,
-  //    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
-  //  }));
-
-  // console.table(item);
 
   const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
     const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
@@ -80,16 +65,16 @@ const CardProduct = () => {
   const nameProduct = <TItle children={item.n} mt={8} />;
   const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
   const sizeProduct = (
-    <Fragment>
+    <FlexBox>
       <Label mt={8}>Розмір:&nbsp;</Label>
       <SizeSquare />
-    </Fragment>
+    </FlexBox>
   );
   const colorProduct = (
-    <Fragment>
+    <FlexBox>
       <Label mt={8}>Колір:&nbsp;</Label>
       <ColorSquare />
-    </Fragment>
+    </FlexBox>
   );
 
   // console.log(item);
@@ -166,11 +151,19 @@ const CardProduct = () => {
           {sizeProduct}
           {colorProduct}
           <Spin spinning={loadingAddBasket}>
-            <PrimaryButton mt={8} children="Додати в кошик" onClick={onPutBasket} />
+            <FlexBox>
+              <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
+              <PrimaryButton style={{ width: 190 }} ml={14} mt={8} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
+            </FlexBox>
           </Spin>
           <Spin spinning={loadingBuyNow}>
-            <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
-            <PrimaryButton className="primary" mt={8} children="Купити зараз" onClick={onClickAddOrder} />
+            <PrimaryButton
+              style={{ width: 264 }}
+              className="primary"
+              mt={8}
+              children={<BtnText children="Купити зараз" />}
+              onClick={onClickAddOrder}
+            />
           </Spin>
 
           {isClient && (

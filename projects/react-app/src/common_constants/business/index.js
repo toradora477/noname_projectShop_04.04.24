@@ -108,6 +108,8 @@ const ACTION = {
   REMOVE: 'remove',
 };
 
+const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL'];
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
@@ -120,4 +122,5 @@ module.exports = {
   NAME_SELECT,
   ERROR_IMAGE_URL,
   ACTION,
+  SIZE_OPTIONS,
 };
