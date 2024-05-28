@@ -18,3 +18,4 @@ export { default as SizeSquare } from './SizeSquare';
 export { default as ColorSquare } from './ColorSquare';
 export { default as ColorPicker } from './ColorPicker';
 export { default as SubcategoryCard } from './SubcategoryCard';
+export { default as QuantitySelector } from './QuantitySelector';

@@ -81,7 +81,7 @@ export const commonSlice = createSlice({
       (state.basket ??= []).unshift(action.payload);
     },
     removeBasket: (state, action) => {
-      const indexToRemove = state.basket.findIndex((item) => item === action.payload);
+      const indexToRemove = state.basket?.findIndex((item) => item === action.payload) ?? -1;
 
       if (indexToRemove !== -1) {
         (state.basket ?? []).splice(indexToRemove, 1);

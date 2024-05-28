@@ -2,9 +2,9 @@ import React, { Fragment, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
-import { addFavoriteProduct, addBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
+import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin, SizeSquare, ColorSquare, ColorPicker, PreviewImage } from '../../components';
+import { Card, Typography, FlexBox, PrimaryButton, Spin, SizeSquare, ColorSquare, ColorPicker, QuantitySelector } from '../../components';
 import { ACTION, PRODUCT_CATEGORIES } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request } from '../../tools';
@@ -20,7 +20,7 @@ const CardProduct = () => {
   const [selectedColor, setSelectedColor] = useState('#1890ff');
 
   const { isClient } = useSelector((state) => state.common.accessRoles);
-
+  const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
 
   // const item = products.find((item) => item._id === productId);
@@ -38,7 +38,7 @@ const CardProduct = () => {
   //    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
   //  }));
 
-  console.table(item);
+  // console.table(item);
 
   const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
     const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
@@ -142,6 +142,19 @@ const CardProduct = () => {
     setSelectedColor(newColor);
   };
 
+  const onPutInBasket = () => {
+    dispatch(addBasket(item._id));
+  };
+
+  const onDelInBasket = () => {
+    dispatch(removeBasket(item._id));
+  };
+
+  const productCounts = basket.reduce((counts, productId) => {
+    counts[productId] = (counts[productId] || 0) + 1;
+    return counts;
+  }, {});
+
   return (
     <div className="card-product">
       <FlexBox>
@@ -156,6 +169,7 @@ const CardProduct = () => {
             <PrimaryButton mt={8} children="Додати в кошик" onClick={onPutBasket} />
           </Spin>
           <Spin spinning={loadingBuyNow}>
+            <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
             <PrimaryButton className="primary" mt={8} children="Купити зараз" onClick={onClickAddOrder} />
           </Spin>
 
