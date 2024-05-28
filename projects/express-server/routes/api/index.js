@@ -21,15 +21,21 @@ router.get('/getNovaPoshtaBranches', guestJWT, async (req, res, next) => {
       });
     }
 
+    const filteredData = response.data.data.map((branch) => ({
+      Description: branch.Description,
+      SettlementAreaDescription: branch.SettlementAreaDescription,
+      SettlementDescription: branch.SettlementDescription,
+    }));
+
     const transportationData = {
       status: true,
-      data: response.data.data,
+      data: filteredData,
     };
 
     req.setLoggingData({
-      log: 'Get all list nova poshta branches',
+      log: 'Get filtered list nova poshta branches',
       operation: 'axios post api nova poshta',
-      dataLength: transportationData?.length ?? null,
+      dataLength: transportationData?.data?.length ?? null,
     });
     res.status(200).json(transportationData);
   } catch (error) {

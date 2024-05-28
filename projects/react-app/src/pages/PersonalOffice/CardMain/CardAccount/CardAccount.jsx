@@ -13,6 +13,7 @@ const CardAccount = () => {
 
   const userAuth = useSelector((state) => state.common.userAuth);
   const { isClient } = useSelector((state) => state.common.accessRoles);
+  const novaPoshtaBranches = useSelector((state) => state.common.novaPoshtaBranches);
 
   const [Title, Label] = [
     ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
@@ -34,8 +35,8 @@ const CardAccount = () => {
   const handleFirstNameChange = (e) => setFirstName(e.target.value);
   const handleLastNameChange = (e) => setLastName(e.target.value);
   const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
-  const handleCityChange = (e) => setCity(e.target.value);
-  const handleRegionChange = (e) => setRegion(e.target.value);
+  // const handleCityChange = (e) => setCity(e.target.value);
+  // const handleRegionChange = (e) => setRegion(e.target.value);
 
   // const handleNovaPoshtaBranchChange = (e) => {
   //   setSelectedNovaPoshtaBranch(e.target.value);
@@ -65,6 +66,37 @@ const CardAccount = () => {
         console.error('Помилка відправлення даних:', error);
       },
     );
+  };
+
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [filteredAddresses, setFilteredAddresses] = useState([]);
+
+  console.log('filteredCities?.length)', filteredCities?.length);
+
+  const handleRegionChange = (e) => {
+    const region = e.target.value;
+    console.log('region', region);
+    setSelectedRegion(region);
+    setSelectedCity('');
+    setFilteredAddresses([]);
+    const cities = novaPoshtaBranches?.filter((branch) => branch.SettlementAreaDescription === region)?.map((branch) => branch.SettlementDescription);
+    console.log('novaPoshtaBranches?.length)', novaPoshtaBranches?.length);
+    console.log('cities?.length)', cities?.length);
+    setFilteredCities([...new Set(cities)]);
+    console.log('[...new Set(cities)])', [...new Set(cities)]);
+  };
+
+  const handleCityChange = (e) => {
+    const city = e.target.value;
+    setSelectedCity(city);
+    const addresses = novaPoshtaBranches
+      ?.filter((branch) => branch.SettlementAreaDescription === selectedRegion && branch.SettlementDescription === city)
+      // ?.filter((branch) => branch.SettlementDescription === city)
+      ?.map((branch) => branch.Description);
+    console.log('[...new Set(addresses)])', addresses);
+    setFilteredAddresses(addresses);
   };
 
   return (
@@ -131,7 +163,7 @@ const CardAccount = () => {
       {isClient && (
         <Fragment>
           <Title mt={32} children="Доставка" />
-          <FlexBox mt={12}>
+          {/* <FlexBox mt={12}>
             <Box className="input-group">
               <Label>Місто</Label>
               <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
@@ -141,25 +173,72 @@ const CardAccount = () => {
               <Label>Область</Label>
               <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
             </Box>
-          </FlexBox>
+          </FlexBox> */}
 
-          {/* <Box className="input-group">
-            <Label>Відділення Нової Пошти</Label>
-            <select
-              aria-label="novaPoshtaBranch"
-              id="novaPoshtaBranch"
-              name="novaPoshtaBranch"
-              value={selectedNovaPoshtaBranch}
-              onChange={handleNovaPoshtaBranchChange}
-            >
-              <option value="">Оберіть відділення Нової Пошти</option>
-              {novaPoshtaBranches.map((branch) => (
-                <option key={branch.id} value={branch.name}>
-                  {branch.name}
+          {novaPoshtaBranches && (
+            <Box className="input-group">
+              <Label>Відділення Нової Пошти</Label>
+              <select
+                aria-label="novaPoshtaBranch"
+                id="novaPoshtaBranch"
+                name="novaPoshtaBranch"
+                // value={selectedNovaPoshtaBranch}
+                // onChange={handleNovaPoshtaBranchChange}
+              >
+                {/* <option value="">Оберіть відділення Нової Пошти</option> */}
+                {novaPoshtaBranches?.map((branch, index) => {
+                  if (index === 0) console.log(branch);
+                  return (
+                    <option key={index} value={branch.name}>
+                      {branch.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </Box>
+          )}
+        </Fragment>
+      )}
+
+      {isClient && novaPoshtaBranches && (
+        <Fragment>
+          <div>
+            <label>Область</label>
+            <select value={selectedRegion} onChange={handleRegionChange}>
+              <option value="">Оберіть область</option>
+              {[...new Set(novaPoshtaBranches.map((branch) => branch.SettlementAreaDescription))].map((region, index) => (
+                <option key={index} value={region}>
+                  {region}
                 </option>
               ))}
             </select>
-          </Box> */}
+          </div>
+          {selectedRegion && (
+            <div>
+              <label>Місто</label>
+              <select value={selectedCity} onChange={handleCityChange}>
+                <option value="">Оберіть місто</option>
+                {filteredCities.map((city, index) => (
+                  <option key={index} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          {selectedCity && (
+            <div>
+              <label>Адреса</label>
+              <select>
+                <option value="">Оберіть адресу</option>
+                {filteredAddresses.map((address, index) => (
+                  <option key={index} value={address}>
+                    {address}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </Fragment>
       )}
 
