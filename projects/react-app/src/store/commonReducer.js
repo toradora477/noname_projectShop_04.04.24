@@ -34,6 +34,7 @@ const initialState = {
   accessRoles: userAuth ? getAccessRoles(userAuth.role) : getAccessRoles('guest'),
   basket: null,
   products: null,
+  novaPoshtaBranches: null,
 };
 
 export const commonSlice = createSlice({
@@ -61,7 +62,13 @@ export const commonSlice = createSlice({
 
       patchProductsIsFavoriteStatus(state);
     },
+    setNovaPoshtaBranches: (state, action) => {
+      if (!Array.isArray(action.payload)) return;
+      state.novaPoshtaBranches = action.payload;
+    },
+
     setProducts: (state, action) => {
+      if (!Array.isArray(action.payload)) return;
       state.products = action.payload;
       state.products.sort((a, b) => b.i - a.i);
 
@@ -121,6 +128,7 @@ export const {
   removeBasket,
   addFavoriteProduct,
   removeFavoriteProduct,
+  setNovaPoshtaBranches,
 } = commonSlice.actions;
 
 export default commonSlice.reducer;

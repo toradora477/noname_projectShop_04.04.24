@@ -38,7 +38,7 @@ router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
 router.get('/getFilePreview', guestJWT, async (req, res, next) => {
   try {
     const { fileID } = req.query;
-    await downloadFileFromStorage(res, COLLECTIONS.PRODUCTS, fileID);
+    await downloadFileFromStorage(req, res, COLLECTIONS.PRODUCTS, fileID);
   } catch (err) {
     next(err);
   }
