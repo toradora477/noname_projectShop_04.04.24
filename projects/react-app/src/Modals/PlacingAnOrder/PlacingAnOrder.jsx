@@ -9,7 +9,6 @@ const PlacingAnOrder = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
-  const filteredProducts = products.filter((product) => basket.includes(product._id));
 
   const [formData, setFormData] = useState({
     contactName: 'Яна Іваненко',
@@ -30,15 +29,24 @@ const PlacingAnOrder = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const productCounts = basket.reduce((counts, productId) => {
+    counts[productId] = (counts[productId] || 0) + 1;
+    return counts;
+  }, {});
+
+  const filteredProducts = products.filter((product) => basket.includes(product._id));
+
+  const productsWithQuantities = filteredProducts.map((product) => ({
+    productId: product._id,
+    quantity: productCounts[product._id] || 0,
+  }));
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const orderData = {
       ...formData,
-      products: filteredProducts.map((product) => ({
-        productId: product._id,
-        quantity: 1, // Припустимо, що кількість 1 для спрощення; змінюйте за потреби
-      })),
+      products: productsWithQuantities,
     };
 
     request.post('/orders/addOrder', orderData, (res) => {
@@ -86,7 +94,6 @@ const PlacingAnOrder = () => {
               <TextGroup children="Доставка" />
               <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange} required>
                 <option value="Самовивіз з Нової Пошти">Самовивіз з Нової Пошти</option>
-                {/* Додайте більше варіантів за потреби */}
               </select>
               <input
                 aria-label="address input"
@@ -102,7 +109,6 @@ const PlacingAnOrder = () => {
               <TextGroup children="Оплата" />
               <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} required>
                 <option value="Оплата під час отримання товару">Оплата під час отримання товару</option>
-                {/* Додайте більше варіантів за потреби */}
               </select>
             </div>
 

@@ -65,8 +65,8 @@ const CardProduct = () => {
   const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : 'ОДЯГ';
   const text4 = typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : 'ОДЯГ';
 
-  const [LinkText, TItle, Text, BtnText] = [
-    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
+  const [LinkText, TItle, Label, BtnText] = [
+    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={400} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={600} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={12} fw={600} />,
@@ -78,16 +78,16 @@ const CardProduct = () => {
     </LinkText>
   );
   const nameProduct = <TItle children={item.n} mt={8} />;
-  const priceProduct = <Text mt={8}>{item.p}&nbsp;₴</Text>;
+  const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
   const sizeProduct = (
     <Fragment>
-      <Text mt={8}>Розмір:&nbsp;</Text>
+      <Label mt={8}>Розмір:&nbsp;</Label>
       <SizeSquare />
     </Fragment>
   );
   const colorProduct = (
     <Fragment>
-      <Text mt={8}>Колір:&nbsp;</Text>
+      <Label mt={8}>Колір:&nbsp;</Label>
       <ColorSquare />
     </Fragment>
   );
@@ -138,22 +138,6 @@ const CardProduct = () => {
     );
   }
 
-  // const registerRequest = () => {
-  //   const body = {
-  //     productId: item._id,
-  //   };
-
-  //   request.post('/auth/clientRegistration', body, (res) => {
-  //     if (res.exists) return setExistsClient(true);
-
-  //     window.localStorage.setItem('accessToken', res.accessToken);
-  //     setExistsClient(null);
-
-  //     dispatch(setUserAuth(getTokenData(res.accessToken)));
-  //     dispatch(setModal());
-  //   });
-  // };
-
   const handleColorChange = (newColor) => {
     setSelectedColor(newColor);
   };
@@ -189,6 +173,43 @@ const CardProduct = () => {
           </div>
         </Card>
       </FlexBox>
+      <br />
+      <div className="product-details">
+        <h2>ОПИС</h2>
+        <p>{item.description}</p>
+        <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Розмір</th>
+              <th>Вага</th>
+              <th>Ріст</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>S</td>
+              <td>55-65</td>
+              <td>155-165</td>
+            </tr>
+            <tr>
+              <td>M</td>
+              <td>65-75</td>
+              <td>165-175</td>
+            </tr>
+            <tr>
+              <td>L</td>
+              <td>75-85</td>
+              <td>175-185</td>
+            </tr>
+            <tr>
+              <td>XL</td>
+              <td>85-95</td>
+              <td>185-195</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <br />
     </div>
   );
