@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { request } from '../../tools';
-import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox } from '../../components';
+import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector } from '../../components';
 import { setModal } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
 
@@ -9,6 +9,11 @@ const PlacingAnOrder = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
+
+  const [TItle, TextGroup] = [
+    ({ children }) => <Typography children={children} fs={24} fw={400} />,
+    ({ children }) => <Typography children={children} mb={4} fs={14} fw={600} />,
+  ];
 
   const [formData, setFormData] = useState({
     contactName: 'Яна Іваненко',
@@ -18,11 +23,6 @@ const PlacingAnOrder = () => {
     paymentMethod: 'Оплата під час отримання товару',
     recipientName: 'Яна Іваненко',
   });
-
-  const [TItle, TextGroup] = [
-    ({ children }) => <Typography children={children} fs={24} fw={400} />,
-    ({ children }) => <Typography children={children} mb={4} fs={14} fw={600} />,
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +41,19 @@ const PlacingAnOrder = () => {
     quantity: productCounts[product._id] || 0,
   }));
 
+  const handleQuantityChange = (productId, amount) => {
+    const newBasket = [...basket];
+    const index = newBasket.indexOf(productId);
+    if (index !== -1) {
+      if (amount === -1 && productCounts[productId] === 1) {
+        newBasket.splice(index, 1);
+      } else {
+        newBasket[index] = productId;
+      }
+      dispatch({ type: 'UPDATE_BASKET', payload: newBasket });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -55,12 +68,14 @@ const PlacingAnOrder = () => {
     });
   };
 
+  const finishCost = filteredProducts.reduce((acc, item) => acc + item.p, 0);
+
   return (
     <Modal position="center">
-      <TItle children=" Оформлення замовлення" />
+      <TItle children="Оформлення замовлення" />
       <form onSubmit={handleSubmit} className="order-form">
         <FlexBox>
-          <Box>
+          <Box className="info-sell">
             <div className="section">
               <TextGroup children="Ваші контактні дані" />
               <div className="editable-field">
@@ -81,11 +96,18 @@ const PlacingAnOrder = () => {
               <TextGroup children="Замовлення" />
               {filteredProducts.map((product) => (
                 <Card pl={7} key={product._id} className="product-item">
-                  <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
-                  <div>
-                    <Typography>{product.n}</Typography>
-                    <Typography>{product.p} ₴</Typography>
-                  </div>
+                  <FlexBox>
+                    <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
+                    <div>
+                      <Typography>{product.n}</Typography>
+                      <Typography>{product.p} ₴</Typography>
+                    </div>
+                    <QuantitySelector
+                      quantity={productCounts[product._id]}
+                      onDecrease={() => handleQuantityChange(product._id, -1)}
+                      onIncrease={() => handleQuantityChange(product._id, 1)}
+                    />
+                  </FlexBox>
                 </Card>
               ))}
             </div>
@@ -123,14 +145,33 @@ const PlacingAnOrder = () => {
             </div>
           </Box>
 
-          <div className="total-section">
-            <Card pl={7} className="product-item">
-              <TItle children="Разом" />
-              <Typography sz={16}>1 товар на суму</Typography>
-              <Typography sz={16}>{filteredProducts.reduce((acc, item) => acc + item.p, 0)} ₴</Typography>
-              <PrimaryButton type="submit">Замовлення підтверджую</PrimaryButton>
-            </Card>
-          </div>
+          <Card pl={20} className="finished-sell">
+            <TItle children="Разом" />
+            <br />
+            <FlexBox>
+              <Typography sz={16}>
+                {basket?.length ?? 0} товар{basket?.length > 1 ? 'и' : ''} на суму
+              </Typography>
+              <Typography sz={16}>{finishCost} ₴</Typography> <br />
+            </FlexBox>
+            <br />
+            <FlexBox>
+              <Typography sz={16}>Вартість доставки</Typography>
+              <Typography sz={16}>за тарифами перевізника</Typography> <br />
+            </FlexBox>
+            <br />
+            <FlexBox>
+              <Typography sz={16}>До сплати</Typography>
+              <Typography sz={16}>{finishCost} ₴</Typography> <br />
+            </FlexBox>
+
+            <br />
+            <PrimaryButton type="submit">Замовлення підтверджую</PrimaryButton>
+            <br />
+            <Typography sz={16}>
+              Підтверджуючи замовлення, я приймаю умови: положення про обробку і захист персональних даних угоди користувача
+            </Typography>
+          </Card>
         </FlexBox>
       </form>
     </Modal>

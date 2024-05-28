@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import clsx from 'clsx';
 import { addProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
-import { Modal, ColorPicker } from '../../components';
-import { PRODUCT_CATEGORIES } from '../../common_constants/business';
+import { Modal, ColorPicker, FlexBox } from '../../components';
+import { PRODUCT_CATEGORIES, SIZE_OPTIONS } from '../../common_constants/business';
 import './ProductAdd.scss';
 
 const ProductAdd = () => {
@@ -15,7 +16,9 @@ const ProductAdd = () => {
     category: '',
     subcategory: '',
     colors: [{ images: [] }],
+    sizes: [],
   });
+  const [formError, setFormError] = useState('');
 
   const handleColorChange = (newColor, index) => {
     const updatedColors = [...formData.colors];
@@ -54,8 +57,20 @@ const ProductAdd = () => {
     });
   };
 
+  const toggleSize = (size) => {
+    setFormData((prevData) => {
+      const newSizes = prevData.sizes.includes(size) ? prevData.sizes.filter((s) => s !== size) : [...prevData.sizes, size];
+      return { ...prevData, sizes: newSizes };
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.sizes.length === 0) {
+      setFormError('Будь ласка, оберіть хоча б один розмір.');
+      return;
+    }
 
     const body = new FormData();
     body.append('productName', formData.productName);
@@ -63,6 +78,7 @@ const ProductAdd = () => {
     body.append('price', formData.price);
     body.append('category', formData.category);
     body.append('subcategory', formData.subcategory);
+    body.append('sizes', JSON.stringify(formData.sizes));
 
     const colorsInfo = formData.colors.map((color) => ({
       color: color.color || '#000000',
@@ -125,6 +141,22 @@ const ProductAdd = () => {
             </select>
           </label>
         )}
+        <label className="form-label">
+          <div>Розміри:</div>
+          <div className="size-selector">
+            {SIZE_OPTIONS.map((size) => (
+              <button
+                type="button"
+                key={size}
+                className={clsx('size-button', { selected: formData.sizes.includes(size) })}
+                onClick={() => toggleSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+          {formError && <p className="form-error">{formError}</p>}
+        </label>
         {formData.colors.map((color, index) => (
           <div key={index}>
             <label className="form-label">
