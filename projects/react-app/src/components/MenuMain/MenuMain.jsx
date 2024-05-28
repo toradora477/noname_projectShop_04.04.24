@@ -14,7 +14,7 @@ const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const userAuth = useSelector((state) => state.common.userAuth);
-  const { isAdmin, isClientOrAbove } = useSelector((state) => state.common.accessRoles);
+  const { isAdmin, isClientOrAbove, isClient, isNotAdmin } = useSelector((state) => state.common.accessRoles);
 
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
@@ -82,18 +82,22 @@ const MenuMain = () => {
             </FlexBox>
           </div>
           &nbsp;&nbsp;
-          <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
-            <FlexBox>
-              <img src={icon_heart_empty_black} alt="btn-like" />
-              &nbsp;
-              <p>Улюблене</p>
-            </FlexBox>
-          </Link>
+          {isClient && (
+            <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
+              <FlexBox>
+                <img src={icon_heart_empty_black} alt="btn-like" />
+                &nbsp;
+                <p>Улюблене</p>
+              </FlexBox>
+            </Link>
+          )}
           &nbsp;&nbsp;
-          <Link className="btn-auth" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
-            <img src={shopping_bag_color_green_gradient} alt="btn-basket" />
-            {basket?.length || null}
-          </Link>
+          {isNotAdmin && (
+            <Link className="btn-auth" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
+              <img src={shopping_bag_color_green_gradient} alt="btn-basket" />
+              {basket?.length || null}
+            </Link>
+          )}
         </div>
       </FlexBox>
     </header>
