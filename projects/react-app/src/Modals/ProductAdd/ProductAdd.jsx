@@ -21,7 +21,7 @@ const ProductAdd = () => {
   const [formError, setFormError] = useState('');
 
   const [Title, Label] = [
-    ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
+    ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={30} fw={700} />,
     ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} />,
   ];
 
@@ -109,6 +109,7 @@ const ProductAdd = () => {
 
   return (
     <Modal position="center">
+      <Title>Додавання товару</Title>
       <form onSubmit={handleSubmit} className="product-form-add">
         <label className="form-label">
           <Label> Назва товару:</Label>

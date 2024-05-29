@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
 import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin, SizeSquare, ColorSquare, ColorPicker, QuantitySelector } from '../../components';
+import { Card, Typography, FlexBox, PrimaryButton, Spin, ColorSquare, ColorPicker, QuantitySelector, SelectSquare } from '../../components';
 import { ACTION, PRODUCT_CATEGORIES } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request } from '../../tools';
@@ -62,21 +62,42 @@ const CardProduct = () => {
       {text1} &gt;&gt; {text2} &gt;&gt; {text3} &gt;&gt; <b>{text4}</b>
     </LinkText>
   );
+
   const nameProduct = <TItle children={item.n} mt={8} />;
   const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
-  console.table(item);
+
+  // const sizesProduct = item?.s?.map((i) => (i = <ColorSquare mr={8} text={i ?? ''} />)) ?? [];
+  // const colorsProduct = item?.f?.map((i) => (i = <ColorSquare mr={8} color={i.color ?? ''} />)) ?? [];
+
+  const sizesProduct = item?.s ?? [];
+  const colorsProduct = item?.f?.map((i) => (i = i.color)) ?? [];
+
+  const onSelectSize = (index) => {
+    // Дії для вибору розміру
+    console.log(index);
+  };
+
+  const onSelectColor = (index) => {
+    // Дії для вибору кольору
+    console.log(index);
+  };
+
   const sizeProduct = (
     <FlexBox>
       <Label mt={8}>Розмір:&nbsp;</Label>
-      <SizeSquare />
+
+      <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
     </FlexBox>
   );
   const colorProduct = (
     <FlexBox>
       <Label mt={8}>Колір:&nbsp;</Label>
-      <ColorSquare />
+
+      <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
     </FlexBox>
   );
+
+  console.table(colorsProduct);
 
   // console.log(item);
 
@@ -177,7 +198,7 @@ const CardProduct = () => {
         </Card>
       </FlexBox>
       <br />
-      <div className="product-details">
+      {/* <div className="product-details">
         <h2>ОПИС</h2>
         <p>{item.description}</p>
         <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
@@ -212,7 +233,7 @@ const CardProduct = () => {
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> */}
       <br />
     </div>
   );
