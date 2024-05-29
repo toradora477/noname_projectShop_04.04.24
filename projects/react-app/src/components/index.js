@@ -14,7 +14,7 @@ export { default as Empty } from './Empty';
 export { default as List } from './List';
 export { default as Divider } from './Divider';
 export { default as PreviewImage } from './PreviewImage';
-export { default as ColorSquare } from './ColorSquare/index.js';
+export { default as ColorSquare } from './ColorSquare';
 export { default as ColorPicker } from './ColorPicker';
 export { default as SubcategoryCard } from './SubcategoryCard';
 export { default as QuantitySelector } from './QuantitySelector';
