@@ -64,6 +64,7 @@ const CardProduct = () => {
   );
   const nameProduct = <TItle children={item.n} mt={8} />;
   const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
+  console.table(item);
   const sizeProduct = (
     <FlexBox>
       <Label mt={8}>Розмір:&nbsp;</Label>
@@ -144,7 +145,7 @@ const CardProduct = () => {
     <div className="card-product">
       <FlexBox>
         <GroupImage />
-        <Card pl={35}>
+        <Card ml={20} pl={35}>
           {linkTypeText}
           {nameProduct}
           {priceProduct}
@@ -173,11 +174,6 @@ const CardProduct = () => {
               </button>
             </Spin>
           )}
-          <div style={{ padding: '20px' }}>
-            <h1>Custom Color Picker</h1>
-            <ColorPicker initialColor={selectedColor} onChange={handleColorChange} />
-            <p>Selected Color: {selectedColor}</p>
-          </div>
         </Card>
       </FlexBox>
       <br />

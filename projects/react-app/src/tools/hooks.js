@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setProducts, updateUserAuth } from '../store/commonReducer';
+import { setProducts, updateUserAuth, setNovaPoshtaBranches } from '../store/commonReducer';
 import { request } from './';
 
 const useClientViewData = () => {
   const dispatch = useDispatch();
   const userAuth = useSelector((state) => state.common.userAuth);
+  const novaPoshtaBranches = useSelector((state) => state.common.novaPoshtaBranches);
 
   useEffect(() => {
     const getListProducts = () =>
@@ -34,6 +35,29 @@ const useClientViewData = () => {
       });
 
     Promise.all([getAccountInfo(), getListProducts()]).catch((error) => console.error('Error:', error.message));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (novaPoshtaBranches) return;
+
+    const getListNovaPoshtaBranches = () =>
+      new Promise((resolve, reject) => {
+        request.get('/api/getNovaPoshtaBranches', {}, (res) => {
+          if (res.data) {
+            dispatch(setNovaPoshtaBranches(res.data));
+            console.log(res.data.length);
+            resolve();
+          } else reject(new Error('Failed to fetch branches nova poshta list'));
+        });
+      });
+
+    const delayedFetch = () => {
+      setTimeout(() => {
+        Promise.all([getListNovaPoshtaBranches()]).catch((error) => console.error('Error:', error.message));
+      }, 0);
+    };
+
+    delayedFetch();
   }, [dispatch]);
 };
 

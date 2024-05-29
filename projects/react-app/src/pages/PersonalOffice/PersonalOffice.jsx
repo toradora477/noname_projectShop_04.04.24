@@ -1,11 +1,11 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { Typography, FlexBox } from '../../components';
 import { NAME_SELECT } from '../../common_constants/business';
 import CardSelected from './CardSelected';
 import CardMain from './CardMain';
-import { setNovaPoshtaBranches } from '../../store/commonReducer';
+
 import './PersonalOffice.scss';
 import {
   icon_user_white,
@@ -16,15 +16,11 @@ import {
   shopping_bag_color_gray,
 } from '../../images';
 
-import { request } from '../../tools';
-
 const PersonalOffice = () => {
-  const dispatch = useDispatch();
   const location = useLocation();
   const selectParam = location.state?.selectParam;
 
   const { isNotAdmin, isClientOrAbove } = useSelector((state) => state.common.accessRoles);
-  const novaPoshtaBranches = useSelector((state) => state.common.novaPoshtaBranches);
 
   const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 
@@ -37,21 +33,6 @@ const PersonalOffice = () => {
   useEffect(() => {
     setSelectedCard(selectParam);
   }, [selectParam]);
-
-  useEffect(() => {
-    if (novaPoshtaBranches) return;
-    const getListNovaPoshtaBranches = () =>
-      new Promise((resolve, reject) => {
-        request.get('/api/getNovaPoshtaBranches', {}, (res) => {
-          if (res.data) {
-            dispatch(setNovaPoshtaBranches(res.data));
-            resolve();
-          } else reject(new Error('Failed to fetch branches nova poshta list'));
-        });
-      });
-
-    Promise.all([getListNovaPoshtaBranches()]).catch((error) => console.error('Error:', error.message));
-  }, [dispatch]);
 
   return (
     <div className="personal-office">

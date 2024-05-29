@@ -12,18 +12,18 @@ const GroupImage = () => {
 
   const item = products.find((item) => item._id === productId);
 
+  const allFiles = item?.f?.reduce((acc, color) => {
+    return acc.concat(color.files);
+  }, []);
+
   return (
     <FlexBox>
       <div className="product-group-second-image">
-        {/* <img src={validImageProduct} alt="product" className="product-second-image" />
-        <img src={validImageProduct} alt="product" className="product-second-image" />
-        <img src={validImageProduct} alt="product" className="product-second-image" /> */}
-        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]?.files?.[0]} />
-        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]?.files?.[0]} />
-        <PreviewImage alt="product" className="product-second-image" fileID={item?.f?.[0]?.files?.[0]} />
+        {allFiles?.[1] && <PreviewImage alt="product" className="product-second-image" fileID={allFiles?.[1]} />}
+        {allFiles?.[2] && <PreviewImage alt="product" className="product-second-image" fileID={allFiles?.[2]} />}
+        {allFiles?.[3] && <PreviewImage alt="product" className="product-second-image" fileID={allFiles?.[3]} />}
       </div>
-      <PreviewImage alt="product" className="product-main-image" fileID={item?.f?.[0]?.files?.[0]} />
-      {/* <img src={validImageProduct} alt="product" className="product-main-image" /> */}
+      <PreviewImage alt="product" className="product-main-image" fileID={allFiles?.[0]} />
     </FlexBox>
   );
 };
