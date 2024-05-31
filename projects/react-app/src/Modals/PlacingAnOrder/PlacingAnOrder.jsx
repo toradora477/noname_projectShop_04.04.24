@@ -68,7 +68,12 @@ const PlacingAnOrder = () => {
     });
   };
 
-  const finishCost = filteredProducts.reduce((acc, item) => acc + item.p, 0);
+  const finishCost = filteredProducts
+    .map((product) => ({
+      price: product.p,
+      quantity: productCounts[product._id] || 0,
+    }))
+    .reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
 
   return (
     <Modal position="center">

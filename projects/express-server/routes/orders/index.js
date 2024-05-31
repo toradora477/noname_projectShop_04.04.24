@@ -29,6 +29,7 @@ router.get('/getListOrder', adminJWT, async (req, res, next) => {
           },
         },
       },
+      { $sort: { i: -1 } },
     ];
 
     const resultAggregation = await orders.aggregate(pipeline).toArray();

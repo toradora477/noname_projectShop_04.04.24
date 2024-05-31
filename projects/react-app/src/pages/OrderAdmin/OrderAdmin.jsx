@@ -1,23 +1,24 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { request } from '../../tools';
-import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin, Card, List } from '../../components';
-import OrderAdminItem from './OrderAdminItem';
+import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin, Card, List, Divider } from '../../components';
+import OrderListItem from './OrderListItem';
+import OrderItemInfo from './OrderItemInfo';
+import OrderItemUser from './OrderItemUser';
 import './OrderAdmin.scss';
 
 const OrderAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [listOrders, setListOrders] = useState([]);
-  const Title = ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />;
 
   useEffect(() => {
     const getListOrder = () => {
-      console.log('onClickAddOrder');
       setLoading(true);
 
       request.get('/orders/getListOrder', {}, (res) => {
         setListOrders(res.data);
-        console.log('res', res);
+        console.log(res.data?.[0]);
+        // console.log('res', res);
       });
 
       setLoading(false);
@@ -27,12 +28,24 @@ const OrderAdmin = () => {
   }, []);
 
   return (
-    <div className="order_admin">
+    <div className="order-admin">
       <Spin spinning={loading}>
-        <Card pl={16}>
-          <Title mt={8} children="Список замовлень" />
-          <List dataSource={listOrders} renderItem={(item) => <OrderAdminItem item={item} />} />
-        </Card>
+        <FlexBox alignItems="flex-start">
+          <Card pl={16}>
+            <Divider sz={18} fw={700} text="Список замовлень" />
+            <List dataSource={listOrders} renderItem={(item) => <OrderListItem item={item} />} />
+          </Card>
+          <div>
+            <Card pl={16}>
+              <Divider sz={18} fw={700} text="Дані про клієнта" />
+              <List dataSource={listOrders} renderItem={(item) => <OrderItemUser item={item} />} />
+            </Card>
+            <Card mt={20} pl={16}>
+              <Divider sz={18} fw={700} text="Дані про товар" />
+              <List dataSource={listOrders} renderItem={(item) => <OrderItemInfo item={item} />} />
+            </Card>
+          </div>
+        </FlexBox>
       </Spin>
     </div>
   );
