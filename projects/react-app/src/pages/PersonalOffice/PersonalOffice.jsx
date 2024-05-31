@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { Typography, FlexBox } from '../../components';
 import { NAME_SELECT } from '../../common_constants/business';
 import CardSelected from './CardSelected';

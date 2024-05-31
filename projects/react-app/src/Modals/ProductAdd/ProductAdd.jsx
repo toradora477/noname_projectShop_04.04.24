@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import clsx from 'clsx';
 import { addProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
-import { Modal, ColorPicker } from '../../components';
-import { PRODUCT_CATEGORIES } from '../../common_constants/business';
+import { Modal, ColorPicker, Box, Typography } from '../../components';
+import { PRODUCT_CATEGORIES, SIZE_OPTIONS } from '../../common_constants/business';
 import './ProductAdd.scss';
 
 const ProductAdd = () => {
@@ -15,7 +16,14 @@ const ProductAdd = () => {
     category: '',
     subcategory: '',
     colors: [{ images: [] }],
+    sizes: [],
   });
+  const [formError, setFormError] = useState('');
+
+  const [Title, Label] = [
+    ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={30} fw={700} />,
+    ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} />,
+  ];
 
   const handleColorChange = (newColor, index) => {
     const updatedColors = [...formData.colors];
@@ -54,8 +62,20 @@ const ProductAdd = () => {
     });
   };
 
+  const toggleSize = (size) => {
+    setFormData((prevData) => {
+      const newSizes = prevData.sizes.includes(size) ? prevData.sizes.filter((s) => s !== size) : [...prevData.sizes, size];
+      return { ...prevData, sizes: newSizes };
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (formData.sizes.length === 0) {
+      setFormError('Будь ласка, оберіть хоча б один розмір.');
+      return;
+    }
 
     const body = new FormData();
     body.append('productName', formData.productName);
@@ -63,6 +83,7 @@ const ProductAdd = () => {
     body.append('price', formData.price);
     body.append('category', formData.category);
     body.append('subcategory', formData.subcategory);
+    body.append('sizes', JSON.stringify(formData.sizes));
 
     const colorsInfo = formData.colors.map((color) => ({
       color: color.color || '#000000',
@@ -88,21 +109,30 @@ const ProductAdd = () => {
 
   return (
     <Modal position="center">
+      <Title>Додавання товару</Title>
       <form onSubmit={handleSubmit} className="product-form-add">
         <label className="form-label">
-          Назва товару:
+          <Label> Назва товару:</Label>
           <input type="text" name="productName" value={formData.productName} onChange={(e) => handleChange(e)} className="form-input" required />
         </label>
         <label className="form-label">
-          Опис:
+          <Label> Опис:</Label>
           <textarea name="description" value={formData.description} onChange={(e) => handleChange(e)} className="form-input textarea" required />
         </label>
+        <Box className="input-group">
+          <Label>Ціна</Label>
+          <input
+            placeholder="Введіть ціну"
+            aria-label="price"
+            id="price"
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={(e) => handleChange(e)}
+          />
+        </Box>
         <label className="form-label">
-          Ціна:
-          <input type="number" name="price" value={formData.price} onChange={(e) => handleChange(e)} className="form-input" required />
-        </label>
-        <label className="form-label">
-          Категорія:
+          <Label>Категорія:</Label>
           <select name="category" value={formData.category} onChange={handleCategoryChange} className="form-input" required>
             <option value="">Оберіть категорію</option>
             {PRODUCT_CATEGORIES.map((cat) => (
@@ -114,7 +144,7 @@ const ProductAdd = () => {
         </label>
         {selectedCategory && (
           <label className="form-label">
-            Підкатегорія:
+            <Label>Підкатегорія:</Label>
             <select name="subcategory" value={formData.subcategory} onChange={handleSubcategoryChange} className="form-input" required>
               <option value="">Оберіть підкатегорію</option>
               {selectedCategory.subcategories.map((subcat) => (
@@ -125,14 +155,30 @@ const ProductAdd = () => {
             </select>
           </label>
         )}
+        <label className="form-label">
+          <Label>Розміри</Label>
+          <div className="size-selector">
+            {SIZE_OPTIONS.map((size) => (
+              <button
+                type="button"
+                key={size}
+                className={clsx('size-button', { selected: formData.sizes.includes(size) })}
+                onClick={() => toggleSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+          {formError && <p className="form-error">{formError}</p>}
+        </label>
         {formData.colors.map((color, index) => (
-          <div key={index}>
+          <div key={index} className="color-group">
             <label className="form-label">
-              Колір товару: <ColorPicker initialColor={color.color || '#000000'} onChange={(newColor) => handleColorChange(newColor, index)} />
+              <Label>Колір товару:</Label>
+              <ColorPicker initialColor={color.color || '#000000'} onChange={(newColor) => handleColorChange(newColor, index)} />
             </label>
-            <br />
             <label className="form-label">
-              Зображення товару для цього кольору:
+              <Label> Зображення товару для цього кольору:</Label>
               <input
                 type="file"
                 name="colorImage"

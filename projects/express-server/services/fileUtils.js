@@ -65,7 +65,7 @@ const uploadFileToStorage = async (folder, file) => {
   }
 };
 
-const downloadFileFromStorage = async (res, folder, fileId) => {
+const downloadFileFromStorage = async (req, res, folder, fileId) => {
   try {
     if (![folder, fileId].every(Boolean)) {
       throw new ExtendedError({
@@ -94,6 +94,11 @@ const downloadFileFromStorage = async (res, folder, fileId) => {
 
     const fileStream = file.createReadStream();
 
+    req.setLoggingData({
+      log: 'Get image with firebase',
+      operation: 'storage getFiles',
+      size: (file?.metadata?.size ? (file?.metadata?.size / (1024 * 1024)).toFixed(3) : 0) + ' mb',
+    });
     res.setHeader('Content-Type', 'image/png');
 
     fileStream.pipe(res);

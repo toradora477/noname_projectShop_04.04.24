@@ -38,7 +38,7 @@ router.get('/getListAllProducts', guestJWT, async (req, res, next) => {
 router.get('/getFilePreview', guestJWT, async (req, res, next) => {
   try {
     const { fileID } = req.query;
-    await downloadFileFromStorage(res, COLLECTIONS.PRODUCTS, fileID);
+    await downloadFileFromStorage(req, res, COLLECTIONS.PRODUCTS, fileID);
   } catch (err) {
     next(err);
   }
@@ -46,12 +46,12 @@ router.get('/getFilePreview', guestJWT, async (req, res, next) => {
 
 router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }).array('files', 20), async (req, res, next) => {
   try {
-    const { productName, description, price, colorsInfo, category, subcategory } = req.body;
+    const { productName, description, price, colorsInfo, category, subcategory, sizes } = req.body;
     const { _id: userID } = req.user;
 
     console.log(req.body);
 
-    if (![userID, productName, price].every(Boolean)) {
+    if (![userID, productName, price, sizes, colorsInfo, category, subcategory, description].every(Boolean)) {
       throw new ExtendedError({
         messageLog: 'One or more values are empty.',
         messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
@@ -65,6 +65,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
     ];
 
     let fileIdAndColorArray;
+    const parsedSizes = JSON.parse(sizes);
     const parsedColorsInfo = JSON.parse(colorsInfo);
     const colorFilesMap = new Map();
 
@@ -102,6 +103,7 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
       t: new Date(),
       i: await getNextSequenceValue('productNextSequenceValue', commonParams),
       f: fileIdAndColorArray,
+      s: parsedSizes,
       c: [category, subcategory],
     };
 

@@ -1,4 +1,6 @@
-# noname_projectShop_04.04.24
+# Online Store - The Dressery Store
+
+This monorepo is the home for projects related to the The Dressery Store.
 
 Intructions
 (node version 18.14.1 < 19.0.0)

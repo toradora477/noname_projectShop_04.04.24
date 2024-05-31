@@ -3,5 +3,6 @@
 /public
 /react-app-static
 .env
+.env.prod
 /config
 firebase-adminsdk.json

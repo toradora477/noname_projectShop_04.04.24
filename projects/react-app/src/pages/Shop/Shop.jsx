@@ -12,11 +12,11 @@ const Shop = () => {
   const products = useSelector((state) => state.common.products) ?? [];
 
   const titleBillboardStandart = 'МАГАЗИН';
+  const productsPerPage = 15;
 
   const [currentPage, setCurrentPage] = useState(0);
   const [titleBillboard, setTitleBillboard] = useState(titleBillboardStandart);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const productsPerPage = 15; // Количество продуктов на странице
 
   const offset = currentPage * productsPerPage;
   const pageCount = Math.ceil(products.length / productsPerPage);
@@ -35,23 +35,26 @@ const Shop = () => {
     const isCategoryValid = category !== null && !isNaN(Number(category));
     const isSubcategoryValid = subcategory !== null && !isNaN(Number(subcategory));
 
-    if (isCategoryValid || isSubcategoryValid) {
+    if (isCategoryValid) {
       const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
-        const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
+        let category, subcategory;
+        category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
         if (!category) return null;
 
-        const subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
-        if (!subcategory) return null;
+        if (isSubcategoryValid) {
+          subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
+          if (!subcategory) return null;
+        }
 
         return {
           categoryLabel: category.label,
-          subcategoryLabel: subcategory.label,
+          ...(isSubcategoryValid ? { subcategoryLabel: subcategory.label } : {}),
         };
       };
 
       const labels = getCategoryAndSubcategoryLabel(category, subcategory);
 
-      setTitleBillboard(labels.subcategoryLabel);
+      setTitleBillboard(isSubcategoryValid ? labels.subcategoryLabel : labels.categoryLabel);
 
       const filtered = products.filter((product) => {
         return product.c?.[0] === category && product.c?.[1] === subcategory;
@@ -65,9 +68,6 @@ const Shop = () => {
 
   return (
     <div className="shop-page">
-      {/* <div className="billboard-label">{titleBillboard}</div>
-      <img src={billboard_subcategory} alt="billboard" /> */}
-
       <div className="billboard-container">
         <div className="billboard-label">{titleBillboard}</div>
         <img src={billboard_subcategory} alt="billboard" className="billboard-image" />
@@ -77,17 +77,20 @@ const Shop = () => {
           <Product key={item._id} item={item} />
         ))}
       </div>
-      <ReactPaginate
-        previousLabel={currentPage === 0 ? '' : '<'}
-        nextLabel={currentPage === pageCount - 1 ? '' : '>'}
-        breakLabel={'...'}
-        pageCount={pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageClick}
-        containerClassName={'pagination'}
-        activeClassName={'active'}
-      />
+
+      {pageCount > 1 && (
+        <ReactPaginate
+          previousLabel={currentPage === 0 ? '' : '<'}
+          nextLabel={currentPage === pageCount - 1 ? '' : '>'}
+          breakLabel={'...'}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination'}
+          activeClassName={'active'}
+        />
+      )}
     </div>
   );
 };

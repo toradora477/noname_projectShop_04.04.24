@@ -31,3 +31,24 @@ export { default as icon_empty_box } from './icon_empty_box.svg';
 ////////////////////////////////////////////////////////////////
 export { default as subcategory_jackets } from './subcategory_jackets.svg';
 export { default as subcategory_winter_jackets } from './subcategory_winter_jackets.jpg';
+export { default as subcategory_sweaters } from './subcategory_sweaters.png';
+export { default as subcategory_bucket_hats } from './subcategory_bucket_hats.png';
+export { default as subcategory_hats } from './subcategory_bucket_hats.png';
+export { default as subcategory_sunglasses } from './subcategory_bucket_hats.png';
+
+export { default as subcategory_hoodies } from './subcategory_hoodies.png';
+
+export { default as subcategory_sweatshirts } from './subcategory_sweatshirts.png';
+export { default as subcategory_cardigans } from './subcategory_cardigans.png';
+export { default as subcategory_t_shirts } from './subcategory_t_shirts.png';
+export { default as subcategory_shirts } from './subcategory_shirts.png';
+export { default as subcategory_pants } from './subcategory_shirts.png';
+
+export { default as subcategory_jeans } from './subcategory_jeans.png';
+export { default as subcategory_shorts } from './subcategory_jeans.png';
+export { default as subcategory_sneakers } from './subcategory_bags.png';
+export { default as subcategory_trainers } from './subcategory_bags.png';
+export { default as subcategory_slippers } from './subcategory_bags.png';
+export { default as subcategory_caps } from './subcategory_bags.png';
+
+export { default as subcategory_bags } from './subcategory_bags.png';

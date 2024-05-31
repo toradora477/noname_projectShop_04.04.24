@@ -1,39 +1,65 @@
-import React, { useState } from 'react';
-
+import React, { useState, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { icons8_like_96, icons8_bag_96, Icon_menu_sidemenu } from '../../images';
 import { PRODUCT_CATEGORIES } from '../../common_constants/business';
 import clsx from 'clsx';
+import { ROUTES } from '../../common_constants/routes';
 import './SideMenu.scss';
+
+const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink }) => {
+  return (
+    <Link
+      style={{ textDecoration: 'none' }}
+      to={{
+        pathname: pathnameLink ?? ROUTES.SHOP,
+        ...(pathnameLink ? {} : { search: `?category=${item?.value}` }),
+      }}
+    >
+      <button style={{ marginLeft: ml }} className="btn-first">
+        <img src={src ?? item?.img} alt="btn menu" />
+        {isExpanded && (
+          <span className="text" style={{ fontWeight: 700, fontSize: '16px' }}>
+            {text ?? item?.label}
+          </span>
+        )}
+      </button>
+    </Link>
+  );
+};
 
 const SideMenu = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const ButtomSideMenu = ({ item, src, text }) => {
-    return (
-      <button className="btn-first">
-        <img src={src ?? item?.img} alt="btn menu" />
-        {isExpanded && <span className="text">{text ?? item?.label}</span>}
-      </button>
-    );
+
+  const handleMouseEnter = () => {
+    setIsExpanded(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsExpanded(false);
   };
 
   return (
-    <nav
-      className={clsx('side-menu', {
-        expanded: isExpanded,
-      })}
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
-    >
-      <div className="container">
-        <br />
-        <ButtomSideMenu src={Icon_menu_sidemenu} text="Меню" />
-        <ButtomSideMenu src={icons8_bag_96} text="Магазин" />
-        {PRODUCT_CATEGORIES.map((item, index) => (
-          <ButtomSideMenu item={item} key={index} />
-        ))}
-        <ButtomSideMenu src={icons8_like_96} text="Лідери продажів" />
-      </div>
-    </nav>
+    <Fragment>
+      <div className="side-block" />
+      <div className={clsx('side-screen-dim', { visible: isExpanded })} />
+      <nav
+        className={clsx('side-menu', {
+          expanded: isExpanded,
+        })}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="container">
+          <br />
+          <ButtonWithIcon pathnameLink={ROUTES.HOME_DASHBOARD} ml={0} src={Icon_menu_sidemenu} text="Меню" isExpanded={isExpanded} />
+          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_bag_96} text="Магазин" isExpanded={isExpanded} />
+          {PRODUCT_CATEGORIES.map((item, index) => (
+            <ButtonWithIcon item={item} key={index} isExpanded={isExpanded} />
+          ))}
+          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_like_96} text="Лідери продажів" isExpanded={isExpanded} />
+        </div>
+      </nav>
+    </Fragment>
   );
 };
 

@@ -27,6 +27,7 @@ const checkEnvVariables = () => {
     if (!process.env.TOKEN_SECRET) log.serverError('TOKEN_SECRET empty');
     if (!process.env.MONGO_URL) log.serverError('MONGO_URL empty');
     if (!process.env.STORAGE_BUCKET) log.serverError('STORAGE_BUCKET empty');
+    if (!process.env.API_NOVA_POSHTA_KEY) log.serverError('API_NOVA_POSHTA_KEY empty');
   } else {
     log.serverError('.env missing');
   }

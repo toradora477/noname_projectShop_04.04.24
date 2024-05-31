@@ -13,7 +13,7 @@ import './Product.scss';
 const Product = ({ item }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { isClient } = useSelector((state) => state.common.accessRoles);
+  const { isClient, isNotAdmin } = useSelector((state) => state.common.accessRoles);
 
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -91,8 +91,8 @@ const Product = ({ item }) => {
           <PreviewImage fileID={item?.f?.[0]?.files?.[0]} />
         </Link>
         <h3>{item.n}</h3>
-        <p>${item.p}</p>
-        {!isPageProductAdmin && <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />}
+        <p>{item.p}&nbsp;$</p>
+        {isNotAdmin && !isPageProductAdmin && <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />}
         {isPagePersonalOffice && removeItemsBasket}
         {isPageProductAdmin && productEditing}
       </Spin>

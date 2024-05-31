@@ -1,46 +1,46 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
-const { DB, COLLECTIONS } = require('../../common_constants/db');
-const { authenticateJWT } = require('../../middlewares/jwtAudit');
-
 const { ExtendedError } = require('../../tools');
-
+const { guestJWT } = require('../../middlewares/jwtAudit');
 const axios = require('axios');
 
-// router.post('/getNovaPoshtaBranches', async (req, res, next) => {
-//   try {
-//     // Получение параметров из тела запроса
-//     const { city, area } = req.body;
+router.get('/getNovaPoshtaBranches', guestJWT, async (req, res, next) => {
+  try {
+    const API_NOVA_POSHTA_KEY = process.env.API_NOVA_POSHTA_KEY;
+    const API_NOVA_POSHTA_URL = process.env.API_NOVA_POSHTA_URL;
 
-//     // Запрос к API Новой Почты для получения списка отделений
-//     const response = await axios.post(
-//       'https://api.novaposhta.ua/v2.0/json/',
-//       // ,
-//       // {
-//       // apiKey: 'your_api_key', // Вставьте ваш API ключ Новой Почты
-//       // modelName: 'Address',
-//       // calledMethod: 'getWarehouses',
-//       // methodProperties: {
-//       //   CityName: city,
-//       //   // Другие параметры для фильтрации по городу, области и т.д., если нужно
-//       // },
-//       // }
-//     );
+    const response = await axios.post(API_NOVA_POSHTA_URL, {
+      apiKey: API_NOVA_POSHTA_KEY,
+      modelName: 'Address',
+      calledMethod: 'getWarehouses',
+    });
 
-//     console.log(response);
-//     console.log('response');
+    if (!response?.data?.success || !response?.data?.data) {
+      throw new ExtendedError({
+        messageLog: 'Poor axios post result.',
+        messageJson: 'Помилка сервера. Не вдалося завантажити список відділень.',
+      });
+    }
 
-//     // Проверка успешного ответа
-//     if (response.data.success) {
-//       // Отправка списка отделений в ответ
-//       res.status(200).json(response.data.data);
-//     } else {
-//       // Если запрос завершился неудачно
-//       res.status(500).json({ error: 'Не удалось загрузить список отделений Новой Почты' });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+    const filteredData = response.data.data.map((branch) => ({
+      Description: branch.Description,
+      SettlementAreaDescription: branch.SettlementAreaDescription,
+      SettlementDescription: branch.SettlementDescription,
+    }));
+
+    const transportationData = {
+      status: true,
+      data: filteredData,
+    };
+
+    req.setLoggingData({
+      log: 'Get filtered list nova poshta branches',
+      operation: 'axios post api nova poshta',
+      dataLength: transportationData?.data?.length ?? null,
+    });
+    res.status(200).json(transportationData);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

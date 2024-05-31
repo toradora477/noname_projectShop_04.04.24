@@ -2,12 +2,13 @@ import React, { Fragment, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
-import { addFavoriteProduct, addBasket, removeFavoriteProduct } from '../../store/commonReducer';
+import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin, SizeSquare, ColorSquare, ColorPicker, PreviewImage } from '../../components';
-import { ACTION } from '../../common_constants/business';
+import { Card, Typography, FlexBox, PrimaryButton, Spin, ColorSquare, ColorPicker, QuantitySelector, SelectSquare } from '../../components';
+import { ACTION, PRODUCT_CATEGORIES } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request } from '../../tools';
+import { PLACING_AN_ORDER } from '../../common_constants/modals';
 
 const CardProduct = () => {
   const dispatch = useDispatch();
@@ -19,43 +20,38 @@ const CardProduct = () => {
   const [selectedColor, setSelectedColor] = useState('#1890ff');
 
   const { isClient } = useSelector((state) => state.common.accessRoles);
-
+  const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
-  const userAuth = useSelector((state) => state.common.userAuth);
 
-  // const item = products.find((item) => item._id === productId);
-  // if (item) {
-  //   item.isFavorite = userAuth?.fav?.includes(item._id) ?? false;
-  // }
+  const item = products.find((item) => item._id === productId);
 
-  // Добавляем свойство isFavorite ко всем продуктам
-  const productsWithFavoriteStatus = products.map((product) => ({
-    ...product,
-    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
-  }));
+  const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
+    const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
+    if (!category) return null;
 
-  // Находим нужный продукт с уже обновленным свойством isFavorite
-  const item = productsWithFavoriteStatus.find((item) => item._id === productId);
+    const subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
+    if (!subcategory) return null;
 
-  //  const productsWithFavoriteStatus = products.map((product) => ({
-  //    ...product,
-  //    isFavorite: userAuth?.fav?.includes(product._id) ?? false,
-  //  }));
-
-  console.log('item', item);
+    return {
+      categoryLabel: category.label,
+      subcategoryLabel: subcategory.label,
+    };
+  };
 
   if (!item) {
     history.push(ROUTES.ERROR404);
     return null;
   }
 
+  const resultLabelCategory = getCategoryAndSubcategoryLabel(item.c?.[0], item.c?.[1]);
+
   const text1 = 'ГОЛОВНА'; // ? постійна
   const text2 = 'МАГАЗИН'; // ? постійна
-  const text3 = 'ОДЯГ'; // TODO динамічною повина бути
-  const text4 = 'ФУТБОЛКИ'; // TODO динамічною повина бути
+  const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : 'ОДЯГ';
+  const text4 = typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : 'ОДЯГ';
 
-  const [LinkText, TItle, Text, BtnText] = [
-    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
+  const [LinkText, TItle, Label, BtnText] = [
+    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={400} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={600} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={12} fw={600} />,
@@ -66,26 +62,49 @@ const CardProduct = () => {
       {text1} &gt;&gt; {text2} &gt;&gt; {text3} &gt;&gt; <b>{text4}</b>
     </LinkText>
   );
+
   const nameProduct = <TItle children={item.n} mt={8} />;
-  const priceProduct = <Text mt={8}>{item.p}&nbsp;₴</Text>;
+  const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
+
+  // const sizesProduct = item?.s?.map((i) => (i = <ColorSquare mr={8} text={i ?? ''} />)) ?? [];
+  // const colorsProduct = item?.f?.map((i) => (i = <ColorSquare mr={8} color={i.color ?? ''} />)) ?? [];
+
+  const sizesProduct = item?.s ?? [];
+  const colorsProduct = item?.f?.map((i) => (i = i.color)) ?? [];
+
+  const onSelectSize = (index) => {
+    // Дії для вибору розміру
+    console.log(index);
+  };
+
+  const onSelectColor = (index) => {
+    // Дії для вибору кольору
+    console.log(index);
+  };
+
   const sizeProduct = (
-    <Fragment>
-      <Text mt={8}>Розмір:&nbsp;</Text>
-      <SizeSquare />
-    </Fragment>
+    <FlexBox>
+      <Label mt={8}>Розмір:&nbsp;</Label>
+
+      <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
+    </FlexBox>
   );
   const colorProduct = (
-    <Fragment>
-      <Text mt={8}>Колір:&nbsp;</Text>
-      <ColorSquare />
-    </Fragment>
+    <FlexBox>
+      <Label mt={8}>Колір:&nbsp;</Label>
+
+      <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
+    </FlexBox>
   );
+
+  console.table(colorsProduct);
 
   // console.log(item);
 
-  const onBuyNow = () => {
+  const onClickAddOrder = () => {
     setLoadingBuyNow(true);
-    console.log('Buy Now');
+    dispatch(addBasket(item._id));
+    dispatch(setModal({ name: PLACING_AN_ORDER }));
     setLoadingBuyNow(false);
   };
 
@@ -126,43 +145,49 @@ const CardProduct = () => {
     );
   }
 
-  // const registerRequest = () => {
-  //   const body = {
-  //     productId: item._id,
-  //   };
-
-  //   request.post('/auth/clientRegistration', body, (res) => {
-  //     if (res.exists) return setExistsClient(true);
-
-  //     window.localStorage.setItem('accessToken', res.accessToken);
-  //     setExistsClient(null);
-
-  //     dispatch(setUserAuth(getTokenData(res.accessToken)));
-  //     dispatch(setModal());
-  //   });
-  // };
-
   const handleColorChange = (newColor) => {
     setSelectedColor(newColor);
   };
+
+  const onPutInBasket = () => {
+    dispatch(addBasket(item._id));
+  };
+
+  const onDelInBasket = () => {
+    dispatch(removeBasket(item._id));
+  };
+
+  const productCounts = basket.reduce((counts, productId) => {
+    counts[productId] = (counts[productId] || 0) + 1;
+    return counts;
+  }, {});
 
   return (
     <div className="card-product">
       <FlexBox>
         <GroupImage />
-        <Card pl={35}>
+        <Card ml={20} pl={35}>
           {linkTypeText}
           {nameProduct}
           {priceProduct}
           {sizeProduct}
           {colorProduct}
-
-          <Spin spinning={loadingBuyNow}>
-            <PrimaryButton mt={8} children="Купити зараз" onClick={onBuyNow} />
-          </Spin>
           <Spin spinning={loadingAddBasket}>
-            <PrimaryButton className="primary" mt={8} children="Додати в кошик" onClick={onPutBasket} />
+            <FlexBox>
+              <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
+              <PrimaryButton style={{ width: 190 }} ml={14} mt={8} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
+            </FlexBox>
           </Spin>
+          <Spin spinning={loadingBuyNow}>
+            <PrimaryButton
+              style={{ width: 264 }}
+              className="primary"
+              mt={8}
+              children={<BtnText children="Купити зараз" />}
+              onClick={onClickAddOrder}
+            />
+          </Spin>
+
           {isClient && (
             <Spin spinning={loadingPutWishList}>
               <button className="btn-no-border" onClick={onPutWishList}>
@@ -170,16 +195,141 @@ const CardProduct = () => {
               </button>
             </Spin>
           )}
-          <div style={{ padding: '20px' }}>
-            <h1>Custom Color Picker</h1>
-            <ColorPicker initialColor={selectedColor} onChange={handleColorChange} />
-            <p>Selected Color: {selectedColor}</p>
-          </div>
         </Card>
       </FlexBox>
+      <br />
+      {/* <div className="product-details">
+        <h2>ОПИС</h2>
+        <p>{item.description}</p>
+        <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Розмір</th>
+              <th>Вага</th>
+              <th>Ріст</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>S</td>
+              <td>55-65</td>
+              <td>155-165</td>
+            </tr>
+            <tr>
+              <td>M</td>
+              <td>65-75</td>
+              <td>165-175</td>
+            </tr>
+            <tr>
+              <td>L</td>
+              <td>75-85</td>
+              <td>175-185</td>
+            </tr>
+            <tr>
+              <td>XL</td>
+              <td>85-95</td>
+              <td>185-195</td>
+            </tr>
+          </tbody>
+        </table>
+      </div> */}
       <br />
     </div>
   );
 };
 
 export default CardProduct;
+
+//  const [LinkText, TItle, Text, BtnText] = [
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} />,
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={600} />,
+//    ({ children, mt }) => <Typography children={children} mt={mt} sz={12} fw={600} />,
+//  ];
+
+//  const linkTypeText = (
+//    <LinkText>
+//      {text1} &gt;&gt; {text2} &gt;&gt; {text3} &gt;&gt; <b>{text4}</b>
+//    </LinkText>
+//  );
+
+//  const nameProduct = <TItle children={item.n} mt={8} />;
+//  const priceProduct = <Text mt={8}>{item.p}&nbsp;₴</Text>;
+//  const sizeProduct = (
+//    <Fragment>
+//      <Text mt={8}>Розмір:&nbsp;</Text>
+//      <select className="form-select">
+//        <option value="S">S</option>
+//        <option value="M">M</option>
+//        <option value="L">L</option>
+//        <option value="XL">XL</option>
+//      </select>
+//    </Fragment>
+//  );
+
+//  const colorProduct = (
+//    <Fragment>
+//      <Text mt={8}>Колір:&nbsp;</Text>
+//      <select className="form-select">
+//        <option value="black">Чорний</option>
+//        <option value="white">Білий</option>
+//      </select>
+//    </Fragment>
+//  );
+
+//  const onBuyNow = () => {
+//    setLoadingBuyNow(true);
+//    console.log('Buy Now');
+//    setLoadingBuyNow(false);
+//  };
+
+//  const onPutBasket = () => {
+//    setLoadingAddBasket(true);
+//    dispatch(addBasket(item._id));
+//    setLoadingAddBasket(false);
+//  };
+
+//  const onPutWishList = () => {
+//    setLoadingPutWishList(true);
+//    handleToFavorites(item._id, ACTION[item.isFavorite ? 'REMOVE' : 'ADD']);
+//    setLoadingPutWishList(false);
+//  };
+
+//  <div className="product-details">
+//       <h2>ОПИС</h2>
+//       <p>{item.description}</p>
+//       <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
+//       <table>
+//         <thead>
+//           <tr>
+//             <th>Розмір</th>
+//             <th>Вага</th>
+//             <th>Ріст</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           <tr>
+//             <td>S</td>
+//             <td>55-65</td>
+//             <td>155-165</td>
+//           </tr>
+//           <tr>
+//             <td>M</td>
+//             <td>65-75</td>
+//             <td>165-175</td>
+//           </tr>
+//           <tr>
+//             <td>L</td>
+//             <td>75-85</td>
+//             <td>175-185</td>
+//           </tr>
+//           <tr>
+//             <td>XL</td>
+//             <td>85-95</td>
+//             <td>185-195</td>
+//           </tr>
+//         </tbody>
+//       </table>
+//     </div>
+//     <br />

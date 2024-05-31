@@ -28,12 +28,33 @@ const patchProductsIsFavoriteStatus = (state) => {
   }));
 };
 
+const sortLicensePlateNovaPoshtaBranches = (a, b) => {
+  const extractNumber = (str) => {
+    const match = str.match(/№(\d+)/);
+    return match ? parseInt(match[1]) : Infinity;
+  };
+
+  const compareStrings = (str1, str2) => {
+    const num1 = extractNumber(str1);
+    const num2 = extractNumber(str2);
+
+    if (num1 !== Infinity && num2 !== Infinity) return num1 - num2;
+    if (num1 !== Infinity) return -1;
+    if (num2 !== Infinity) return 1;
+
+    return str1.localeCompare(str2);
+  };
+
+  return compareStrings(a, b);
+};
+
 const initialState = {
   modal: { name: '', data: {} },
   userAuth: userAuth && { ...userAuth, token: userToken },
   accessRoles: userAuth ? getAccessRoles(userAuth.role) : getAccessRoles('guest'),
   basket: null,
   products: null,
+  novaPoshtaBranches: null,
 };
 
 export const commonSlice = createSlice({
@@ -61,7 +82,15 @@ export const commonSlice = createSlice({
 
       patchProductsIsFavoriteStatus(state);
     },
+    setNovaPoshtaBranches: (state, action) => {
+      if (!Array.isArray(action.payload)) return;
+      state.novaPoshtaBranches = action.payload;
+
+      state.novaPoshtaBranches = state.novaPoshtaBranches.sort((a, b) => sortLicensePlateNovaPoshtaBranches(a.Description, b.Description));
+    },
+
     setProducts: (state, action) => {
+      if (!Array.isArray(action.payload)) return;
       state.products = action.payload;
       state.products.sort((a, b) => b.i - a.i);
 
@@ -81,7 +110,7 @@ export const commonSlice = createSlice({
       (state.basket ??= []).unshift(action.payload);
     },
     removeBasket: (state, action) => {
-      const indexToRemove = state.basket.findIndex((item) => item === action.payload);
+      const indexToRemove = state.basket?.findIndex((item) => item === action.payload) ?? -1;
 
       if (indexToRemove !== -1) {
         (state.basket ?? []).splice(indexToRemove, 1);
@@ -121,6 +150,7 @@ export const {
   removeBasket,
   addFavoriteProduct,
   removeFavoriteProduct,
+  setNovaPoshtaBranches,
 } = commonSlice.actions;
 
 export default commonSlice.reducer;
