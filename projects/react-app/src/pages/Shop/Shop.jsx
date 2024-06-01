@@ -18,14 +18,11 @@ const Shop = () => {
   const [titleBillboard, setTitleBillboard] = useState(titleBillboardStandart);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  const offset = currentPage * productsPerPage;
   const pageCount = Math.ceil(products.length / productsPerPage);
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
-
-  const currentProducts = products.slice(offset, offset + productsPerPage);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -39,6 +36,7 @@ const Shop = () => {
       const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
         let category, subcategory;
         category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
+
         if (!category) return null;
 
         if (isSubcategoryValid) {
@@ -57,8 +55,10 @@ const Shop = () => {
       setTitleBillboard(isSubcategoryValid ? labels.subcategoryLabel : labels.categoryLabel);
 
       const filtered = products.filter((product) => {
-        return product.c?.[0] === category && product.c?.[1] === subcategory;
+        const retval = product.c?.[0] === category && (isSubcategoryValid ? product.c?.[1] === subcategory : true);
+        return retval;
       });
+
       setFilteredProducts(filtered);
     } else {
       setTitleBillboard(titleBillboardStandart);

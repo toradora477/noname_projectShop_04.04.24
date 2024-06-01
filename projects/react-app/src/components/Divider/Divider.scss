@@ -7,5 +7,37 @@
   .divider-line {
     flex-grow: 1;
     border-bottom: 1px solid $dark_gray;
+
+    &.primary {
+      border-bottom-color: $primary;
+    }
+
+    &.gray50 {
+      border-bottom-color: $gray50;
+    }
+
+    &.gray30 {
+      border-bottom-color: $gray30;
+    }
+
+    &.gray {
+      border-bottom-color: $gray;
+    }
+
+    &.medium_gray {
+      border-bottom-color: $medium_gray;
+    }
+
+    &.dark_gray {
+      border-bottom-color: $dark_gray;
+    }
+
+    &.orange {
+      border-bottom-color: $orange;
+    }
+
+    &.red {
+      border-bottom-color: $red;
+    }
   }
 }

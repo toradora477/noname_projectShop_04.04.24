@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { request } from '../../tools';
-import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector } from '../../components';
+import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector, Divider } from '../../components';
 import { setModal, addBasket, removeBasket, cleanBasket } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
 
@@ -73,6 +73,15 @@ const PlacingAnOrder = () => {
       dispatch(cleanBasket());
       dispatch(setModal());
     });
+  };
+
+  const InfoRow = ({ leftText, rightText, mt = 0, mb = 0 }) => {
+    return (
+      <FlexBox mt={mt} mb={mb} style={{ justifyContent: 'space-between' }}>
+        <Typography color="gray50" sz={12} fw={500} children={leftText} />
+        <Typography sz={14} fw={600} children={rightText} />
+      </FlexBox>
+    );
   };
 
   useEffect(() => {
@@ -163,31 +172,24 @@ const PlacingAnOrder = () => {
             </div>
           </Box>
 
-          <Card pl={20} className="finished-sell">
+          <Card ml={50} pl={20} className="finished-sell">
             <TItle children="Разом" />
-            <br />
-            <FlexBox>
-              <Typography sz={16}>
-                {basket?.length ?? 0} товар{basket?.length > 1 ? 'и' : ''} на суму
-              </Typography>
-              <Typography sz={16}>{newFinishCost} ₴</Typography> <br />
-            </FlexBox>
-            <br />
-            <FlexBox>
-              <Typography sz={16}>Вартість доставки</Typography>
-              <Typography sz={16}>за тарифами перевізника</Typography> <br />
-            </FlexBox>
-            <br />
-            <FlexBox>
-              <Typography sz={16}>До сплати</Typography>
-              <Typography sz={16}>{newFinishCost} ₴</Typography> <br />
-            </FlexBox>
 
-            <br />
-            <PrimaryButton type="submit">Замовлення підтверджую</PrimaryButton>
-            <br />
-            <Typography sz={16}>
-              Підтверджуючи замовлення, я приймаю умови: положення про обробку і захист персональних даних угоди користувача
+            <InfoRow mt={30} leftText={`${basket?.length ?? 0} товар${basket?.length > 1 ? 'и' : ''} на суму`} rightText={`${newFinishCost} ₴`} />
+
+            <InfoRow mt={20} mb={12} leftText="Вартість доставки" rightText="за тарифами перевізника" />
+            <Divider color="gray30" />
+            <InfoRow mt={20} mb={20} leftText="До сплати" rightText={`${newFinishCost} ₴`} />
+            <Divider color="gray30" />
+
+            <PrimaryButton mt={20} mb={20} type="submit" children="Замовлення підтверджую" />
+
+            <Typography color="gray50" sz={10} fw={500}>
+              Підтверджуючи замовлення, я приймаю умови:
+              <br />
+              <span>&nbsp;&#8226; положення про обробку і захист персональних даних</span>
+              <br />
+              <span>&nbsp;&#8226; угоди користувача</span>
             </Typography>
           </Card>
         </FlexBox>
