@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { request } from '../../tools';
 import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector } from '../../components';
-import { setModal } from '../../store/commonReducer';
+import { setModal, addBasket, removeBasket, cleanBasket } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
 
 const PlacingAnOrder = () => {
@@ -23,18 +23,13 @@ const PlacingAnOrder = () => {
     paymentMethod: 'Оплата під час отримання товару',
     recipientName: 'Яна Іваненко',
   });
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [productCounts, setProductCounts] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const productCounts = basket.reduce((counts, productId) => {
-    counts[productId] = (counts[productId] || 0) + 1;
-    return counts;
-  }, {});
-
-  const filteredProducts = products.filter((product) => basket.includes(product._id));
 
   const productsWithQuantities = filteredProducts.map((product) => ({
     productId: product._id,
@@ -42,17 +37,26 @@ const PlacingAnOrder = () => {
   }));
 
   const handleQuantityChange = (productId, amount) => {
-    const newBasket = [...basket];
-    const index = newBasket.indexOf(productId);
+    const index = basket.indexOf(productId);
+
     if (index !== -1) {
       if (amount === -1 && productCounts[productId] === 1) {
-        newBasket.splice(index, 1);
+        dispatch(removeBasket(productId));
+      } else if (amount === -1) {
+        dispatch(removeBasket(productId));
       } else {
-        newBasket[index] = productId;
+        dispatch(addBasket(productId));
       }
-      dispatch({ type: 'UPDATE_BASKET', payload: newBasket });
     }
   };
+
+  const newFinishCost =
+    filteredProducts
+      .map((product) => ({
+        price: product.p,
+        quantity: productCounts[product._id] || 0,
+      }))
+      .reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0) ?? 0;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,18 +66,26 @@ const PlacingAnOrder = () => {
       products: productsWithQuantities,
     };
 
+    console.log('Order data:', orderData);
+
     request.post('/orders/addOrder', orderData, (res) => {
       console.log('Замовлення успішно оформлене', res);
+      dispatch(cleanBasket());
       dispatch(setModal());
     });
   };
 
-  const finishCost = filteredProducts
-    .map((product) => ({
-      price: product.p,
-      quantity: productCounts[product._id] || 0,
-    }))
-    .reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
+  useEffect(() => {
+    const filteredProducts = products.filter((product) => basket.includes(product._id));
+
+    const productCounts = basket.reduce((counts, productId) => {
+      counts[productId] = (counts[productId] || 0) + 1;
+      return counts;
+    }, {});
+
+    setFilteredProducts(filteredProducts);
+    setProductCounts(productCounts);
+  }, [basket, products]);
 
   return (
     <Modal position="center">
@@ -99,8 +111,8 @@ const PlacingAnOrder = () => {
 
             <div className="section">
               <TextGroup children="Замовлення" />
-              {filteredProducts.map((product) => (
-                <Card pl={7} key={product._id} className="product-item">
+              {filteredProducts?.map((product, index) => (
+                <Card pl={7} key={product?._id ?? index} className="product-item">
                   <FlexBox>
                     <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
                     <div>
@@ -108,6 +120,7 @@ const PlacingAnOrder = () => {
                       <Typography>{product.p} ₴</Typography>
                     </div>
                     <QuantitySelector
+                      key={product?._id ?? index}
                       quantity={productCounts[product._id]}
                       onDecrease={() => handleQuantityChange(product._id, -1)}
                       onIncrease={() => handleQuantityChange(product._id, 1)}
@@ -157,7 +170,7 @@ const PlacingAnOrder = () => {
               <Typography sz={16}>
                 {basket?.length ?? 0} товар{basket?.length > 1 ? 'и' : ''} на суму
               </Typography>
-              <Typography sz={16}>{finishCost} ₴</Typography> <br />
+              <Typography sz={16}>{newFinishCost} ₴</Typography> <br />
             </FlexBox>
             <br />
             <FlexBox>
@@ -167,7 +180,7 @@ const PlacingAnOrder = () => {
             <br />
             <FlexBox>
               <Typography sz={16}>До сплати</Typography>
-              <Typography sz={16}>{finishCost} ₴</Typography> <br />
+              <Typography sz={16}>{newFinishCost} ₴</Typography> <br />
             </FlexBox>
 
             <br />

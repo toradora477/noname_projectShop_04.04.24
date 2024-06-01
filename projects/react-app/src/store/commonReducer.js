@@ -116,6 +116,9 @@ export const commonSlice = createSlice({
         (state.basket ?? []).splice(indexToRemove, 1);
       }
     },
+    cleanBasket: (state) => {
+      state.basket = [];
+    },
     addFavoriteProduct: (state, action) => {
       if (state.accessRoles?.isNotClient || !state.userAuth) return;
 
@@ -148,6 +151,7 @@ export const {
   deleteProduct,
   addBasket,
   removeBasket,
+  cleanBasket,
   addFavoriteProduct,
   removeFavoriteProduct,
   setNovaPoshtaBranches,
