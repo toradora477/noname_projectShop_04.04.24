@@ -16,6 +16,9 @@ const OrderItemInfo = ({ item }) => {
 
   const isClient = item.authorInfo;
 
+  console.log(item);
+  console.log(isClient);
+
   return (
     <div className="order-list-item">
       <Spin spinning={loading}>

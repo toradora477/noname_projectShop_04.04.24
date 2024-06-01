@@ -1,19 +1,22 @@
 import React, { useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, removeBasket } from '../../store/commonReducer';
 import { Link, useLocation } from 'react-router-dom';
+import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, removeBasket, setModal } from '../../store/commonReducer';
+
+import { AUTH } from '../../common_constants/modals';
+import { ROUTES } from '../../common_constants/routes';
+import { ACTION } from '../../common_constants/business';
 
 import { request } from '../../tools';
-import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_gray } from '../../images';
 import { Spin, PreviewImage, PrimaryButton } from '../';
-import { ACTION } from '../../common_constants/business';
+
 import './Product.scss';
 
 const Product = ({ item }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { isClient, isNotAdmin } = useSelector((state) => state.common.accessRoles);
+  const { isGuest, isNotAdmin, isClientOrLower } = useSelector((state) => state.common.accessRoles);
 
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,6 +47,10 @@ const Product = ({ item }) => {
     });
 
     setLoading(false);
+  };
+
+  const onBtnClickAuth = () => {
+    dispatch(setModal({ name: AUTH }));
   };
 
   const onPutWishList = () => {
@@ -79,9 +86,9 @@ const Product = ({ item }) => {
   return (
     <div className="product">
       <Spin spinning={loading}>
-        {isClient && !isPageProductAdmin && (
+        {isClientOrLower && !isPageProductAdmin && (
           <Spin spinning={loadingPutWishList}>
-            <button className="btn-first product-like-icon" onClick={onPutWishList}>
+            <button className="btn-first product-like-icon" onClick={isGuest ? onBtnClickAuth : onPutWishList}>
               <img src={isLikeProduct} alt="btn menu" />
             </button>
           </Spin>

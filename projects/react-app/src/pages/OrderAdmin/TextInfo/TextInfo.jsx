@@ -7,10 +7,10 @@ const TextInfo = ({ label, text }) => {
     return null;
 
   return (
-    <div className="order-info-row">
+    <span className="order-info-row">
       <Typography className="order-info-label" sz={16} fw={600} children={label ?? ''} />
       <Typography className="order-info-text" sz={14} children={text ?? ''} />
-    </div>
+    </span>
   );
 };
 

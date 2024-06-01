@@ -1,7 +1,7 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+
 import { request } from '../../tools';
-import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin, Card, List, Divider } from '../../components';
+import { FlexBox, Spin, Card, List, Divider } from '../../components';
 import OrderListItem from './OrderListItem';
 import OrderItemInfo from './OrderItemInfo';
 import OrderItemUser from './OrderItemUser';
@@ -14,13 +14,9 @@ const OrderAdmin = () => {
   useEffect(() => {
     const getListOrder = () => {
       setLoading(true);
-
       request.get('/orders/getListOrder', {}, (res) => {
         setListOrders(res.data);
-        console.log(res.data?.[0]);
-        // console.log('res', res);
       });
-
       setLoading(false);
     };
 

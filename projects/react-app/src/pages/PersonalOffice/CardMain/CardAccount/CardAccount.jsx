@@ -160,48 +160,11 @@ const CardAccount = () => {
           <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
         </Box>
       </FlexBox>
-      {isClient && (
-        <Fragment>
-          <Title mt={32} children="Доставка" />
-          {/* <FlexBox mt={12}>
-            <Box className="input-group">
-              <Label>Місто</Label>
-              <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
-            </Box>
-            &nbsp;&nbsp;
-            <Box className="input-group">
-              <Label>Область</Label>
-              <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
-            </Box>
-          </FlexBox> */}
-
-          {novaPoshtaBranches && (
-            <Box className="input-group">
-              <Label>Відділення Нової Пошти</Label>
-              <select
-                aria-label="novaPoshtaBranch"
-                id="novaPoshtaBranch"
-                name="novaPoshtaBranch"
-                // value={selectedNovaPoshtaBranch}
-                // onChange={handleNovaPoshtaBranchChange}
-              >
-                {/* <option value="">Оберіть відділення Нової Пошти</option> */}
-                {novaPoshtaBranches?.map((branch, index) => {
-                  if (index === 0) console.log(branch);
-                  return (
-                    <option key={index} value={branch.name}>
-                      {branch.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </Box>
-          )}
-        </Fragment>
-      )}
 
       {isClient && novaPoshtaBranches && (
         <Fragment>
+          <Title mt={32} children="Доставка" />
+          <Label>Відділення Нової Пошти</Label>
           <div>
             <label>Область</label>
             <select value={selectedRegion} onChange={handleRegionChange}>

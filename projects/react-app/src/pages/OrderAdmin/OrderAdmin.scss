@@ -15,17 +15,14 @@
       flex-wrap: wrap;
 
       &-row {
-        width: 50%; /* Делаем каждый ряд на половину ширины */
+        width: 50%;
         display: flex;
+        justify-content: flex-start;
       }
 
       &-label {
-        width: 50%; /* Задаем ширину для заголовка */
+        padding-right: 6px;
         font-weight: bold;
-      }
-
-      &-text {
-        width: 50%; /* Задаем ширину для текста */
       }
     }
   }

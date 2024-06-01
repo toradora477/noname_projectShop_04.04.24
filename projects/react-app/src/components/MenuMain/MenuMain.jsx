@@ -14,7 +14,7 @@ const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const userAuth = useSelector((state) => state.common.userAuth);
-  const { isAdmin, isClientOrAbove, isClient, isNotAdmin } = useSelector((state) => state.common.accessRoles);
+  const { isAdmin, isClientOrAbove, isGuest, isNotAdmin, isClientOrLower } = useSelector((state) => state.common.accessRoles);
 
   const Text = ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={500} />;
 
@@ -27,7 +27,7 @@ const MenuMain = () => {
     window.location.reload();
   };
 
-  const menuAdmin = (
+  const MenuAdmin = () => (
     <div className="menu-admin">
       <Link className="menu-admin-btn" to={ROUTES.ORDER_ADMIN}>
         <PrimaryButton children="Замовлення" color="gradient_main" />
@@ -38,6 +38,14 @@ const MenuMain = () => {
       </Link>
       &nbsp;&nbsp;&nbsp;&nbsp;
     </div>
+  );
+
+  const BtnLike = () => (
+    <FlexBox>
+      <img src={icon_heart_empty_black} alt="btn-like" />
+      &nbsp;
+      <Text>Улюблене</Text>
+    </FlexBox>
   );
 
   return (
@@ -55,7 +63,7 @@ const MenuMain = () => {
           </div>
         </div>
 
-        {isAdmin && menuAdmin}
+        {isAdmin && <MenuAdmin />}
 
         <div className="menu-part">
           <div className="btn-auth text-link">
@@ -76,15 +84,16 @@ const MenuMain = () => {
             </FlexBox>
           </div>
           &nbsp;&nbsp;
-          {isClient && (
-            <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
-              <FlexBox>
-                <img src={icon_heart_empty_black} alt="btn-like" />
-                &nbsp;
-                <Text>Улюблене</Text>
-              </FlexBox>
-            </Link>
-          )}
+          {isClientOrLower &&
+            (isGuest ? (
+              <button className="btn-auth text-link" onClick={onBtnClickAuth}>
+                <BtnLike />
+              </button>
+            ) : (
+              <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
+                <BtnLike />
+              </Link>
+            ))}
           &nbsp;&nbsp;
           {isNotAdmin && (
             <Link className="btn-auth basket-icon" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
