@@ -24,7 +24,7 @@ const PersonalOffice = () => {
 
   const [selectedCard, setSelectedCard] = useState(selectParam ?? null);
 
-  const TItle = ({ children, mt }) => <Typography children={children} mb={8} mt={mt} sz={20} fw={600} />;
+  const TItle = ({ children, mt }) => <Typography children={children} mb={16} mt={mt} sz={20} fw={600} />;
 
   const handleCardClick = (cardId) => {
     setSelectedCard(cardId);

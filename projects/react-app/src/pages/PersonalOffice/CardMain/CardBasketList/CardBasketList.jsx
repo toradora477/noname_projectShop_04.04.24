@@ -15,7 +15,7 @@ const CardBasketList = () => {
   return (
     <div>
       <Spin spinning={false}>
-        <Typography sz={18} fw={700} mt={8}>
+        <Typography sz={18} fw={700} mt={8} mb={16}>
           Вибрані товари
         </Typography>
         {filteredProducts.length > 0 ? (

@@ -15,6 +15,7 @@ const CardSelected = ({ selectedCard, handleCardClick, cardId, iconSelected, ico
     <button className="button-like-card" onClick={() => handleCardClick(cardId)}>
       <Card
         pl={16}
+        mb={12}
         className={clsx({
           selectedPersonalOffice: isSelected,
           unselectedPersonalOffice: !isSelected,

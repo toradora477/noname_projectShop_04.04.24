@@ -16,8 +16,8 @@ const CardAccount = () => {
   const novaPoshtaBranches = useSelector((state) => state.common.novaPoshtaBranches);
 
   const [Title, Label] = [
-    ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
-    ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
+    ({ children, mt, mb }) => <Typography children={children} mt={mt ?? 0} mb={mb ?? 0} sz={18} fw={700} />,
+    ({ children, mt, mb }) => <Typography children={children} mt={mt ?? 0} mb={mb ?? 4} fs={12} fw={600} color="dark_gray" />,
   ];
 
   const [password, setPassword] = useState(userAuth?.password ?? '');
@@ -101,8 +101,8 @@ const CardAccount = () => {
 
   return (
     <div>
-      <Title mt={8} children="Особиста інформація" />
-      <Box mt={12} className="input-group">
+      <Title children="Особиста інформація" />
+      <Box mt={16} mb={24} className="input-group">
         <Label>Пароль входу</Label>
         <input
           placeholder="мін. 8 символів"
@@ -114,7 +114,7 @@ const CardAccount = () => {
           onChange={handlePasswordChange}
         />
       </Box>
-      <FlexBox>
+      <FlexBox mb={24}>
         <Box className="input-group">
           <Label>Ім'я</Label>
           <input
@@ -141,7 +141,7 @@ const CardAccount = () => {
           />
         </Box>
       </FlexBox>
-      <FlexBox>
+      <FlexBox mb={24}>
         <Box className="input-group">
           <Label>Номер телефону</Label>
           <input
@@ -163,35 +163,39 @@ const CardAccount = () => {
 
       {isClient && novaPoshtaBranches && (
         <Fragment>
-          <Title mt={32} children="Доставка" />
-          <Label>Відділення Нової Пошти</Label>
-          <div>
-            <label>Область</label>
-            <select value={selectedRegion} onChange={handleRegionChange}>
-              <option value="">Оберіть область</option>
-              {[...new Set(novaPoshtaBranches.map((branch) => branch.SettlementAreaDescription))].map((region, index) => (
-                <option key={index} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-          </div>
-          {selectedRegion && (
-            <div>
-              <label>Місто</label>
-              <select value={selectedCity} onChange={handleCityChange}>
-                <option value="">Оберіть місто</option>
-                {filteredCities.map((city, index) => (
-                  <option key={index} value={city}>
-                    {city}
+          <Title mt={32} mb={12} children="Доставка" />
+
+          <FlexBox mb={24}>
+            <Box>
+              <Label>Область</Label>
+              <select value={selectedRegion} onChange={handleRegionChange}>
+                <option value="">Оберіть область</option>
+                {[...new Set(novaPoshtaBranches.map((branch) => branch.SettlementAreaDescription))].map((region, index) => (
+                  <option key={index} value={region}>
+                    {region}
                   </option>
                 ))}
               </select>
-            </div>
-          )}
-          {selectedCity && (
-            <div>
-              <label>Адреса</label>
+            </Box>
+            &nbsp;&nbsp;
+            <Box>
+              <Label>Місто</Label>
+              {selectedRegion && (
+                <select value={selectedCity} onChange={handleCityChange}>
+                  <option value="">Оберіть місто</option>
+                  {filteredCities.map((city, index) => (
+                    <option key={index} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Box>
+          </FlexBox>
+
+          <Box>
+            <Label>Відділення Нової Пошти</Label>
+            {selectedCity && (
               <select>
                 <option value="">Оберіть адресу</option>
                 {filteredAddresses.map((address, index) => (
@@ -200,8 +204,8 @@ const CardAccount = () => {
                   </option>
                 ))}
               </select>
-            </div>
-          )}
+            )}
+          </Box>
         </Fragment>
       )}
 

@@ -9,7 +9,7 @@ import { ACTION } from '../../common_constants/business';
 
 import { request } from '../../tools';
 import { icon_heart_empty_red, icon_heart_empty_gray } from '../../images';
-import { Spin, PreviewImage, PrimaryButton } from '../';
+import { Spin, PreviewImage, PrimaryButton, Typography } from '../';
 
 import './Product.scss';
 
@@ -97,8 +97,9 @@ const Product = ({ item }) => {
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           <PreviewImage fileID={item?.f?.[0]?.files?.[0]} />
         </Link>
-        <h3>{item.n}</h3>
-        <p>{item.p}&nbsp;$</p>
+
+        <Typography mt={10} color="gray100" sz={10} fw={400} children={item.n} />
+        <Typography mt={10} mb={10} color="gray100" sz={10} fw={600} children={`${item.p} ₴`} />
         {isNotAdmin && !isPageProductAdmin && <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />}
         {isPagePersonalOffice && removeItemsBasket}
         {isPageProductAdmin && productEditing}
