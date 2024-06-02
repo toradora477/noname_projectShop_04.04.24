@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { request } from '../../tools';
-import { FlexBox, Spin, Card, List, Divider } from '../../components';
+import { FlexBox, Spin, Card, List, Divider, Box } from '../../components';
 import OrderListItem from './OrderListItem';
 import OrderItemInfo from './OrderItemInfo';
 import OrderItemUser from './OrderItemUser';
@@ -31,7 +31,7 @@ const OrderAdmin = () => {
             <Divider sz={18} fw={700} text="Список замовлень" />
             <List dataSource={listOrders} renderItem={(item) => <OrderListItem item={item} />} />
           </Card>
-          <div>
+          <Box ml={20}>
             <Card pl={16}>
               <Divider sz={18} fw={700} text="Дані про клієнта" />
               <List dataSource={listOrders} renderItem={(item) => <OrderItemUser item={item} />} />
@@ -40,7 +40,7 @@ const OrderAdmin = () => {
               <Divider sz={18} fw={700} text="Дані про товар" />
               <List dataSource={listOrders} renderItem={(item) => <OrderItemInfo item={item} />} />
             </Card>
-          </div>
+          </Box>
         </FlexBox>
       </Spin>
     </div>

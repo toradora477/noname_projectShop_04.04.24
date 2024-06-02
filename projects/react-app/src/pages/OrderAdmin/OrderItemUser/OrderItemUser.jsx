@@ -20,17 +20,15 @@ const OrderItemUser = ({ item }) => {
     <div className="order-list-item">
       <Spin spinning={loading}>
         <Card pl={16} className="order-info-card ">
-          <Divider text="Дані про замовлення" />
           <div className="order-info">
-            <TextInfo label="Дата:" text={getFormattedDateWithRelativeDays(item.t)} />
-            <TextInfo label="Номер:" text={item.i} />
-            <TextInfo label="Клієнт:" text={item.a} />
-            <TextInfo label="Номер" text={item.i} />
+            <TextInfo label="ПІБ Замовника:" text={item.contactName} />
+            <TextInfo label="Місто Замовника:" text={item.city} />
+            <TextInfo label="ПІБ Отримувача:" text={item.recipientName} />
+            <TextInfo label="Поштове відділення:" text={item.address} />
           </div>
 
           {isClient && (
             <Fragment>
-              <Divider text="Дані про клієнта" />
               <div className="order-info">
                 <TextInfo label="Клієнт:" text={`${isClient?.firstName ?? ''} ${isClient?.lastName ?? ''}`} />
                 <TextInfo label="Дата реєстрації:" text={getFormattedDateWithRelativeDays(isClient?.T)} />

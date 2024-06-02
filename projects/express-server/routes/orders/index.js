@@ -5,6 +5,63 @@ const { guestJWT, adminJWT } = require('../../middlewares/jwtAudit');
 const { ExtendedError, getNextSequenceValue } = require('../../tools');
 const { ObjectId } = require('mongodb');
 
+router.patch('/:orderId/archiveOrder', adminJWT, async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+
+    const userID = req.user?._id;
+
+    if (![orderId, reason, userID].every(Boolean))
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
+
+    const orders = req.app.locals.client.db(DB).collection(COLLECTIONS.ORDERS);
+    const commonParams = req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS);
+
+    const findDB = { _id: new ObjectId(orderId) };
+
+    const data = {
+      ai: await getNextSequenceValue('orderArchiveNextSequenceValue', commonParams),
+      ad: new Date(),
+      at: reason,
+      al: new ObjectId(userID),
+    };
+
+    const updateDB = {
+      $set: data,
+    };
+    const result = await orders.updateOne(findDB, updateDB, { upsert: true });
+
+    if (result.matchedCount === 0 && result.upsertedCount === 0) {
+      throw new ExtendedError({
+        messageLog: 'Failed to update order.',
+        messageJson: 'Помилка сервера. Не вдалося оновити замовлення.',
+        code: 500,
+      });
+    }
+
+    const transportationData = {
+      status: true,
+      data: result,
+    };
+
+    req.setLoggingData({
+      log: `Archive oreder`,
+      operation: 'updateOne for collection ORDERS',
+      findDB,
+      updateDB,
+      result: result ?? null,
+    });
+    res.status(200).json(transportationData);
+  } catch (err) {
+    next(err);
+  }
+}); // TODO доробити сторону на реакті
+
 router.get('/getListOrder', adminJWT, async (req, res, next) => {
   try {
     const orders = req.app.locals.client.db(DB).collection(COLLECTIONS.ORDERS);
