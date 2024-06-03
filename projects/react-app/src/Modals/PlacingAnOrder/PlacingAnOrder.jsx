@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { request } from '../../tools';
+import { request, retrieveCategoryAndSubcategoryLabels } from '../../tools';
 import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector, Divider, RowGroup } from '../../components';
 import { setModal, addBasket, removeBasket, cleanBasket } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
@@ -181,34 +181,45 @@ const PlacingAnOrder = () => {
               </Box>
             </FlexBox>
 
-            <div className="section">
+            <Box>
               <TextGroup children="Замовлення" />
-              {filteredProducts?.map((product, index) => (
-                <Card pl={7} key={product?._id ?? index} className="product-item">
-                  <FlexBox>
-                    <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
-                    <RowGroup>
-                      <TextInfo label="Назва:" text={product.n} />
-                      <TextInfo label="Ціна:" text={`${product.p} ₴`} />
-                      <TextInfo
-                        label="Кількість:"
-                        component={
-                          <QuantitySelector
-                            key={product?._id ?? index}
-                            quantity={productCounts[product._id]}
-                            onDecrease={() => handleQuantityChange(product._id, -1)}
-                            onIncrease={() => handleQuantityChange(product._id, 1)}
-                          />
-                        }
-                        // text={`${product.p} ₴`}
-                      />
-                    </RowGroup>
-                  </FlexBox>
-                </Card>
-              ))}
-            </div>
+              {filteredProducts?.map((product, index) => {
+                const resultLabelCategory = retrieveCategoryAndSubcategoryLabels(product.c?.[0], product.c?.[1]);
+                console.log(resultLabelCategory);
+                return (
+                  <Card pl={7} key={product?._id ?? index} className="product-item">
+                    <FlexBox>
+                      <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
+                      <RowGroup>
+                        <TextInfo label="Назва:" text={product.n} />
 
-            <div className="section">
+                        <TextInfo
+                          label="Категорія:"
+                          text={`${resultLabelCategory?.categoryLabel ?? ''} / ${resultLabelCategory?.subcategoryLabel ?? ''}`}
+                        />
+                        <TextInfo label="Ціна:" text={`${product.p} ₴`} />
+                        <TextInfo label="Сума:" text={`${Number(product.p) * Number(productCounts[product._id])} ₴`} />
+
+                        <TextInfo
+                          label="Кількість:"
+                          component={
+                            <QuantitySelector
+                              key={product?._id ?? index}
+                              quantity={productCounts[product._id]}
+                              onDecrease={() => handleQuantityChange(product._id, -1)}
+                              onIncrease={() => handleQuantityChange(product._id, 1)}
+                            />
+                          }
+                          // text={`${product.p} ₴`}
+                        />
+                      </RowGroup>
+                    </FlexBox>
+                  </Card>
+                );
+              })}
+            </Box>
+
+            <Box>
               <TextGroup children="Доставка" />
 
               <div className="editable-field">
@@ -229,16 +240,16 @@ const PlacingAnOrder = () => {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </Box>
 
-            <div className="section">
+            <Box>
               <TextGroup children="Оплата" />
               <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} required>
                 <option value="Оплата під час отримання товару">Оплата під час отримання товару</option>
               </select>
-            </div>
+            </Box>
 
-            <div className="section">
+            <Box>
               <TextGroup children="Отримувач" />
               <div className="editable-field">
                 <Typography>{formData.recipientName}</Typography>
@@ -246,7 +257,7 @@ const PlacingAnOrder = () => {
                   Змінити
                 </button>
               </div>
-            </div>
+            </Box>
           </Box>
 
           <Card ml={50} pl={20} className="finished-sell">

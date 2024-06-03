@@ -7,8 +7,9 @@ import './CardProduct.scss';
 import { Card, Typography, FlexBox, PrimaryButton, Spin, ColorSquare, ColorPicker, QuantitySelector, SelectSquare } from '../../components';
 import { ACTION, PRODUCT_CATEGORIES, TEXT_LINK_STEP } from '../../common_constants/business';
 import GroupImage from './GroupImage';
-import { request } from '../../tools';
+import { request, retrieveCategoryAndSubcategoryLabels } from '../../tools';
 import { PLACING_AN_ORDER } from '../../common_constants/modals';
+import { icon_heart_empty_black, icon_heart_empty_red } from '../../images';
 
 const CardProduct = () => {
   const dispatch = useDispatch();
@@ -25,25 +26,12 @@ const CardProduct = () => {
 
   const item = products.find((item) => item._id === productId);
 
-  const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
-    const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
-    if (!category) return null;
-
-    const subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
-    if (!subcategory) return null;
-
-    return {
-      categoryLabel: category.label,
-      subcategoryLabel: subcategory.label,
-    };
-  };
-
   if (!item) {
     history.push(ROUTES.ERROR404);
     return null;
   }
 
-  const resultLabelCategory = getCategoryAndSubcategoryLabel(item.c?.[0], item.c?.[1]);
+  const resultLabelCategory = retrieveCategoryAndSubcategoryLabels(item.c?.[0], item.c?.[1]);
 
   const text1 = TEXT_LINK_STEP.MAIN;
   const text2 = TEXT_LINK_STEP.SHOP;
@@ -189,146 +177,19 @@ const CardProduct = () => {
 
           {isClient && (
             <Spin spinning={loadingPutWishList}>
-              <button className="btn-no-border" onClick={onPutWishList}>
-                <BtnText>Додати до списку бажань {item.isFavorite ? '(так)' : '(ні)'}</BtnText>
-              </button>
+              <FlexBox mt={8}>
+                <img src={item.isFavorite ? icon_heart_empty_red : icon_heart_empty_black} alt="btn-like" />
+                &nbsp;
+                <button className="btn-no-border" onClick={onPutWishList}>
+                  <BtnText>Додати до списку бажань </BtnText>
+                </button>
+              </FlexBox>
             </Spin>
           )}
         </Card>
       </FlexBox>
-      <br />
-      {/* <div className="product-details">
-        <h2>ОПИС</h2>
-        <p>{item.description}</p>
-        <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Розмір</th>
-              <th>Вага</th>
-              <th>Ріст</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>S</td>
-              <td>55-65</td>
-              <td>155-165</td>
-            </tr>
-            <tr>
-              <td>M</td>
-              <td>65-75</td>
-              <td>165-175</td>
-            </tr>
-            <tr>
-              <td>L</td>
-              <td>75-85</td>
-              <td>175-185</td>
-            </tr>
-            <tr>
-              <td>XL</td>
-              <td>85-95</td>
-              <td>185-195</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> */}
-      <br />
     </div>
   );
 };
 
 export default CardProduct;
-
-//  const [LinkText, TItle, Text, BtnText] = [
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} />,
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={600} />,
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={12} fw={600} />,
-//  ];
-
-//  const linkTypeText = (
-//    <LinkText>
-//      {text1} &gt;&gt; {text2} &gt;&gt; {text3} &gt;&gt; <b>{text4}</b>
-//    </LinkText>
-//  );
-
-//  const nameProduct = <TItle children={item.n} mt={8} />;
-//  const priceProduct = <Text mt={8}>{item.p}&nbsp;₴</Text>;
-//  const sizeProduct = (
-//    <Fragment>
-//      <Text mt={8}>Розмір:&nbsp;</Text>
-//      <select className="form-select">
-//        <option value="S">S</option>
-//        <option value="M">M</option>
-//        <option value="L">L</option>
-//        <option value="XL">XL</option>
-//      </select>
-//    </Fragment>
-//  );
-
-//  const colorProduct = (
-//    <Fragment>
-//      <Text mt={8}>Колір:&nbsp;</Text>
-//      <select className="form-select">
-//        <option value="black">Чорний</option>
-//        <option value="white">Білий</option>
-//      </select>
-//    </Fragment>
-//  );
-
-//  const onBuyNow = () => {
-//    setLoadingBuyNow(true);
-//    console.log('Buy Now');
-//    setLoadingBuyNow(false);
-//  };
-
-//  const onPutBasket = () => {
-//    setLoadingAddBasket(true);
-//    dispatch(addBasket(item._id));
-//    setLoadingAddBasket(false);
-//  };
-
-//  const onPutWishList = () => {
-//    setLoadingPutWishList(true);
-//    handleToFavorites(item._id, ACTION[item.isFavorite ? 'REMOVE' : 'ADD']);
-//    setLoadingPutWishList(false);
-//  };
-
-//  <div className="product-details">
-//       <h2>ОПИС</h2>
-//       <p>{item.description}</p>
-//       <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
-//       <table>
-//         <thead>
-//           <tr>
-//             <th>Розмір</th>
-//             <th>Вага</th>
-//             <th>Ріст</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           <tr>
-//             <td>S</td>
-//             <td>55-65</td>
-//             <td>155-165</td>
-//           </tr>
-//           <tr>
-//             <td>M</td>
-//             <td>65-75</td>
-//             <td>165-175</td>
-//           </tr>
-//           <tr>
-//             <td>L</td>
-//             <td>75-85</td>
-//             <td>175-185</td>
-//           </tr>
-//           <tr>
-//             <td>XL</td>
-//             <td>85-95</td>
-//             <td>185-195</td>
-//           </tr>
-//         </tbody>
-//       </table>
-//     </div>
-//     <br />
