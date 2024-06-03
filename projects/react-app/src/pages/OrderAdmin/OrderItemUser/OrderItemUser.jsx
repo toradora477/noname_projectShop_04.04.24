@@ -5,7 +5,7 @@ import '../OrderAdmin.scss';
 import TextInfo from '../TextInfo/TextInfo';
 
 const OrderItemUser = ({ item }) => {
-  const isClient = item.authorInfo;
+  const isClient = item?.authorInfo;
 
   return (
     <div className="order-list-item">

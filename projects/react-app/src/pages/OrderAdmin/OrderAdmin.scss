@@ -1,3 +1,5 @@
+@import '../../common_constants/styles/colors.scss';
+
 .order-admin {
   width: 100%;
   display: flex;
@@ -9,6 +11,30 @@
   .order-list-item {
     .order-info-card {
       min-width: 350px;
+
+      &.selectedOrder,
+      &.unselectedOrder,
+      &.unselectedArchiveOrder {
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        -ms-border-radius: 12px;
+        -o-border-radius: 12px;
+        border-radius: 12px;
+      }
+
+      &.selectedOrder {
+        border: 2px solid $primary;
+        background-color: $light_primary;
+      }
+
+      &.unselectedOrder {
+        border: 1px solid $gray;
+      }
+
+      &.unselectedArchiveOrder {
+        border: 2px solid $orange_6;
+        background-color: $orange_3;
+      }
     }
     .order-info {
       display: flex;
@@ -31,5 +57,48 @@
     width: 90px;
     height: 90px;
     margin-right: 10px;
+  }
+
+  .empty-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+
+  .pagination li {
+    margin: 0 4px;
+  }
+
+  .pagination li a {
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    border-radius: 12px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    color: $primary;
+  }
+
+  .pagination li.active a {
+    background-color: $primary;
+    color: white;
+    border-color: $primary;
+  }
+
+  .pagination li.disabled a {
+    color: #6c757d;
+    cursor: not-allowed;
   }
 }

@@ -1,3 +1,5 @@
+@import '../../common_constants/styles/colors.scss';
+
 .shop-page {
   width: 100%;
   display: flex;
@@ -47,16 +49,36 @@
   .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
 
-    li {
-      display: inline-block;
-      margin-right: 5px;
-      cursor: pointer;
+  .pagination li {
+    margin: 0 4px;
+  }
 
-      &.active {
-        font-weight: bold;
-      }
-    }
+  .pagination li a {
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    border-radius: 12px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    color: $primary;
+  }
+
+  .pagination li.active a {
+    background-color: $primary;
+    color: white;
+    border-color: $primary;
+  }
+
+  .pagination li.disabled a {
+    color: #6c757d;
+    cursor: not-allowed;
   }
 }
