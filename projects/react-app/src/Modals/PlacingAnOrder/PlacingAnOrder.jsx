@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { request } from '../../tools';
-import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector, Divider } from '../../components';
+import { Modal, PrimaryButton, Typography, PreviewImage, Card, Box, FlexBox, QuantitySelector, Divider, RowGroup } from '../../components';
 import { setModal, addBasket, removeBasket, cleanBasket } from '../../store/commonReducer';
 import './PlacingAnOrder.scss';
 
@@ -10,6 +10,8 @@ const PlacingAnOrder = () => {
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
   const userAuth = useSelector((state) => state.common.userAuth);
+
+  const { TextInfo } = RowGroup;
 
   const [formData, setFormData] = useState({
     city: 'Бровари',
@@ -124,6 +126,7 @@ const PlacingAnOrder = () => {
               <Box className="input-group">
                 <Label>Ім'я</Label>
                 <input
+                  className="order-form-input"
                   placeholder="Ім'я"
                   aria-label="firstName"
                   type="text"
@@ -137,6 +140,7 @@ const PlacingAnOrder = () => {
               <Box className="input-group">
                 <Label>Прізвище</Label>
                 <input
+                  className="order-form-input"
                   placeholder="Прізвище"
                   aria-label="lastName"
                   type="text"
@@ -151,6 +155,7 @@ const PlacingAnOrder = () => {
               <Box className="input-group">
                 <Label>Номер телефону</Label>
                 <input
+                  className="order-form-input"
                   placeholder="Номер телефону"
                   aria-label="phoneNumber"
                   type="tel"
@@ -164,6 +169,7 @@ const PlacingAnOrder = () => {
               <Box className="input-group">
                 <Label>Email</Label>
                 <input
+                  className="order-form-input"
                   placeholder="name@example.com"
                   aria-label="email"
                   type="text"
@@ -181,16 +187,22 @@ const PlacingAnOrder = () => {
                 <Card pl={7} key={product?._id ?? index} className="product-item">
                   <FlexBox>
                     <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
-                    <div>
-                      <Typography>{product.n}</Typography>
-                      <Typography>{product.p} ₴</Typography>
-                    </div>
-                    <QuantitySelector
-                      key={product?._id ?? index}
-                      quantity={productCounts[product._id]}
-                      onDecrease={() => handleQuantityChange(product._id, -1)}
-                      onIncrease={() => handleQuantityChange(product._id, 1)}
-                    />
+                    <RowGroup>
+                      <TextInfo label="Назва:" text={product.n} />
+                      <TextInfo label="Ціна:" text={`${product.p} ₴`} />
+                      <TextInfo
+                        label="Кількість:"
+                        component={
+                          <QuantitySelector
+                            key={product?._id ?? index}
+                            quantity={productCounts[product._id]}
+                            onDecrease={() => handleQuantityChange(product._id, -1)}
+                            onIncrease={() => handleQuantityChange(product._id, 1)}
+                          />
+                        }
+                        // text={`${product.p} ₴`}
+                      />
+                    </RowGroup>
                   </FlexBox>
                 </Card>
               ))}
@@ -209,6 +221,7 @@ const PlacingAnOrder = () => {
                 <option value="Самовивіз з Нової Пошти">Самовивіз з Нової Пошти</option>
               </select>
               <input
+                className="order-form-input"
                 aria-label="address input"
                 placeholder="Виберіть відповідну адресу"
                 name="address"

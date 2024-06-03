@@ -5,7 +5,7 @@ import { ROUTES } from '../../common_constants/routes';
 import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
 import { Card, Typography, FlexBox, PrimaryButton, Spin, ColorSquare, ColorPicker, QuantitySelector, SelectSquare } from '../../components';
-import { ACTION, PRODUCT_CATEGORIES } from '../../common_constants/business';
+import { ACTION, PRODUCT_CATEGORIES, TEXT_LINK_STEP } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request } from '../../tools';
 import { PLACING_AN_ORDER } from '../../common_constants/modals';
@@ -45,10 +45,11 @@ const CardProduct = () => {
 
   const resultLabelCategory = getCategoryAndSubcategoryLabel(item.c?.[0], item.c?.[1]);
 
-  const text1 = 'ГОЛОВНА'; // ? постійна
-  const text2 = 'МАГАЗИН'; // ? постійна
-  const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : 'ОДЯГ';
-  const text4 = typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : 'ОДЯГ';
+  const text1 = TEXT_LINK_STEP.MAIN;
+  const text2 = TEXT_LINK_STEP.SHOP;
+  const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : TEXT_LINK_STEP.DEFAULT;
+  const text4 =
+    typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : TEXT_LINK_STEP.DEFAULT;
 
   const [LinkText, TItle, Label, BtnText] = [
     ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={400} />,
@@ -83,16 +84,14 @@ const CardProduct = () => {
   };
 
   const sizeProduct = (
-    <FlexBox>
-      <Label mt={8}>Розмір:&nbsp;</Label>
-
+    <FlexBox mt={8}>
+      <Label>Розмір:&nbsp;</Label>
       <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
     </FlexBox>
   );
   const colorProduct = (
-    <FlexBox>
-      <Label mt={8}>Колір:&nbsp;</Label>
-
+    <FlexBox mt={8}>
+      <Label>Колір:&nbsp;</Label>
       <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
     </FlexBox>
   );
@@ -173,9 +172,9 @@ const CardProduct = () => {
           {sizeProduct}
           {colorProduct}
           <Spin spinning={loadingAddBasket}>
-            <FlexBox>
+            <FlexBox mt={8}>
               <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
-              <PrimaryButton style={{ width: 190 }} ml={14} mt={8} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
+              <PrimaryButton style={{ width: 190 }} ml={14} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
             </FlexBox>
           </Spin>
           <Spin spinning={loadingBuyNow}>

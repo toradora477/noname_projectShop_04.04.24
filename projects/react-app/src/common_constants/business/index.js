@@ -110,6 +110,8 @@ const ACTION = {
 
 const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL'];
 
+const TEXT_LINK_STEP = { MAIN: 'ГОЛОВНА', SHOP: 'МАГАЗИН', DEFAULT: 'ОДЯГ' };
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
@@ -123,4 +125,5 @@ module.exports = {
   ERROR_IMAGE_URL,
   ACTION,
   SIZE_OPTIONS,
+  TEXT_LINK_STEP,
 };

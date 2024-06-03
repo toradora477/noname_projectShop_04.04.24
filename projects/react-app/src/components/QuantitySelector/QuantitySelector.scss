@@ -1,37 +1,50 @@
+@import '../../common_constants/styles/colors.scss';
+
 .quantity-selector {
   display: flex;
   align-items: center;
-  border: 1px solid #d9e0d8;
-  border-radius: 4px;
+  border: 2px solid $light_primary;
+  border-radius: 12px;
+
   overflow: hidden;
-  // width: 79px;
-  // height: 27px;
 
   button {
-    height: 27px;
-    width: 18px;
-    background-color: #f0f0f0;
+    height: 40px;
+    width: 20px;
+    background-color: transparent;
     border: none;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     font-size: 16px;
-    color: #333;
+    color: black;
+    transition:
+      background-color 0.3s,
+      border-color 0.3s;
 
     &:hover:not(:disabled) {
       background-color: #e0e0e0;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 
   input {
-    width: 20px;
+    height: 40px;
+    max-width: 24px;
     text-align: center;
     border: none;
+    border-left: 2px solid $light_primary;
+    border-right: 2px solid $light_primary;
     outline: none;
     font-size: 16px;
-    color: #333;
+    color: black;
     background-color: #fff;
+    transition: border-color 0.3s;
 
     -moz-appearance: textfield;
     appearance: textfield;
@@ -41,10 +54,7 @@
       -webkit-appearance: none;
       margin: 0;
     }
-  }
 
-  button:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    padding: 0;
   }
 }
