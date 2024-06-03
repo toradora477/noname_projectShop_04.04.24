@@ -5,7 +5,7 @@ import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, re
 
 import { AUTH } from '../../common_constants/modals';
 import { ROUTES } from '../../common_constants/routes';
-import { ACTION } from '../../common_constants/business';
+import { ACTION, NAME_SELECT } from '../../common_constants/business';
 
 import { request } from '../../tools';
 import { icon_heart_empty_red, icon_heart_empty_gray } from '../../images';
@@ -13,7 +13,7 @@ import { Spin, PreviewImage, PrimaryButton, Typography } from '../';
 
 import './Product.scss';
 
-const Product = ({ item }) => {
+const Product = ({ item, selectedCard }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { isGuest, isNotAdmin, isClientOrLower } = useSelector((state) => state.common.accessRoles);
@@ -21,7 +21,7 @@ const Product = ({ item }) => {
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE;
+  const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE && selectedCard === NAME_SELECT.BASKETLIST;
   const isPageProductAdmin = pathname === ROUTES.PRODUCTS_ADMIN;
   const isLikeProduct = item.isFavorite ? icon_heart_empty_red : icon_heart_empty_gray;
 

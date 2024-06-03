@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setModal } from '../../../../store/commonReducer';
 import { PLACING_AN_ORDER } from '../../../../common_constants/modals';
+import { NAME_SELECT } from '../../../../common_constants/business';
 import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin } from '../../../../components';
 
 const CardBasketList = () => {
@@ -25,7 +26,7 @@ const CardBasketList = () => {
                 acc.push(
                   <FlexBox key={`flexbox-${index}`} style={{ flexWrap: 'wrap' }}>
                     {filteredProducts.slice(index, index + 5).map((product) => (
-                      <Product key={product._id} item={product} />
+                      <Product key={product._id} item={product} selectedCard={NAME_SELECT.BASKETLIST} />
                     ))}
                   </FlexBox>,
                 );

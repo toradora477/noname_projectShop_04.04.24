@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { getFormattedDateWithRelativeDays } from '../../../tools';
-import { Card } from '../../../components';
+import { Card, RowGroup } from '../../../components';
 import clsx from 'clsx';
 import '../OrderAdmin.scss';
 
-import TextInfo from '../TextInfo/TextInfo';
-
 const OrderListItem = ({ item, onClick, isSelected }) => {
+  const { TextInfo } = RowGroup;
+
   const products = useSelector((state) => state.common.products) ?? [];
   const productMap = new Map(item.products.map(({ productId, quantity }) => [productId, quantity]));
 
@@ -24,12 +24,12 @@ const OrderListItem = ({ item, onClick, isSelected }) => {
           unselectedArchiveOrder: !isSelected && !!item.ag,
         })}
       >
-        <div className="order-info">
+        <RowGroup>
           <TextInfo label="Дата:" text={getFormattedDateWithRelativeDays(item.t)} />
           <TextInfo label="Товари:" text={totalQuantity} />
           <TextInfo label="Замовлення:" text={'№' + item.i} />
           <TextInfo label="Сума:" text={totalCost + ' ₴'} />
-        </div>
+        </RowGroup>
       </Card>
     </div>
   );

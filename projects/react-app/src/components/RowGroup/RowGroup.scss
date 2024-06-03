@@ -1,0 +1,28 @@
+.row-group {
+  display: flex;
+  flex-wrap: wrap;
+
+  &-row {
+    display: flex;
+    width: 50%; // Каждый элемент занимает половину ширины контейнера
+    box-sizing: border-box;
+    padding: 5px 0;
+    align-items: center;
+
+    .row-group-label {
+      font-weight: bold;
+      padding-right: 5px;
+      white-space: nowrap; // Предотвращает перенос текста на следующую строку
+    }
+
+    .row-group-text {
+      white-space: nowrap; // Предотвращает перенос текста на следующую строку
+    }
+  }
+
+  @media (max-width: 768px) {
+    &-row {
+      width: 100%; // На малых экранах элементы занимают всю ширину
+    }
+  }
+}

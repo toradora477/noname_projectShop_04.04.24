@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setOrders } from '../../../store/commonReducer';
 import { request } from '../../../tools';
-import { PrimaryButton, FlexBox, Spin, Card, PreviewImage } from '../../../components';
+import { PrimaryButton, FlexBox, Spin, Card, PreviewImage, RowGroup } from '../../../components';
 import '../OrderAdmin.scss';
-
-import TextInfo from '../TextInfo/TextInfo';
 
 const OrderItemInfo = ({ item }) => {
   const dispatch = useDispatch();
@@ -15,6 +13,8 @@ const OrderItemInfo = ({ item }) => {
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productCounts, setProductCounts] = useState({});
+
+  const { TextInfo } = RowGroup;
 
   const handleOnArchive = async () => {
     setLoading(true);
@@ -65,21 +65,21 @@ const OrderItemInfo = ({ item }) => {
           <FlexBox>
             <PreviewImage fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
 
-            <div className="order-info">
+            <RowGroup>
               <TextInfo label="Назва:" text={product.n} />
               <TextInfo label="Ціна:" text={`${product.p} ₴`} />
               <TextInfo label="Кількість:" text={productCounts[product._id]} />
               <TextInfo label="Сума:" text={`${Number(product.p) * Number(productCounts[product._id])} ₴`} />
-            </div>
+            </RowGroup>
           </FlexBox>
         </Card>
       ))}
 
-      <div className="order-info">
+      <RowGroup>
         <TextInfo label="Забере:" text={item.deliveryMethod} />
         <TextInfo label="Ціна:" text={`${newFinishCost} ₴`} />
         <TextInfo label="Оплата:" text={item.paymentMethod} />
-      </div>
+      </RowGroup>
       <Spin spinning={loading}>
         <PrimaryButton disabled={!!item.ag} mt={20} children="Архівувати" onClick={handleOnArchive} />
       </Spin>

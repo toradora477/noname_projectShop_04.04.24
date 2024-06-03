@@ -19,3 +19,4 @@ export { default as ColorPicker } from './ColorPicker';
 export { default as SubcategoryCard } from './SubcategoryCard';
 export { default as QuantitySelector } from './QuantitySelector';
 export { default as SelectSquare } from './SelectSquare';
+export { default as RowGroup } from './RowGroup';

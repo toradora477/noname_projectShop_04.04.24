@@ -9,14 +9,9 @@ const PlacingAnOrder = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
-
-  const [TItle, TextGroup] = [
-    ({ children }) => <Typography children={children} fs={24} fw={400} />,
-    ({ children }) => <Typography children={children} mb={4} fs={14} fw={600} />,
-  ];
+  const userAuth = useSelector((state) => state.common.userAuth);
 
   const [formData, setFormData] = useState({
-    contactName: 'Яна Іваненко',
     city: 'Бровари',
     address: '',
     deliveryMethod: 'Самовивіз з Нової Пошти',
@@ -25,6 +20,27 @@ const PlacingAnOrder = () => {
   });
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productCounts, setProductCounts] = useState({});
+
+  const [password, setPassword] = useState(userAuth?.password ?? '');
+  const [email, setEmail] = useState(userAuth?.password ?? '');
+  const [firstName, setFirstName] = useState(userAuth?.firstName ?? '');
+  const [lastName, setLastName] = useState(userAuth?.lastName ?? '');
+  const [phoneNumber, setPhoneNumber] = useState(userAuth?.phoneNumber ?? '');
+  const [city, setCity] = useState(userAuth?.city ?? '');
+  const [region, setRegion] = useState(userAuth?.region ?? '');
+  // const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
+  // const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleFirstNameChange = (e) => setFirstName(e.target.value);
+  const handleLastNameChange = (e) => setLastName(e.target.value);
+  const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
+
+  const [TItle, TextGroup, Label] = [
+    ({ children, mt, mb }) => <Typography children={children} mt={mt} mb={mb} fs={24} fw={400} />,
+    ({ children, mt, mb }) => <Typography children={children} mt={mt ?? 20} mb={mb} fs={14} fw={600} />,
+    ({ children, mt, mb }) => <Typography children={children} mt={mt ?? 0} mb={mb ?? 4} fs={12} fw={600} color="dark_gray" />,
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,25 +114,66 @@ const PlacingAnOrder = () => {
 
   return (
     <Modal position="center">
-      <TItle children="Оформлення замовлення" />
+      <TItle mb={10} children="Оформлення замовлення" />
       <form onSubmit={handleSubmit} className="order-form">
         <FlexBox>
           <Box className="info-sell">
-            <div className="section">
-              <TextGroup children="Ваші контактні дані" />
-              <div className="editable-field">
-                <Typography>{formData.contactName}</Typography>
-                <button type="button" onClick={() => alert("Змінити ім'я")}>
-                  Змінити
-                </button>
-              </div>
-              <div className="editable-field">
-                <Typography>{formData.city}</Typography>
-                <button type="button" onClick={() => alert('Змінити місто')}>
-                  Змінити
-                </button>
-              </div>
-            </div>
+            <TextGroup mb={12} children="Ваші контактні дані" />
+
+            <FlexBox mb={24}>
+              <Box className="input-group">
+                <Label>Ім'я</Label>
+                <input
+                  placeholder="Ім'я"
+                  aria-label="firstName"
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={firstName}
+                  onChange={handleFirstNameChange}
+                />
+              </Box>
+              &nbsp;&nbsp;
+              <Box className="input-group">
+                <Label>Прізвище</Label>
+                <input
+                  placeholder="Прізвище"
+                  aria-label="lastName"
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value={lastName}
+                  onChange={handleLastNameChange}
+                />
+              </Box>
+            </FlexBox>
+            <FlexBox mb={24}>
+              <Box className="input-group">
+                <Label>Номер телефону</Label>
+                <input
+                  placeholder="Номер телефону"
+                  aria-label="phoneNumber"
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={phoneNumber}
+                  onChange={handlePhoneNumberChange}
+                />
+              </Box>
+              &nbsp;&nbsp;
+              <Box className="input-group">
+                <Label>Email</Label>
+                <input
+                  placeholder="name@example.com"
+                  aria-label="email"
+                  type="text"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                />
+              </Box>
+            </FlexBox>
 
             <div className="section">
               <TextGroup children="Замовлення" />
@@ -141,6 +198,13 @@ const PlacingAnOrder = () => {
 
             <div className="section">
               <TextGroup children="Доставка" />
+
+              <div className="editable-field">
+                <Typography>{formData.city}</Typography>
+                <button type="button" onClick={() => alert('Змінити місто')}>
+                  Змінити
+                </button>
+              </div>
               <select name="deliveryMethod" value={formData.deliveryMethod} onChange={handleChange} required>
                 <option value="Самовивіз з Нової Пошти">Самовивіз з Нової Пошти</option>
               </select>
