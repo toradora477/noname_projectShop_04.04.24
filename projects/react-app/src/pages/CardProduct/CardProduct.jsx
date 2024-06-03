@@ -1,11 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
 import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin, ColorSquare, ColorPicker, QuantitySelector, SelectSquare } from '../../components';
-import { ACTION, PRODUCT_CATEGORIES, TEXT_LINK_STEP } from '../../common_constants/business';
+import { Card, Typography, FlexBox, PrimaryButton, Spin, QuantitySelector, SelectSquare } from '../../components';
+import { ACTION, TEXT_LINK_STEP } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request, retrieveCategoryAndSubcategoryLabels } from '../../tools';
 import { PLACING_AN_ORDER } from '../../common_constants/modals';
@@ -18,7 +18,6 @@ const CardProduct = () => {
   const [loadingAddBasket, setLoadingAddBasket] = useState(false);
   const [loadingBuyNow, setLoadingBuyNow] = useState(false);
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
-  const [selectedColor, setSelectedColor] = useState('#1890ff');
 
   const { isClient } = useSelector((state) => state.common.accessRoles);
   const basket = useSelector((state) => state.common.basket) ?? [];
@@ -55,38 +54,16 @@ const CardProduct = () => {
   const nameProduct = <TItle children={item.n} mt={8} />;
   const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
 
-  // const sizesProduct = item?.s?.map((i) => (i = <ColorSquare mr={8} text={i ?? ''} />)) ?? [];
-  // const colorsProduct = item?.f?.map((i) => (i = <ColorSquare mr={8} color={i.color ?? ''} />)) ?? [];
-
   const sizesProduct = item?.s ?? [];
   const colorsProduct = item?.f?.map((i) => (i = i.color)) ?? [];
 
   const onSelectSize = (index) => {
-    // Дії для вибору розміру
-    console.log(index);
+    console.log(index.text);
   };
 
   const onSelectColor = (index) => {
-    // Дії для вибору кольору
-    console.log(index);
+    console.log(index.color);
   };
-
-  const sizeProduct = (
-    <FlexBox mt={8}>
-      <Label>Розмір:&nbsp;</Label>
-      <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
-    </FlexBox>
-  );
-  const colorProduct = (
-    <FlexBox mt={8}>
-      <Label>Колір:&nbsp;</Label>
-      <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
-    </FlexBox>
-  );
-
-  console.table(colorsProduct);
-
-  // console.log(item);
 
   const onClickAddOrder = () => {
     setLoadingBuyNow(true);
@@ -108,10 +85,9 @@ const CardProduct = () => {
     handleToFavorites(
       item._id,
 
-      // item.isFavorite ? ACTION.ADD : ACTION.REMOVE,
       ACTION[item.isFavorite ? 'REMOVE' : 'ADD'],
     );
-    // handleToFavorites(item._id, ACTION.REMOVE);
+
     setLoadingPutWishList(false);
   };
 
@@ -131,10 +107,6 @@ const CardProduct = () => {
       },
     );
   }
-
-  const handleColorChange = (newColor) => {
-    setSelectedColor(newColor);
-  };
 
   const onPutInBasket = () => {
     dispatch(addBasket(item._id));
@@ -157,8 +129,14 @@ const CardProduct = () => {
           {linkTypeText}
           {nameProduct}
           {priceProduct}
-          {sizeProduct}
-          {colorProduct}
+          <FlexBox mt={8}>
+            <Label>Розмір:&nbsp;</Label>
+            <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
+          </FlexBox>
+          <FlexBox mt={8}>
+            <Label>Колір:&nbsp;</Label>
+            <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
+          </FlexBox>
           <Spin spinning={loadingAddBasket}>
             <FlexBox mt={8}>
               <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
