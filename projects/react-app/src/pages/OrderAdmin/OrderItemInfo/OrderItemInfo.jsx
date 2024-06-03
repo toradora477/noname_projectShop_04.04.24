@@ -32,11 +32,24 @@ const OrderItemInfo = ({ item }) => {
 
   const TextGroup = ({ children }) => <Typography children={children} mb={4} fs={14} fw={600} />;
 
-  console.log(item);
-  console.log(isClient);
-
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productCounts, setProductCounts] = useState({});
+
+  const handleOnArchive = () => {};
+
+  useEffect(() => {
+    // Фильтруем продукты, которые есть в заказе
+    const filteredProducts = products.filter((product) => item.products.some((orderProduct) => orderProduct.productId === product._id));
+
+    // Создаем объект productCounts, используя данные из item.products
+    const productCounts = item.products.reduce((counts, orderProduct) => {
+      counts[orderProduct.productId] = orderProduct.quantity;
+      return counts;
+    }, {});
+
+    setFilteredProducts(filteredProducts);
+    setProductCounts(productCounts);
+  }, [products, item.products]);
 
   const newFinishCost =
     filteredProducts
@@ -46,47 +59,35 @@ const OrderItemInfo = ({ item }) => {
       }))
       .reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0) ?? 0;
 
+  console.log('item', item);
   console.log('filteredProducts', filteredProducts);
-
-  useEffect(() => {
-    const filteredProducts = products.filter((product) => item.products.some((item) => item.productId === product._id));
-
-    // const productCounts = basket.reduce((counts, productId) => {
-    //   counts[productId] = (counts[productId] || 0) + 1;
-    //   return counts;
-    // }, {});
-
-    console.log('filteredProducts', filteredProducts);
-
-    setFilteredProducts(filteredProducts);
-    // setProductCounts(productCounts);
-  }, [products]);
+  console.log('productCounts', productCounts);
+  console.log('newFinishCost', newFinishCost);
 
   return (
     <div className="order-list-item">
       <Spin spinning={loading}>
-        <Card pl={16} className="order-info-card ">
-          <div className="section">
-            <TextGroup children="Замовлення" />
-            {filteredProducts?.map((product, index) => (
-              <Card mb={10} pl={7} key={product?._id ?? index} className="product-item">
-                <FlexBox>
-                  <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
-                  <div>
-                    <Typography>{product.n}</Typography>
-                    <Typography>{product.p} ₴</Typography>
-                  </div>
-                  <QuantitySelector
-                    key={product?._id ?? index}
-                    quantity={productCounts[product._id]}
-                    // onDecrease={() => handleQuantityChange(product._id, -1)}
-                    // onIncrease={() => handleQuantityChange(product._id, 1)}
-                  />
-                </FlexBox>
-              </Card>
-            ))}
-          </div>
-        </Card>
+        {filteredProducts?.map((product, index) => (
+          <Card mb={10} pl={7} key={product?._id ?? index} className="product-item">
+            <FlexBox>
+              <PreviewImage fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
+
+              <div className="order-info">
+                <TextInfo label="Назва:" text={product.n} />
+                <TextInfo label="Ціна:" text={`${product.p} ₴`} />
+                <TextInfo label="Кількість:" text={productCounts[product._id]} />
+                <TextInfo label="Сума:" text={`${Number(product.p) * Number(productCounts[product._id])} ₴`} />
+              </div>
+            </FlexBox>
+          </Card>
+        ))}
+
+        <div className="order-info">
+          <TextInfo label="Забере:" text={item.deliveryMethod} />
+          <TextInfo label="Ціна:" text={`${newFinishCost} ₴`} />
+          <TextInfo label="Оплата:" text={item.paymentMethod} />
+        </div>
+        <PrimaryButton mt={20} children="Архівувати" onClick={handleOnArchive} />
       </Spin>
     </div>
   );
