@@ -58,6 +58,7 @@ const initialState = {
   basket: null,
   products: null,
   novaPoshtaBranches: null,
+  orders: null,
 };
 
 const groupUserAuth = {
@@ -75,7 +76,7 @@ const groupUserAuth = {
   },
 };
 
-const groupProduct = {
+const groupProducts = {
   setProducts: (state, action) => {
     if (!Array.isArray(action.payload)) return;
     state.products = action.payload;
@@ -105,7 +106,7 @@ const groupBasket = {
   },
 };
 
-const groupFavoriteProduct = {
+const groupFavoriteProducts = {
   addFavoriteProduct: (state, action) => {
     if (state.accessRoles?.isNotClient || !state.userAuth) return;
     const productId = action.payload;
@@ -120,6 +121,17 @@ const groupFavoriteProduct = {
     const productId = action.payload;
     state.userAuth.fav = state.userAuth.fav.filter((id) => id !== productId);
     patchProductsIsFavoriteStatus(state);
+  },
+};
+
+const groupOrders = {
+  setOrders: (state, action) => {
+    if (!Array.isArray(action.payload)) return;
+
+    state.orders = [
+      ...action.payload.filter((item) => !item.hasOwnProperty('ag')).sort((a, b) => b.i - a.i),
+      ...action.payload.filter((item) => item.hasOwnProperty('ag')).sort((a, b) => b.i - a.i),
+    ];
   },
 };
 
@@ -139,9 +151,10 @@ export const commonSlice = createSlice({
       state.novaPoshtaBranches = state.novaPoshtaBranches.sort((a, b) => sortLicensePlateNovaPoshtaBranches(a.Description, b.Description));
     },
     ...groupUserAuth,
-    ...groupProduct,
+    ...groupProducts,
     ...groupBasket,
-    ...groupFavoriteProduct,
+    ...groupFavoriteProducts,
+    ...groupOrders,
   },
 });
 
@@ -158,6 +171,7 @@ export const {
   addFavoriteProduct,
   removeFavoriteProduct,
   setNovaPoshtaBranches,
+  setOrders,
 } = commonSlice.actions;
 
 export default commonSlice.reducer;

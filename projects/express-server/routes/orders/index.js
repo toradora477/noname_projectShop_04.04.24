@@ -8,11 +8,10 @@ const { ObjectId } = require('mongodb');
 router.patch('/:orderId/archiveOrder', adminJWT, async (req, res, next) => {
   try {
     const { orderId } = req.params;
-    const { reason } = req.body;
 
     const userID = req.user?._id;
 
-    if (![orderId, reason, userID].every(Boolean))
+    if (![orderId, userID].every(Boolean))
       throw new ExtendedError({
         messageLog: 'One or more values are empty.',
         messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
@@ -25,10 +24,11 @@ router.patch('/:orderId/archiveOrder', adminJWT, async (req, res, next) => {
     const findDB = { _id: new ObjectId(orderId) };
 
     const data = {
-      ai: await getNextSequenceValue('orderArchiveNextSequenceValue', commonParams),
-      ad: new Date(),
-      at: reason,
-      al: new ObjectId(userID),
+      ag: {
+        ai: await getNextSequenceValue('orderArchiveNextSequenceValue', commonParams),
+        ad: new Date(),
+        al: new ObjectId(userID),
+      },
     };
 
     const updateDB = {
@@ -46,7 +46,7 @@ router.patch('/:orderId/archiveOrder', adminJWT, async (req, res, next) => {
 
     const transportationData = {
       status: true,
-      data: result,
+      data: data,
     };
 
     req.setLoggingData({
