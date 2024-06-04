@@ -14,6 +14,7 @@ const SelectSquare = ({ onSelect, optionsColor, optionsText, mr }) => {
 
   const select = _options.map((i, index) => (
     <button
+      type="button"
       key={index}
       className="select-button"
       onClick={() => handleOptionClick({ index: index, color: optionsColor ? i : undefined, text: optionsText ? i : undefined })}

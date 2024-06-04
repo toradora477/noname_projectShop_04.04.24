@@ -61,4 +61,14 @@
     width: 450px;
     height: 350px;
   }
+
+  select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    padding-right: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+  }
 }
