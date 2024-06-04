@@ -1,24 +1,20 @@
 import React from 'react';
+import clsx from 'clsx';
+import './ColorSquare.scss';
 
 const ColorSquare = ({ color = 'rgba(255, 255, 255, 0.5)', text = '', mr = 0, isChoiceSelect }) => {
   return (
     <div
+      className={clsx('color-square', {
+        'is-selected': isChoiceSelect,
+        'not-selected': !isChoiceSelect,
+      })}
       style={{
-        width: '24px',
-        height: '24px',
-        borderRadius: '4px',
-        border: isChoiceSelect ? '2px solid green' : '1px solid #000000',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: color,
-        marginRight: mr,
-        textAlign: 'center',
-        lineHeight: '24px',
-        cursor: 'pointer',
+        '--mr': `${mr}px`, // использование CSS переменной для установки отступа
       }}
     >
-      <span style={{ fontSize: '14px' }}>{text}</span>
+      <span>{text}</span>
     </div>
   );
 };

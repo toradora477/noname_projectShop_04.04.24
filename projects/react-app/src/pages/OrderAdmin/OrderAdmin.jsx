@@ -1,25 +1,41 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, Fragment } from 'react';
+import ReactPaginate from 'react-paginate';
+import { useDispatch, useSelector } from 'react-redux';
+import { setOrders } from '../../store/commonReducer';
 import { request } from '../../tools';
-import { PrimaryButton, Typography, FlexBox, Product, Empty, Spin, Card, List } from '../../components';
-import OrderAdminItem from './OrderAdminItem';
+import { FlexBox, Spin, Card, List, Divider, Box, Empty } from '../../components';
+import OrderListItem from './OrderListItem';
+import OrderItemInfo from './OrderItemInfo';
+import OrderItemUser from './OrderItemUser';
 import './OrderAdmin.scss';
 
 const OrderAdmin = () => {
+  const dispatch = useDispatch();
+
+  const orders = useSelector((state) => state.common.orders) ?? [];
+
   const [loading, setLoading] = useState(false);
-  const [listOrders, setListOrders] = useState([]);
-  const Title = ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedOrderItem, setSelectedOrderItem] = useState(null);
+  const itemsPerPage = 10;
+
+  const handleOrderItemClick = (order) => {
+    setSelectedOrderItem(order);
+  };
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
+
+  const offset = currentPage * itemsPerPage;
+  const currentPageData = orders.slice(offset, offset + itemsPerPage);
 
   useEffect(() => {
-    const getListOrder = () => {
-      console.log('onClickAddOrder');
+    const getListOrder = async () => {
       setLoading(true);
-
-      request.get('/orders/getListOrder', {}, (res) => {
-        setListOrders(res.data);
-        console.log('res', res);
+      await request.get('/orders/getListOrder', {}, (res) => {
+        dispatch(setOrders(res.data));
       });
-
       setLoading(false);
     };
 
@@ -27,13 +43,62 @@ const OrderAdmin = () => {
   }, []);
 
   return (
-    <div className="order_admin">
-      <Spin spinning={loading}>
-        <Card pl={16}>
-          <Title mt={8} children="Список замовлень" />
-          <List dataSource={listOrders} renderItem={(item) => <OrderAdminItem item={item} />} />
+    <div className="order-admin">
+      <FlexBox alignItems="flex-start">
+        <Card style={{ width: '450px' }} pl={16}>
+          <Spin spinning={loading} tip="Зачекайте, йде завантаження">
+            <Divider sz={18} fw={700} text="Список замовлень" />
+            {orders?.length > 0 ? (
+              <Fragment>
+                <List
+                  dataSource={currentPageData}
+                  renderItem={(item) => (
+                    <OrderListItem onClick={() => handleOrderItemClick(item)} isSelected={selectedOrderItem?._id === item._id} item={item} />
+                  )}
+                />
+
+                {orders?.length > itemsPerPage && (
+                  <ReactPaginate
+                    previousLabel={'<'}
+                    nextLabel={'>'}
+                    breakLabel={'...'}
+                    pageCount={Math.ceil(orders.length / itemsPerPage)}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={handlePageClick}
+                    containerClassName={'pagination'}
+                    activeClassName={'active'}
+                  />
+                )}
+              </Fragment>
+            ) : (
+              <Empty description="Немає замовлень" w={350} h={250} />
+            )}
+          </Spin>
         </Card>
-      </Spin>
+        <Box ml={20}>
+          <Card pl={16} style={{ width: '650px' }}>
+            <Divider sz={18} fw={700} text="Дані про клієнта" />
+            {selectedOrderItem ? (
+              <OrderItemUser item={selectedOrderItem} />
+            ) : (
+              <div className="empty-container">
+                <Empty description="Немає замовлень" w={350} h={250} />
+              </div>
+            )}
+          </Card>
+          <Card mt={20} pl={16} style={{ width: '650px' }}>
+            <Divider sz={18} fw={700} text="Дані про товар" />
+            {selectedOrderItem ? (
+              <OrderItemInfo item={selectedOrderItem} />
+            ) : (
+              <div className="empty-container">
+                <Empty description="Немає замовлень" w={350} h={250} />
+              </div>
+            )}
+          </Card>
+        </Box>
+      </FlexBox>
     </div>
   );
 };

@@ -7,6 +7,8 @@ export { default as icon_user_black } from './icon_user_black.png';
 export { default as icon_user_gray } from './icon_user_gray.svg';
 export { default as icon_user_white } from './icon_user_white.svg';
 ///////////////////////////////////////////////////////////////////////////
+
+export { default as shopping_bag_baskets_main } from './shopping_bag_baskets_main.svg';
 export { default as shopping_bag_color_green_gradient } from './shopping_bag_color_green_gradient.svg';
 export { default as shopping_bag_color_gray } from './shopping_bag_color_gray.svg';
 export { default as shopping_bag_color_white } from './shopping_bag_color_white.svg';

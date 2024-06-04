@@ -3,14 +3,15 @@ import './Card.scss';
 import clsx from 'clsx';
 import { Typography, FlexBox, Product, SubcategoryCard } from '../';
 
-const Card = ({ listProducts, listCategories, children, title, mt, ml, pl, style, className }) => {
+const Card = ({ listProducts, listCategories, children, title, mt, ml, mb, pl, style, className }) => {
   const _list = listProducts ?? listCategories ?? null;
   return (
     <div
       className={clsx('card-component', className)}
       style={{
-        marginTop: mt ?? 8,
-        marginLeft: ml ?? 8,
+        marginTop: mt ?? 0,
+        marginLeft: ml ?? 0,
+        marginBottom: mb ?? 0,
         padding: pl ?? 0,
         ...style,
       }}

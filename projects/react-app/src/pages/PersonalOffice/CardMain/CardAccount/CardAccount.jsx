@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { updateUserAuth } from '../../../../store/commonReducer';
@@ -16,8 +16,8 @@ const CardAccount = () => {
   const novaPoshtaBranches = useSelector((state) => state.common.novaPoshtaBranches);
 
   const [Title, Label] = [
-    ({ children, mt }) => <Typography children={children} mt={mt ?? 0} sz={18} fw={700} />,
-    ({ children }) => <Typography children={children} mb={4} fs={12} fw={600} color="dark_gray" />,
+    ({ children, mt, mb }) => <Typography children={children} mt={mt ?? 0} mb={mb ?? 0} sz={18} fw={700} />,
+    ({ children, mt, mb }) => <Typography children={children} mt={mt ?? 0} mb={mb ?? 4} fs={12} fw={600} color="dark_gray" />,
   ];
 
   const [password, setPassword] = useState(userAuth?.password ?? '');
@@ -27,20 +27,16 @@ const CardAccount = () => {
   const [phoneNumber, setPhoneNumber] = useState(userAuth?.phoneNumber ?? '');
   const [city, setCity] = useState(userAuth?.city ?? '');
   const [region, setRegion] = useState(userAuth?.region ?? '');
-  // const [novaPoshtaBranches, setNovaPoshtaBranches] = useState([]);
-  // const [selectedNovaPoshtaBranch, setSelectedNovaPoshtaBranch] = useState('');
+  const [address, setAdress] = useState(userAuth?.address ?? '');
+
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [filteredAddresses, setFilteredAddresses] = useState([]);
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleFirstNameChange = (e) => setFirstName(e.target.value);
   const handleLastNameChange = (e) => setLastName(e.target.value);
   const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
-  // const handleCityChange = (e) => setCity(e.target.value);
-  // const handleRegionChange = (e) => setRegion(e.target.value);
-
-  // const handleNovaPoshtaBranchChange = (e) => {
-  //   setSelectedNovaPoshtaBranch(e.target.value);
-  // };
 
   const onSubmit = () => {
     const body = {
@@ -49,9 +45,9 @@ const CardAccount = () => {
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
-      city: city,
-      region: region,
-      // novaPoshtaBranch: selectedNovaPoshtaBranch,
+      city: city ?? undefined,
+      region: region ?? undefined,
+      address: address ?? undefined,
     };
 
     const filteredBody = Object.fromEntries(Object.entries(body).filter(([key, value]) => value !== ''));
@@ -68,41 +64,38 @@ const CardAccount = () => {
     );
   };
 
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
-  const [filteredCities, setFilteredCities] = useState([]);
-  const [filteredAddresses, setFilteredAddresses] = useState([]);
-
-  console.log('filteredCities?.length)', filteredCities?.length);
-
   const handleRegionChange = (e) => {
     const region = e.target.value;
-    console.log('region', region);
-    setSelectedRegion(region);
-    setSelectedCity('');
+    setRegion(region);
+    setCity('');
+
     setFilteredAddresses([]);
     const cities = novaPoshtaBranches?.filter((branch) => branch.SettlementAreaDescription === region)?.map((branch) => branch.SettlementDescription);
-    console.log('novaPoshtaBranches?.length)', novaPoshtaBranches?.length);
-    console.log('cities?.length)', cities?.length);
+
     setFilteredCities([...new Set(cities)]);
-    console.log('[...new Set(cities)])', [...new Set(cities)]);
   };
 
   const handleCityChange = (e) => {
     const city = e.target.value;
-    setSelectedCity(city);
+
+    setCity(city);
     const addresses = novaPoshtaBranches
-      ?.filter((branch) => branch.SettlementAreaDescription === selectedRegion && branch.SettlementDescription === city)
-      // ?.filter((branch) => branch.SettlementDescription === city)
+      ?.filter((branch) => branch.SettlementAreaDescription === region && branch.SettlementDescription === city)
+
       ?.map((branch) => branch.Description);
-    console.log('[...new Set(addresses)])', addresses);
+
     setFilteredAddresses(addresses);
+  };
+
+  const handleAddressChange = (e) => {
+    const address = e.target.value;
+    setAdress(address);
   };
 
   return (
     <div>
-      <Title mt={8} children="Особиста інформація" />
-      <Box mt={12} className="input-group">
+      <Title children="Особиста інформація" />
+      <Box mt={16} mb={24} className="input-group">
         <Label>Пароль входу</Label>
         <input
           placeholder="мін. 8 символів"
@@ -114,7 +107,7 @@ const CardAccount = () => {
           onChange={handlePasswordChange}
         />
       </Box>
-      <FlexBox>
+      <FlexBox mb={24}>
         <Box className="input-group">
           <Label>Ім'я</Label>
           <input
@@ -141,7 +134,7 @@ const CardAccount = () => {
           />
         </Box>
       </FlexBox>
-      <FlexBox>
+      <FlexBox mb={24}>
         <Box className="input-group">
           <Label>Номер телефону</Label>
           <input
@@ -160,63 +153,26 @@ const CardAccount = () => {
           <input placeholder="name@example.com" aria-label="email" type="text" id="email" name="email" value={email} onChange={handleEmailChange} />
         </Box>
       </FlexBox>
-      {isClient && (
-        <Fragment>
-          <Title mt={32} children="Доставка" />
-          {/* <FlexBox mt={12}>
-            <Box className="input-group">
-              <Label>Місто</Label>
-              <input placeholder="Місто" aria-label="city" type="text" id="city" name="city" value={city} onChange={handleCityChange} />
-            </Box>
-            &nbsp;&nbsp;
-            <Box className="input-group">
-              <Label>Область</Label>
-              <input placeholder="Область" aria-label="region" type="text" id="region" name="region" value={region} onChange={handleRegionChange} />
-            </Box>
-          </FlexBox> */}
 
-          {novaPoshtaBranches && (
-            <Box className="input-group">
-              <Label>Відділення Нової Пошти</Label>
-              <select
-                aria-label="novaPoshtaBranch"
-                id="novaPoshtaBranch"
-                name="novaPoshtaBranch"
-                // value={selectedNovaPoshtaBranch}
-                // onChange={handleNovaPoshtaBranchChange}
-              >
-                {/* <option value="">Оберіть відділення Нової Пошти</option> */}
-                {novaPoshtaBranches?.map((branch, index) => {
-                  if (index === 0) console.log(branch);
-                  return (
-                    <option key={index} value={branch.name}>
-                      {branch.name}
-                    </option>
-                  );
-                })}
+      {isClient && novaPoshtaBranches ? (
+        <Box>
+          <FlexBox mb={24}>
+            <Box>
+              <Label>Область</Label>
+              <select value={region} onChange={handleRegionChange} required>
+                <option value="">Оберіть область</option>
+                {[...new Set(novaPoshtaBranches.map((branch) => branch.SettlementAreaDescription))].map((region, index) => (
+                  <option key={index} value={region}>
+                    {region}
+                  </option>
+                ))}
               </select>
             </Box>
-          )}
-        </Fragment>
-      )}
+            &nbsp;&nbsp;
+            <Box>
+              <Label>Місто</Label>
 
-      {isClient && novaPoshtaBranches && (
-        <Fragment>
-          <div>
-            <label>Область</label>
-            <select value={selectedRegion} onChange={handleRegionChange}>
-              <option value="">Оберіть область</option>
-              {[...new Set(novaPoshtaBranches.map((branch) => branch.SettlementAreaDescription))].map((region, index) => (
-                <option key={index} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-          </div>
-          {selectedRegion && (
-            <div>
-              <label>Місто</label>
-              <select value={selectedCity} onChange={handleCityChange}>
+              <select disabled={!region} value={city} onChange={handleCityChange} required>
                 <option value="">Оберіть місто</option>
                 {filteredCities.map((city, index) => (
                   <option key={index} value={city}>
@@ -224,22 +180,40 @@ const CardAccount = () => {
                   </option>
                 ))}
               </select>
-            </div>
-          )}
-          {selectedCity && (
-            <div>
-              <label>Адреса</label>
-              <select>
-                <option value="">Оберіть адресу</option>
-                {filteredAddresses.map((address, index) => (
-                  <option key={index} value={address}>
-                    {address}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </Fragment>
+            </Box>
+          </FlexBox>
+
+          <Box>
+            <Label>Відділення Нової Пошти</Label>
+
+            <select disabled={!city} value={address} onChange={handleAddressChange} required>
+              <option value="">Оберіть адресу</option>
+              {filteredAddresses.map((address, index) => (
+                <option key={index} value={address}>
+                  {address}
+                </option>
+              ))}
+            </select>
+          </Box>
+        </Box>
+      ) : (
+        <Box>
+          <FlexBox mb={24}>
+            <Box>
+              <Label>Область</Label>
+              <input className="order-form-input" type="text" aria-label="input reqion" value={region} onChange={handleRegionChange} required />
+            </Box>
+            &nbsp;&nbsp;
+            <Box>
+              <Label>Місто</Label>
+              <input className="order-form-input" type="text" aria-label="input city" value={city} onChange={handleCityChange} required />
+            </Box>
+          </FlexBox>
+          <Box>
+            <Label>Адреса</Label>
+            <input className="order-form-input" type="text" aria-label="input address" value={address} onChange={handleAddressChange} required />
+          </Box>
+        </Box>
       )}
 
       <PrimaryButton onClick={onSubmit} mt={32}>

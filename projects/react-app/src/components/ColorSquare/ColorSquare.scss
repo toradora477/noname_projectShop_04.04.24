@@ -1,0 +1,27 @@
+@import '../../common_constants/styles/colors.scss';
+.color-square {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: var(--mr, 0);
+  text-align: center;
+  line-height: 24px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+
+  &.is-selected {
+    border: 2px solid $primary;
+    box-shadow: 0 0 5px $primary;
+  }
+
+  &.not-selected {
+    border: 1px solid #000000;
+  }
+
+  span {
+    font-size: 14px;
+  }
+}

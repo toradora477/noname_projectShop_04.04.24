@@ -4,11 +4,13 @@ import './QuantitySelector.scss';
 const QuantitySelector = ({ quantity, onDecrease, onIncrease }) => {
   return (
     <div className="quantity-selector">
-      <button onClick={onDecrease} disabled={quantity <= 0}>
+      <button type="button" onClick={onDecrease} disabled={quantity <= 0}>
         -
       </button>
-      <input type="text" value={quantity} readOnly />
-      <button onClick={onIncrease}>+</button>
+      <input aria-label="number products" type="text" value={quantity} readOnly />
+      <button type="button" onClick={onIncrease}>
+        +
+      </button>
     </div>
   );
 };

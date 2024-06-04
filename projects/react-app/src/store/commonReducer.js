@@ -9,10 +9,13 @@ const userAuth = getTokenData(userToken);
 const getAccessRoles = (role) => {
   const normalizedRole = role || 'guest';
   return {
+    isClientOrLower: ROLES[normalizedRole] >= ROLES.client,
+
     isClientOrAbove: ROLES[normalizedRole] <= ROLES.client,
 
     isAdmin: ROLES[normalizedRole] === ROLES.admin,
     isClient: ROLES[normalizedRole] === ROLES.client,
+    isGuest: ROLES[normalizedRole] === ROLES.guest,
 
     isNotAdmin: ROLES[normalizedRole] !== ROLES.admin,
     isNotClient: ROLES[normalizedRole] !== ROLES.client,
@@ -55,6 +58,81 @@ const initialState = {
   basket: null,
   products: null,
   novaPoshtaBranches: null,
+  orders: null,
+};
+
+const groupUserAuth = {
+  setUserAuth: (state, action) => {
+    state.userAuth = action.payload;
+    state.accessRoles = getAccessRoles(action.payload?.role);
+    patchProductsIsFavoriteStatus(state);
+  },
+  updateUserAuth: (state, action) => {
+    const { payload } = action;
+    if (!payload || typeof payload !== 'object') return;
+    state.userAuth = { ...(state.userAuth || {}), ...payload };
+    state.accessRoles = getAccessRoles(payload.role);
+    patchProductsIsFavoriteStatus(state);
+  },
+};
+
+const groupProducts = {
+  setProducts: (state, action) => {
+    if (!Array.isArray(action.payload)) return;
+    state.products = action.payload;
+    state.products.sort((a, b) => b.i - a.i);
+    patchProductsIsFavoriteStatus(state);
+  },
+  addProduct: (state, action) => {
+    if (state.accessRoles?.isNotAdmin) return;
+    (state.products ?? []).unshift(action.payload);
+  },
+  deleteProduct: (state, action) => {
+    if (state.accessRoles?.isNotAdmin) return;
+    state.products = (state.products ?? []).filter((item) => item._id !== action.payload);
+  },
+};
+
+const groupBasket = {
+  addBasket: (state, action) => {
+    (state.basket ??= []).unshift(action.payload);
+  },
+  removeBasket: (state, action) => {
+    const indexToRemove = state.basket?.findIndex((item) => item === action.payload) ?? -1;
+    if (indexToRemove !== -1) (state.basket ?? []).splice(indexToRemove, 1);
+  },
+  cleanBasket: (state) => {
+    state.basket = [];
+  },
+};
+
+const groupFavoriteProducts = {
+  addFavoriteProduct: (state, action) => {
+    if (state.accessRoles?.isNotClient || !state.userAuth) return;
+    const productId = action.payload;
+    if (!state.userAuth?.fav) {
+      state.userAuth.fav = [productId];
+    } else if (!state.userAuth?.fav?.includes(productId)) state.userAuth.fav.push(productId);
+
+    patchProductsIsFavoriteStatus(state);
+  },
+  removeFavoriteProduct: (state, action) => {
+    if (state.accessRoles?.isNotClient || !state.userAuth || !state.userAuth?.fav) return;
+    const productId = action.payload;
+    state.userAuth.fav = state.userAuth.fav.filter((id) => id !== productId);
+    patchProductsIsFavoriteStatus(state);
+  },
+};
+
+const groupOrders = {
+  setOrders: (state, action) => {
+    if (!Array.isArray(action.payload)) return;
+
+    state.orders = [
+      ...action.payload.filter((item) => !item.hasOwnProperty('ag')).sort((a, b) => b.i - a.i),
+      ...action.payload.filter((item) => item.hasOwnProperty('ag')).sort((a, b) => b.i - a.i),
+    ];
+  },
 };
 
 export const commonSlice = createSlice({
@@ -67,75 +145,16 @@ export const commonSlice = createSlice({
         prev: action.payload?.prev || (state.modal.name ? state.modal : undefined),
       };
     },
-    setUserAuth: (state, action) => {
-      state.userAuth = action.payload;
-      state.accessRoles = getAccessRoles(action.payload?.role);
-
-      patchProductsIsFavoriteStatus(state);
-    },
-    updateUserAuth: (state, action) => {
-      const { payload } = action;
-      if (!payload || typeof payload !== 'object') return;
-
-      state.userAuth = { ...(state.userAuth || {}), ...payload };
-      state.accessRoles = getAccessRoles(payload.role);
-
-      patchProductsIsFavoriteStatus(state);
-    },
     setNovaPoshtaBranches: (state, action) => {
       if (!Array.isArray(action.payload)) return;
       state.novaPoshtaBranches = action.payload;
-
       state.novaPoshtaBranches = state.novaPoshtaBranches.sort((a, b) => sortLicensePlateNovaPoshtaBranches(a.Description, b.Description));
     },
-
-    setProducts: (state, action) => {
-      if (!Array.isArray(action.payload)) return;
-      state.products = action.payload;
-      state.products.sort((a, b) => b.i - a.i);
-
-      patchProductsIsFavoriteStatus(state);
-    },
-    addProduct: (state, action) => {
-      if (state.accessRoles?.isNotAdmin) return;
-
-      (state.products ?? []).unshift(action.payload);
-    },
-    deleteProduct: (state, action) => {
-      if (state.accessRoles?.isNotAdmin) return;
-
-      state.products = (state.products ?? []).filter((item) => item._id !== action.payload);
-    },
-    addBasket: (state, action) => {
-      (state.basket ??= []).unshift(action.payload);
-    },
-    removeBasket: (state, action) => {
-      const indexToRemove = state.basket?.findIndex((item) => item === action.payload) ?? -1;
-
-      if (indexToRemove !== -1) {
-        (state.basket ?? []).splice(indexToRemove, 1);
-      }
-    },
-    addFavoriteProduct: (state, action) => {
-      if (state.accessRoles?.isNotClient || !state.userAuth) return;
-
-      const productId = action.payload;
-      if (!state.userAuth?.fav) {
-        state.userAuth.fav = [productId];
-      } else if (!state.userAuth?.fav?.includes(productId)) {
-        state.userAuth.fav.push(productId);
-      }
-
-      patchProductsIsFavoriteStatus(state);
-    },
-    removeFavoriteProduct: (state, action) => {
-      if (state.accessRoles?.isNotClient || !state.userAuth || !state.userAuth?.fav) return;
-
-      const productId = action.payload;
-      state.userAuth.fav = state.userAuth.fav.filter((id) => id !== productId);
-
-      patchProductsIsFavoriteStatus(state);
-    },
+    ...groupUserAuth,
+    ...groupProducts,
+    ...groupBasket,
+    ...groupFavoriteProducts,
+    ...groupOrders,
   },
 });
 
@@ -148,9 +167,11 @@ export const {
   deleteProduct,
   addBasket,
   removeBasket,
+  cleanBasket,
   addFavoriteProduct,
   removeFavoriteProduct,
   setNovaPoshtaBranches,
+  setOrders,
 } = commonSlice.actions;
 
 export default commonSlice.reducer;

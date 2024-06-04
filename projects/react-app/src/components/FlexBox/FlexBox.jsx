@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { Box } from '../';
 
-const FlexBox = ({ children, className, mt, style, alignItems = 'center' }) => (
+const FlexBox = ({ children, className, mt, mb, style, alignItems = 'center' }) => (
   <Box
     className={clsx(className)}
     style={{
@@ -11,6 +11,7 @@ const FlexBox = ({ children, className, mt, style, alignItems = 'center' }) => (
       ...style,
     }}
     mt={mt}
+    mb={mb}
     children={children}
   />
 );

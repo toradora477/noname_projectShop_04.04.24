@@ -45,7 +45,7 @@ const useClientViewData = () => {
         request.get('/api/getNovaPoshtaBranches', {}, (res) => {
           if (res.data) {
             dispatch(setNovaPoshtaBranches(res.data));
-            console.log(res.data.length);
+
             resolve();
           } else reject(new Error('Failed to fetch branches nova poshta list'));
         });

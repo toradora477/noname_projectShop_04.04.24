@@ -1,14 +1,15 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
 import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin, ColorSquare, ColorPicker, QuantitySelector, SelectSquare } from '../../components';
-import { ACTION, PRODUCT_CATEGORIES } from '../../common_constants/business';
+import { Card, Typography, FlexBox, PrimaryButton, Spin, QuantitySelector, SelectSquare } from '../../components';
+import { ACTION, TEXT_LINK_STEP } from '../../common_constants/business';
 import GroupImage from './GroupImage';
-import { request } from '../../tools';
+import { request, retrieveCategoryAndSubcategoryLabels } from '../../tools';
 import { PLACING_AN_ORDER } from '../../common_constants/modals';
+import { icon_heart_empty_black, icon_heart_empty_red } from '../../images';
 
 const CardProduct = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,6 @@ const CardProduct = () => {
   const [loadingAddBasket, setLoadingAddBasket] = useState(false);
   const [loadingBuyNow, setLoadingBuyNow] = useState(false);
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
-  const [selectedColor, setSelectedColor] = useState('#1890ff');
 
   const { isClient } = useSelector((state) => state.common.accessRoles);
   const basket = useSelector((state) => state.common.basket) ?? [];
@@ -25,30 +25,18 @@ const CardProduct = () => {
 
   const item = products.find((item) => item._id === productId);
 
-  const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
-    const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
-    if (!category) return null;
-
-    const subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
-    if (!subcategory) return null;
-
-    return {
-      categoryLabel: category.label,
-      subcategoryLabel: subcategory.label,
-    };
-  };
-
   if (!item) {
     history.push(ROUTES.ERROR404);
     return null;
   }
 
-  const resultLabelCategory = getCategoryAndSubcategoryLabel(item.c?.[0], item.c?.[1]);
+  const resultLabelCategory = retrieveCategoryAndSubcategoryLabels(item.c?.[0], item.c?.[1]);
 
-  const text1 = 'ГОЛОВНА'; // ? постійна
-  const text2 = 'МАГАЗИН'; // ? постійна
-  const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : 'ОДЯГ';
-  const text4 = typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : 'ОДЯГ';
+  const text1 = TEXT_LINK_STEP.MAIN;
+  const text2 = TEXT_LINK_STEP.SHOP;
+  const text3 = typeof resultLabelCategory.categoryLabel === 'string' ? resultLabelCategory.categoryLabel.toUpperCase() : TEXT_LINK_STEP.DEFAULT;
+  const text4 =
+    typeof resultLabelCategory.subcategoryLabel === 'string' ? resultLabelCategory.subcategoryLabel.toUpperCase() : TEXT_LINK_STEP.DEFAULT;
 
   const [LinkText, TItle, Label, BtnText] = [
     ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={400} />,
@@ -66,40 +54,16 @@ const CardProduct = () => {
   const nameProduct = <TItle children={item.n} mt={8} />;
   const priceProduct = <Label mt={8}>{item.p}&nbsp;₴</Label>;
 
-  // const sizesProduct = item?.s?.map((i) => (i = <ColorSquare mr={8} text={i ?? ''} />)) ?? [];
-  // const colorsProduct = item?.f?.map((i) => (i = <ColorSquare mr={8} color={i.color ?? ''} />)) ?? [];
-
   const sizesProduct = item?.s ?? [];
   const colorsProduct = item?.f?.map((i) => (i = i.color)) ?? [];
 
   const onSelectSize = (index) => {
-    // Дії для вибору розміру
-    console.log(index);
+    console.log(index.text);
   };
 
   const onSelectColor = (index) => {
-    // Дії для вибору кольору
-    console.log(index);
+    console.log(index.color);
   };
-
-  const sizeProduct = (
-    <FlexBox>
-      <Label mt={8}>Розмір:&nbsp;</Label>
-
-      <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
-    </FlexBox>
-  );
-  const colorProduct = (
-    <FlexBox>
-      <Label mt={8}>Колір:&nbsp;</Label>
-
-      <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
-    </FlexBox>
-  );
-
-  console.table(colorsProduct);
-
-  // console.log(item);
 
   const onClickAddOrder = () => {
     setLoadingBuyNow(true);
@@ -121,10 +85,9 @@ const CardProduct = () => {
     handleToFavorites(
       item._id,
 
-      // item.isFavorite ? ACTION.ADD : ACTION.REMOVE,
       ACTION[item.isFavorite ? 'REMOVE' : 'ADD'],
     );
-    // handleToFavorites(item._id, ACTION.REMOVE);
+
     setLoadingPutWishList(false);
   };
 
@@ -144,10 +107,6 @@ const CardProduct = () => {
       },
     );
   }
-
-  const handleColorChange = (newColor) => {
-    setSelectedColor(newColor);
-  };
 
   const onPutInBasket = () => {
     dispatch(addBasket(item._id));
@@ -170,12 +129,18 @@ const CardProduct = () => {
           {linkTypeText}
           {nameProduct}
           {priceProduct}
-          {sizeProduct}
-          {colorProduct}
+          <FlexBox mt={8}>
+            <Label>Розмір:&nbsp;</Label>
+            <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
+          </FlexBox>
+          <FlexBox mt={8}>
+            <Label>Колір:&nbsp;</Label>
+            <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
+          </FlexBox>
           <Spin spinning={loadingAddBasket}>
-            <FlexBox>
+            <FlexBox mt={8}>
               <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
-              <PrimaryButton style={{ width: 190 }} ml={14} mt={8} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
+              <PrimaryButton style={{ width: 190 }} ml={14} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
             </FlexBox>
           </Spin>
           <Spin spinning={loadingBuyNow}>
@@ -190,146 +155,19 @@ const CardProduct = () => {
 
           {isClient && (
             <Spin spinning={loadingPutWishList}>
-              <button className="btn-no-border" onClick={onPutWishList}>
-                <BtnText>Додати до списку бажань {item.isFavorite ? '(так)' : '(ні)'}</BtnText>
-              </button>
+              <FlexBox mt={8}>
+                <img src={item.isFavorite ? icon_heart_empty_red : icon_heart_empty_black} alt="btn-like" />
+                &nbsp;
+                <button className="btn-no-border" onClick={onPutWishList}>
+                  <BtnText>Додати до списку бажань </BtnText>
+                </button>
+              </FlexBox>
             </Spin>
           )}
         </Card>
       </FlexBox>
-      <br />
-      {/* <div className="product-details">
-        <h2>ОПИС</h2>
-        <p>{item.description}</p>
-        <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Розмір</th>
-              <th>Вага</th>
-              <th>Ріст</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>S</td>
-              <td>55-65</td>
-              <td>155-165</td>
-            </tr>
-            <tr>
-              <td>M</td>
-              <td>65-75</td>
-              <td>165-175</td>
-            </tr>
-            <tr>
-              <td>L</td>
-              <td>75-85</td>
-              <td>175-185</td>
-            </tr>
-            <tr>
-              <td>XL</td>
-              <td>85-95</td>
-              <td>185-195</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> */}
-      <br />
     </div>
   );
 };
 
 export default CardProduct;
-
-//  const [LinkText, TItle, Text, BtnText] = [
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={10} fw={700} />,
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} />,
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={600} />,
-//    ({ children, mt }) => <Typography children={children} mt={mt} sz={12} fw={600} />,
-//  ];
-
-//  const linkTypeText = (
-//    <LinkText>
-//      {text1} &gt;&gt; {text2} &gt;&gt; {text3} &gt;&gt; <b>{text4}</b>
-//    </LinkText>
-//  );
-
-//  const nameProduct = <TItle children={item.n} mt={8} />;
-//  const priceProduct = <Text mt={8}>{item.p}&nbsp;₴</Text>;
-//  const sizeProduct = (
-//    <Fragment>
-//      <Text mt={8}>Розмір:&nbsp;</Text>
-//      <select className="form-select">
-//        <option value="S">S</option>
-//        <option value="M">M</option>
-//        <option value="L">L</option>
-//        <option value="XL">XL</option>
-//      </select>
-//    </Fragment>
-//  );
-
-//  const colorProduct = (
-//    <Fragment>
-//      <Text mt={8}>Колір:&nbsp;</Text>
-//      <select className="form-select">
-//        <option value="black">Чорний</option>
-//        <option value="white">Білий</option>
-//      </select>
-//    </Fragment>
-//  );
-
-//  const onBuyNow = () => {
-//    setLoadingBuyNow(true);
-//    console.log('Buy Now');
-//    setLoadingBuyNow(false);
-//  };
-
-//  const onPutBasket = () => {
-//    setLoadingAddBasket(true);
-//    dispatch(addBasket(item._id));
-//    setLoadingAddBasket(false);
-//  };
-
-//  const onPutWishList = () => {
-//    setLoadingPutWishList(true);
-//    handleToFavorites(item._id, ACTION[item.isFavorite ? 'REMOVE' : 'ADD']);
-//    setLoadingPutWishList(false);
-//  };
-
-//  <div className="product-details">
-//       <h2>ОПИС</h2>
-//       <p>{item.description}</p>
-//       <h2>ДОДАТКОВА ІНФОРМАЦІЯ</h2>
-//       <table>
-//         <thead>
-//           <tr>
-//             <th>Розмір</th>
-//             <th>Вага</th>
-//             <th>Ріст</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           <tr>
-//             <td>S</td>
-//             <td>55-65</td>
-//             <td>155-165</td>
-//           </tr>
-//           <tr>
-//             <td>M</td>
-//             <td>65-75</td>
-//             <td>165-175</td>
-//           </tr>
-//           <tr>
-//             <td>L</td>
-//             <td>75-85</td>
-//             <td>175-185</td>
-//           </tr>
-//           <tr>
-//             <td>XL</td>
-//             <td>85-95</td>
-//             <td>185-195</td>
-//           </tr>
-//         </tbody>
-//       </table>
-//     </div>
-//     <br />

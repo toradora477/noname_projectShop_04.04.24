@@ -1,24 +1,27 @@
 import React, { useState, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, removeBasket } from '../../store/commonReducer';
 import { Link, useLocation } from 'react-router-dom';
+import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, removeBasket, setModal } from '../../store/commonReducer';
+
+import { AUTH } from '../../common_constants/modals';
+import { ROUTES } from '../../common_constants/routes';
+import { ACTION, NAME_SELECT } from '../../common_constants/business';
 
 import { request } from '../../tools';
-import { ROUTES } from '../../common_constants/routes';
 import { icon_heart_empty_red, icon_heart_empty_gray } from '../../images';
-import { Spin, PreviewImage, PrimaryButton } from '../';
-import { ACTION } from '../../common_constants/business';
+import { Spin, PreviewImage, PrimaryButton, Typography } from '../';
+
 import './Product.scss';
 
-const Product = ({ item }) => {
+const Product = ({ item, selectedCard }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const { isClient, isNotAdmin } = useSelector((state) => state.common.accessRoles);
+  const { isGuest, isNotAdmin, isClientOrLower } = useSelector((state) => state.common.accessRoles);
 
   const [loadingPutWishList, setLoadingPutWishList] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE;
+  const isPagePersonalOffice = pathname === ROUTES.PERSONAL_OFFICE && selectedCard === NAME_SELECT.BASKETLIST;
   const isPageProductAdmin = pathname === ROUTES.PRODUCTS_ADMIN;
   const isLikeProduct = item.isFavorite ? icon_heart_empty_red : icon_heart_empty_gray;
 
@@ -44,6 +47,10 @@ const Product = ({ item }) => {
     });
 
     setLoading(false);
+  };
+
+  const onBtnClickAuth = () => {
+    dispatch(setModal({ name: AUTH }));
   };
 
   const onPutWishList = () => {
@@ -79,9 +86,9 @@ const Product = ({ item }) => {
   return (
     <div className="product">
       <Spin spinning={loading}>
-        {isClient && !isPageProductAdmin && (
+        {isClientOrLower && !isPageProductAdmin && (
           <Spin spinning={loadingPutWishList}>
-            <button className="btn-first product-like-icon" onClick={onPutWishList}>
+            <button className="btn-first product-like-icon" onClick={isGuest ? onBtnClickAuth : onPutWishList}>
               <img src={isLikeProduct} alt="btn menu" />
             </button>
           </Spin>
@@ -90,8 +97,9 @@ const Product = ({ item }) => {
         <Link className="menu-admin-btn" to={`${ROUTES.CARD_PRODUCT}/${item._id}`}>
           <PreviewImage fileID={item?.f?.[0]?.files?.[0]} />
         </Link>
-        <h3>{item.n}</h3>
-        <p>{item.p}&nbsp;$</p>
+
+        <Typography mt={10} color="gray100" sz={10} fw={400} children={item.n} />
+        <Typography mt={10} mb={10} color="gray100" sz={10} fw={600} children={`${item.p} ₴`} />
         {isNotAdmin && !isPageProductAdmin && <PrimaryButton children={textAddBtnDynamic} onClick={onPutInBasket} />}
         {isPagePersonalOffice && removeItemsBasket}
         {isPageProductAdmin && productEditing}

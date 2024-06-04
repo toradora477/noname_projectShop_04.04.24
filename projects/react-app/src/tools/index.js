@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HTTP_METHODS } from '../common_constants/business';
+import { HTTP_METHODS, PRODUCT_CATEGORIES } from '../common_constants/business';
 
 const { getFormattedDateWithRelativeDays } = require('./dateUtils');
 const { useClientViewData } = require('./hooks');
@@ -95,4 +95,17 @@ const request = {
   },
 };
 
-export { request, prepareUsers, getTokenData, getFormattedDateWithRelativeDays, useClientViewData };
+const retrieveCategoryAndSubcategoryLabels = (categoryValue, subcategoryValue) => {
+  const category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
+  if (!category) return null;
+
+  const subcategory = category.subcategories.find((sub) => sub.value === Number(subcategoryValue));
+  if (!subcategory) return null;
+
+  return {
+    categoryLabel: category.label,
+    subcategoryLabel: subcategory.label,
+  };
+};
+
+export { request, prepareUsers, getTokenData, getFormattedDateWithRelativeDays, useClientViewData, retrieveCategoryAndSubcategoryLabels };

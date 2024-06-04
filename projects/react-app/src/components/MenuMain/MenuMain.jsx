@@ -6,15 +6,17 @@ import { AUTH } from '../../common_constants/modals';
 import { NAME_SELECT } from '../../common_constants/business';
 import { setModal } from '../../store/commonReducer';
 import { FlexBox } from '../';
-import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_color_green_gradient } from '../../images';
+import { logo_menu_component, icon_user_black, icon_heart_empty_black, shopping_bag_baskets_main } from '../../images';
 import './MenuMain.scss';
-import { PrimaryButton } from '../';
+import { PrimaryButton, Typography } from '../';
 
 const MenuMain = () => {
   const dispatch = useDispatch();
   const basket = useSelector((state) => state.common.basket) ?? [];
   const userAuth = useSelector((state) => state.common.userAuth);
-  const { isAdmin, isClientOrAbove, isClient, isNotAdmin } = useSelector((state) => state.common.accessRoles);
+  const { isAdmin, isClientOrAbove, isGuest, isNotAdmin, isClientOrLower } = useSelector((state) => state.common.accessRoles);
+
+  const Text = ({ children, mt }) => <Typography children={children} mt={mt} sz={14} fw={500} />;
 
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
@@ -25,10 +27,7 @@ const MenuMain = () => {
     window.location.reload();
   };
 
-  const testDynamicForLogin = userAuth ? 'Вийти' : 'Увійти';
-  const btnDynamicForLogin = userAuth ? logout : onBtnClickAuth;
-
-  const menuAdmin = (
+  const MenuAdmin = () => (
     <div className="menu-admin">
       <Link className="menu-admin-btn" to={ROUTES.ORDER_ADMIN}>
         <PrimaryButton children="Замовлення" color="gradient_main" />
@@ -38,13 +37,15 @@ const MenuMain = () => {
         <PrimaryButton children="Товари" color="gradient_main" />
       </Link>
       &nbsp;&nbsp;&nbsp;&nbsp;
-      {/* <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
-        <PrimaryButton children="Архів" color="gradient_main" />
-      </Link>  */}
-      {/* <Link className="menu-admin-btn" to={ROUTES.STATISTICS_ADMIN}>
-        <PrimaryButton children="Статистика" color="gradient_main" />
-      </Link> */}
     </div>
+  );
+
+  const BtnLike = () => (
+    <FlexBox>
+      <img src={icon_heart_empty_black} alt="btn-like" />
+      &nbsp;
+      <Text>Улюблене</Text>
+    </FlexBox>
   );
 
   return (
@@ -62,40 +63,42 @@ const MenuMain = () => {
           </div>
         </div>
 
-        {isAdmin && menuAdmin}
+        {isAdmin && <MenuAdmin />}
 
         <div className="menu-part">
-          <div className="btn-auth">
+          <div className="btn-auth text-link">
             <FlexBox>
-              {isClientOrAbove && (
+              {isClientOrAbove ? (
                 <Link to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.ACCOUNT } }}>
                   <img src={icon_user_black} alt="btn-login" />
                 </Link>
+              ) : (
+                <button name="login in and login out" className="btn-auth" style={{ padding: 0 }} onClick={userAuth ? logout : onBtnClickAuth}>
+                  {!isClientOrAbove && <img src={icon_user_black} alt="btn-login" />}
+                </button>
               )}
 
-              <button className="btn-auth" onClick={btnDynamicForLogin}>
-                <FlexBox>
-                  {!isClientOrAbove && <img src={icon_user_black} alt="btn-login" />}
-                  <p>{testDynamicForLogin}</p>
-                </FlexBox>
+              <button name="login in and login out" className="btn-auth" onClick={userAuth ? logout : onBtnClickAuth}>
+                <Text>{userAuth ? 'Вийти' : 'Увійти'}</Text>
               </button>
             </FlexBox>
           </div>
           &nbsp;&nbsp;
-          {isClient && (
-            <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
-              <FlexBox>
-                <img src={icon_heart_empty_black} alt="btn-like" />
-                &nbsp;
-                <p>Улюблене</p>
-              </FlexBox>
-            </Link>
-          )}
+          {isClientOrLower &&
+            (isGuest ? (
+              <button className="btn-auth text-link" onClick={onBtnClickAuth}>
+                <BtnLike />
+              </button>
+            ) : (
+              <Link className="btn-auth text-link" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.WISHLIST } }}>
+                <BtnLike />
+              </Link>
+            ))}
           &nbsp;&nbsp;
           {isNotAdmin && (
-            <Link className="btn-auth" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
-              <img src={shopping_bag_color_green_gradient} alt="btn-basket" />
-              {basket?.length || null}
+            <Link className="btn-auth basket-icon" to={{ pathname: ROUTES.PERSONAL_OFFICE, state: { selectParam: NAME_SELECT.BASKETLIST } }}>
+              <img src={shopping_bag_baskets_main} alt="btn-basket" />
+              {basket?.length > 0 && <span className="basket-count">{basket.length}</span>}
             </Link>
           )}
         </div>

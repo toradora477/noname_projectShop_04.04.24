@@ -33,18 +33,19 @@
   .product-item {
     // display: flex;
     // align-items: center;
-    gap: 10px;
+    // gap: 10px;
 
     .product-image {
-      width: 50px;
-      height: 50px;
+      width: 90px;
+      height: 90px;
       object-fit: cover;
       border-radius: 12px;
+      margin-right: 10px;
     }
   }
 
-  select,
-  input {
+  &-select,
+  &-input {
     // width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -52,12 +53,22 @@
   }
 
   .info-sell {
-    width: 475px;
+    width: 850px;
   }
 
   .finished-sell {
     margin-left: 50px;
-    width: 365px;
-    height: 365px;
+    width: 450px;
+    height: 350px;
+  }
+
+  select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    padding-right: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
   }
 }

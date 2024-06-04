@@ -51,4 +51,14 @@
   .input-group input:focus {
     outline: none;
   }
+
+  select {
+    width: 202px;
+    padding: 10px;
+    padding-right: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+  }
 }

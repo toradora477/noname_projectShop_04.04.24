@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReactPaginate from 'react-paginate';
-import { Product } from '../../components';
+import { Product, Empty } from '../../components';
 import { PRODUCT_CATEGORIES } from '../../common_constants/business';
 import { billboard_subcategory } from '../../images';
 import './Shop.scss';
@@ -18,14 +18,12 @@ const Shop = () => {
   const [titleBillboard, setTitleBillboard] = useState(titleBillboardStandart);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  const offset = currentPage * productsPerPage;
-  const pageCount = Math.ceil(products.length / productsPerPage);
-
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
 
-  const currentProducts = products.slice(offset, offset + productsPerPage);
+  const offset = currentPage * productsPerPage;
+  const currentPageData = filteredProducts.slice(offset, offset + productsPerPage);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -39,6 +37,7 @@ const Shop = () => {
       const getCategoryAndSubcategoryLabel = (categoryValue, subcategoryValue) => {
         let category, subcategory;
         category = PRODUCT_CATEGORIES.find((cat) => cat.value === Number(categoryValue));
+
         if (!category) return null;
 
         if (isSubcategoryValid) {
@@ -57,8 +56,10 @@ const Shop = () => {
       setTitleBillboard(isSubcategoryValid ? labels.subcategoryLabel : labels.categoryLabel);
 
       const filtered = products.filter((product) => {
-        return product.c?.[0] === category && product.c?.[1] === subcategory;
+        const retval = product.c?.[0] === category && (isSubcategoryValid ? product.c?.[1] === subcategory : true);
+        return retval;
       });
+
       setFilteredProducts(filtered);
     } else {
       setTitleBillboard(titleBillboardStandart);
@@ -72,24 +73,31 @@ const Shop = () => {
         <div className="billboard-label">{titleBillboard}</div>
         <img src={billboard_subcategory} alt="billboard" className="billboard-image" />
       </div>
-      <div className="product-list">
-        {filteredProducts.map((item) => (
-          <Product key={item._id} item={item} />
-        ))}
-      </div>
 
-      {pageCount > 1 && (
-        <ReactPaginate
-          previousLabel={currentPage === 0 ? '' : '<'}
-          nextLabel={currentPage === pageCount - 1 ? '' : '>'}
-          breakLabel={'...'}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={'pagination'}
-          activeClassName={'active'}
-        />
+      {filteredProducts?.length > 0 ? (
+        <Fragment>
+          <div className="product-list">
+            {currentPageData.map((item) => (
+              <Product key={item._id} item={item} />
+            ))}
+          </div>
+
+          {filteredProducts?.length > productsPerPage && (
+            <ReactPaginate
+              previousLabel={'<'}
+              nextLabel={'>'}
+              breakLabel={'...'}
+              pageCount={Math.ceil(filteredProducts.length / productsPerPage)}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={'pagination'}
+              activeClassName={'active'}
+            />
+          )}
+        </Fragment>
+      ) : (
+        <Empty description="Немає товару" w={350} h={250} />
       )}
     </div>
   );
