@@ -16,8 +16,6 @@ const OrderItemInfo = ({ item }) => {
 
   const { TextInfo } = RowGroup;
 
-  if (item.i === 19) console.table(item);
-
   const handleOnArchive = async () => {
     setLoading(true);
     await request.patch(
@@ -68,11 +66,8 @@ const OrderItemInfo = ({ item }) => {
   return (
     <div className="order-list-item">
       {filteredProducts?.map((product, index) => {
-        // const sizesProduct = product?.s ?? [];
         const sizesProduct = product.size ? [product.size] : [];
-        console.log(product);
 
-        // item.products;
         const colorsProduct = product.color ? [product.color] : [];
         const resultLabelCategory = retrieveCategoryAndSubcategoryLabels(product.c?.[0], product.c?.[1]);
 
