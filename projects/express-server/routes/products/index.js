@@ -49,8 +49,6 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
     const { productName, description, price, colorsInfo, category, subcategory, sizes } = req.body;
     const { _id: userID } = req.user;
 
-    console.log(req.body);
-
     if (![userID, productName, price, sizes, colorsInfo, category, subcategory, description].every(Boolean)) {
       throw new ExtendedError({
         messageLog: 'One or more values are empty.',

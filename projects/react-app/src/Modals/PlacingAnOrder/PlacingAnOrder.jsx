@@ -34,7 +34,6 @@ const PlacingAnOrder = () => {
 
     deliveryMethod: 'Самовивіз з Нової Пошти',
     paymentMethod: 'Оплата під час отримання товару',
-    recipientName: 'Яна Іваненко',
 
     region: userAuth?.region ?? '',
     city: userAuth?.city ?? '',
@@ -43,8 +42,6 @@ const PlacingAnOrder = () => {
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [productCounts, setProductCounts] = useState({});
-
-  const [selectedAddress, setSelectedAddress] = useState('');
 
   const [filteredCities, setFilteredCities] = useState([]);
   const [filteredAddresses, setFilteredAddresses] = useState([]);
@@ -133,20 +130,12 @@ const PlacingAnOrder = () => {
     const orderData = {
       ...formData,
       products: productsWithQuantities,
-      // region: formData.region,
-      // city: formData.city,
-      // address: formData.address,
     };
 
-    // console.table(userAuth);
-    console.table(orderData);
-    // console.table(orderData.products);
-
-    // request.post('/orders/addOrder', orderData, (res) => {
-    //   console.log('Замовлення успішно оформлене', res);
-    //   dispatch(cleanBasket());
-    //   dispatch(setModal());
-    // });
+    request.post('/orders/addOrder', orderData, (res) => {
+      dispatch(cleanBasket());
+      dispatch(setModal());
+    });
   };
 
   const InfoRow = ({ leftText, rightText, mt = 0, mb = 0 }) => {
@@ -241,7 +230,7 @@ const PlacingAnOrder = () => {
             </FlexBox>
 
             <Box>
-              <TextGroup children="Замовлення" />
+              <TextGroup mb={12} children="Замовлення" />
               {filteredProducts?.map((product, index) => {
                 const sizesProduct = product?.s ?? [];
                 const colorsProduct = product?.f?.map((i) => (i = i.color)) ?? [];
@@ -252,7 +241,7 @@ const PlacingAnOrder = () => {
                     <FlexBox>
                       <PreviewImage style={{ width: '90px', height: '90px' }} fileID={product?.f?.[0]?.files?.[0]} className="product-image" />
                       <RowGroup>
-                        <TextInfo label="Назва:" text={product.n} />{' '}
+                        <TextInfo label="Назва:" text={product.n} />
                         <TextInfo
                           label="Розмір:"
                           component={<SelectSquare mr={8} optionsText={sizesProduct} onSelect={(index) => onSelectSize(product._id, index.text)} />}
@@ -285,7 +274,7 @@ const PlacingAnOrder = () => {
             </Box>
 
             <Box>
-              <TextGroup children="Доставка" />
+              <TextGroup mb={12} children="Доставка" />
 
               {novaPoshtaBranches ? (
                 <Box>
@@ -372,17 +361,18 @@ const PlacingAnOrder = () => {
             </Box>
 
             <Box>
-              <TextGroup children="Оплата" />
+              <TextGroup mb={12} children="Оплата" />
               <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} required>
                 <option value="Оплата під час отримання товару">Оплата під час отримання товару</option>
               </select>
             </Box>
 
             <Box>
-              <TextGroup children="Отримувач" />
+              <TextGroup mb={12} children="Отримувач" />
               <input
                 className="order-form-input"
                 name="recipient"
+                placeholder="ПІБ"
                 aria-label="input name"
                 value={formData.recipient}
                 onChange={handleChange}

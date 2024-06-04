@@ -115,11 +115,11 @@ router.get('/getListOrder', adminJWT, async (req, res, next) => {
 
 router.post('/addOrder', guestJWT, async (req, res, next) => {
   try {
-    const { contactName, city, address, deliveryMethod, paymentMethod, recipientName, products } = req.body;
+    const { firstName, lastName, phoneNumber, email, deliveryMethod, paymentMethod, region, city, address, recipient, products } = req.body;
 
     const userID = req.user?._id ?? null;
 
-    if (![contactName, city, address, deliveryMethod, paymentMethod, recipientName, products].every(Boolean))
+    if (![firstName, lastName, phoneNumber, email, deliveryMethod, paymentMethod, region, city, address, recipient, products].every(Boolean))
       throw new ExtendedError({
         messageLog: 'One or more values are empty.',
         messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
@@ -134,12 +134,16 @@ router.post('/addOrder', guestJWT, async (req, res, next) => {
     const bodyOrder = {
       t: new Date(),
       i: await getNextSequenceValue('orderNextSequenceValue', commonParams),
-      contactName,
-      city,
-      address,
+      firstName,
+      lastName,
+      phoneNumber,
+      ...(email ? { email: email } : {}),
       deliveryMethod,
       paymentMethod,
-      recipientName,
+      region,
+      city,
+      address,
+      recipient,
       products: products.map((item) => ({ ...item, productId: new ObjectId(item.productId) })),
       ...(userID ? { a: new ObjectId(userID) } : {}),
     };

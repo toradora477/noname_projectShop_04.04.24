@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import ColorSquare from '../ColorSquare';
 import './SelectSquare.scss';
 
-const SelectSquare = ({ onSelect, optionsColor, optionsText, mr }) => {
+const SelectSquare = ({ onSelect = false, optionsColor, optionsText, mr }) => {
   const [selectedOption, setSelectedOption] = useState({});
 
   const handleOptionClick = (obj) => {
-    onSelect(obj);
+    if (onSelect) onSelect(obj);
     setSelectedOption(obj);
   };
 
@@ -19,7 +19,12 @@ const SelectSquare = ({ onSelect, optionsColor, optionsText, mr }) => {
       className="select-button"
       onClick={() => handleOptionClick({ index: index, color: optionsColor ? i : undefined, text: optionsText ? i : undefined })}
     >
-      <ColorSquare isChoiceSelect={selectedOption?.index === index} color={optionsColor ? i : undefined} text={optionsText ? i : undefined} mr={mr} />
+      <ColorSquare
+        isChoiceSelect={onSelect && selectedOption?.index === index}
+        color={optionsColor ? i : undefined}
+        text={optionsText ? i : undefined}
+        mr={mr}
+      />
     </button>
   ));
 
