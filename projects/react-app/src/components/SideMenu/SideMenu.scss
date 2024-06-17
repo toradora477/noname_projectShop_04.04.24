@@ -47,8 +47,20 @@
     }
   }
 
-  &.expanded {
+  &.first-level-expanded {
     width: 200px;
+
+    .btn-first .text {
+      opacity: 1; // Показываем текст при расширении меню
+    }
+  }
+
+  &.second-level-expanded {
+    width: 400px;
+
+    .btn-second .text {
+      opacity: 1; // Показываем текст при расширении меню
+    }
 
     .btn-first .text {
       opacity: 1; // Показываем текст при расширении меню

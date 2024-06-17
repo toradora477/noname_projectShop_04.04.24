@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { ROUTES } from '../../common_constants/routes';
 import './SideMenu.scss';
 
-const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink }) => {
+const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, handleMouseEnterSecondLevel, handleMouseLeaveSecondLevel }) => {
   return (
     <Link
       style={{ textDecoration: 'none' }}
@@ -14,6 +14,8 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink }) 
         pathname: pathnameLink ?? ROUTES.SHOP,
         ...(pathnameLink ? {} : { search: `?category=${item?.value}` }),
       }}
+      onMouseEnter={handleMouseEnterSecondLevel || (() => {})}
+      onMouseLeave={handleMouseLeaveSecondLevel || (() => {})}
     >
       <button style={{ marginLeft: ml }} className="btn-first">
         <img src={src ?? item?.img} alt="btn menu" />
@@ -28,35 +30,54 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink }) 
 };
 
 const SideMenu = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpandedFirstLevel, setIsExpandedFirstLevel] = useState(false);
+  const [isExpandedSecondLevel, setIsExpandedSecondLevel] = useState(false);
 
-  const handleMouseEnter = () => {
-    setIsExpanded(true);
+  const handleMouseEnterFirstLevel = () => {
+    setIsExpandedFirstLevel(true);
   };
 
-  const handleMouseLeave = () => {
-    setIsExpanded(false);
+  const handleMouseLeaveFirstLevel = () => {
+    // setIsExpanded(false); // TODO исправить
+    setIsExpandedFirstLevel(true);
   };
+
+  const handleMouseEnterSecondLevel = () => {
+    setIsExpandedSecondLevel(true);
+  };
+
+  const handleMouseLeaveSecondLevel = () => {
+    // setIsExpanded(false); // TODO исправить
+    setIsExpandedSecondLevel(false);
+  };
+  console.table({ isExpandedFirstLevel, isExpandedSecondLevel });
 
   return (
     <Fragment>
       <div className="side-block" />
-      <div className={clsx('side-screen-dim', { visible: isExpanded })} />
+      <div className={clsx('side-screen-dim', { visible: isExpandedFirstLevel })} />
       <nav
         className={clsx('side-menu', {
-          expanded: isExpanded,
+          'first-level-expanded': isExpandedFirstLevel,
+          'second-level-expanded': isExpandedSecondLevel,
         })}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={handleMouseEnterFirstLevel}
+        onMouseLeave={handleMouseLeaveFirstLevel}
       >
         <div className="container">
           <br />
-          <ButtonWithIcon pathnameLink={ROUTES.HOME_DASHBOARD} ml={0} src={Icon_menu_sidemenu} text="Меню" isExpanded={isExpanded} />
-          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_bag_96} text="Магазин" isExpanded={isExpanded} />
+          <ButtonWithIcon pathnameLink={ROUTES.HOME_DASHBOARD} ml={0} src={Icon_menu_sidemenu} text="Меню" isExpanded={isExpandedFirstLevel} />
+          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_bag_96} text="Магазин" isExpanded={isExpandedFirstLevel} />
           {PRODUCT_CATEGORIES.map((item, index) => (
-            <ButtonWithIcon item={item} key={index} isExpanded={isExpanded} />
+            <ButtonWithIcon
+              item={item}
+              key={index}
+              isExpanded={isExpandedFirstLevel}
+              handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
+              handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+            />
           ))}
-          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_like_96} text="Лідери продажів" isExpanded={isExpanded} />
+          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_like_96} text="Лідери продажів" isExpanded={isExpandedFirstLevel} />
         </div>
       </nav>
     </Fragment>
