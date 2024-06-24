@@ -31,18 +31,20 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
 };
 
 const SideMenu = () => {
-  const { isMobileScreen, isTabletScreen, isDesktopScreen } = useSelector((state) => state.screenSize.deviceType);
-  console.table({ isMobileScreen, isTabletScreen, isDesktopScreen });
+  const { isMobileScreen, isTabletScreen } = useSelector((state) => state.screenSize.deviceType);
+
   const [isExpandedFirstLevel, setIsExpandedFirstLevel] = useState(false);
   const [isExpandedSecondLevel, setIsExpandedSecondLevel] = useState(false);
+
+  if (isTabletScreen || isMobileScreen) return null;
 
   const handleMouseEnterFirstLevel = () => {
     setIsExpandedFirstLevel(true);
   };
 
   const handleMouseLeaveFirstLevel = () => {
-    // setIsExpanded(false); // TODO исправить
-    setIsExpandedFirstLevel(true);
+    setIsExpandedFirstLevel(false);
+    //  setIsExpandedFirstLevel(true); // ? тестовий
   };
 
   const handleMouseEnterSecondLevel = () => {
@@ -50,10 +52,10 @@ const SideMenu = () => {
   };
 
   const handleMouseLeaveSecondLevel = () => {
-    // setIsExpanded(false); // TODO исправить
     setIsExpandedSecondLevel(false);
+    // setIsExpandedSecondLevel(false); // ? тестовий
   };
-  console.table({ isExpandedFirstLevel, isExpandedSecondLevel });
+  // console.table({ isExpandedFirstLevel, isExpandedSecondLevel });
 
   return (
     <Fragment>

@@ -14,6 +14,7 @@ export { default as shopping_bag_color_gray } from './shopping_bag_color_gray.sv
 export { default as shopping_bag_color_white } from './shopping_bag_color_white.svg';
 ///////////////////////////////////////////////////////////////////////////
 export { default as billboardHomeDashboard } from './billboard_HomeDashboard.png';
+export { default as billboard_HomeDashboard_mob } from './billboard_HomeDashboard_mob.png';
 export { default as billboard_subcategory } from './billboard_subcategory.svg';
 ///////////////////////////////////////////////////////////////////////////
 export { default as error404 } from './Error404.svg';
