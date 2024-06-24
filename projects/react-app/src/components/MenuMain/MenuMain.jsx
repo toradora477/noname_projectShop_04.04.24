@@ -54,7 +54,7 @@ const MenuMain = () => {
 
   const BtnLike = () => (
     <FlexBox>
-      <img style={{ width: 45 }} src={icon_heart_empty_black} alt="btn-like" />
+      <img src={icon_heart_empty_black} alt="btn-like" />
       &nbsp;
       <Text>Улюблене</Text>
     </FlexBox>
