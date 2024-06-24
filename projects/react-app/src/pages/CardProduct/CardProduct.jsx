@@ -162,9 +162,9 @@ const CardProduct = () => {
     </Fragment>
   );
 
-  const contentForMobyle = !isDesktopScreen ? <Box children={componentContent} /> : <FlexBox children={componentContent} />;
+  const contentForMobile = !isDesktopScreen ? <Box children={componentContent} /> : <FlexBox children={componentContent} />;
 
-  return <div className="card-product" children={contentForMobyle} />;
+  return <div className="card-product" children={contentForMobile} />;
 };
 
 export default CardProduct;
