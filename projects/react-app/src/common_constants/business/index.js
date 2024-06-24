@@ -112,6 +112,11 @@ const SIZE_OPTIONS = ['S', 'M', 'L', 'XL', 'XXL'];
 
 const TEXT_LINK_STEP = { MAIN: 'ГОЛОВНА', SHOP: 'МАГАЗИН', DEFAULT: 'ОДЯГ' };
 
+const SCREEN_SIZES = {
+  MOBILE_MAX: 768,
+  TABLET_MAX: 1024,
+};
+
 module.exports = {
   COMPANY_NAME,
   WORKING_HOURS,
@@ -126,4 +131,5 @@ module.exports = {
   ACTION,
   SIZE_OPTIONS,
   TEXT_LINK_STEP,
+  SCREEN_SIZES,
 };

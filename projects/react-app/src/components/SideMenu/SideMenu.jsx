@@ -1,4 +1,5 @@
 import React, { useState, Fragment } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { icons8_like_96, icons8_bag_96, Icon_menu_sidemenu } from '../../images';
 import { PRODUCT_CATEGORIES } from '../../common_constants/business';
@@ -30,6 +31,8 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
 };
 
 const SideMenu = () => {
+  const { isMobileScreen, isTabletScreen, isDesktopScreen } = useSelector((state) => state.screenSize.deviceType);
+  console.table({ isMobileScreen, isTabletScreen, isDesktopScreen });
   const [isExpandedFirstLevel, setIsExpandedFirstLevel] = useState(false);
   const [isExpandedSecondLevel, setIsExpandedSecondLevel] = useState(false);
 
