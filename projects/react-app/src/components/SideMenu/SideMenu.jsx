@@ -61,13 +61,13 @@ const SideMenu = () => {
     <Fragment>
       <div className="side-block" />
       <div className={clsx('side-screen-dim', { visible: isExpandedFirstLevel })} />
+
       <nav
         className={clsx('side-menu', {
           'first-level-expanded': isExpandedFirstLevel,
-          'second-level-expanded': isExpandedSecondLevel,
         })}
         onMouseEnter={handleMouseEnterFirstLevel}
-        onMouseLeave={handleMouseLeaveFirstLevel}
+        // onMouseLeave={handleMouseLeaveFirstLevel}
       >
         <div className="container">
           <br />
@@ -84,6 +84,18 @@ const SideMenu = () => {
           ))}
           <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_like_96} text="Лідери продажів" isExpanded={isExpandedFirstLevel} />
         </div>
+
+        <nav
+          className={clsx('side-menu-2', {
+            'second-level-expanded': isExpandedSecondLevel,
+          })}
+          onMouseEnter={handleMouseEnterFirstLevel}
+          onMouseLeave={handleMouseLeaveFirstLevel}
+        >
+          <div className="container">
+            <br />
+          </div>
+        </nav>
       </nav>
     </Fragment>
   );
