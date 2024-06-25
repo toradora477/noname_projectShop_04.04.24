@@ -36,7 +36,7 @@ const ButtonSecond = ({ src, text, item, ml = 10, pathnameLink }) => {
       style={{ textDecoration: 'none' }}
       to={{
         pathname: pathnameLink ?? ROUTES.SHOP,
-        ...(pathnameLink ? {} : { search: `?category=${item?.value}` }),
+        ...(pathnameLink ? {} : { search: `?category=${item?.category}&subcategory=${item.value}` }),
       }}
     >
       <button style={{ marginLeft: ml }} className="btn-first">
@@ -79,13 +79,9 @@ const SideMenu = () => {
   //   setActiveButton(null);
   // };
 
-  const handleMouseEnterSecondLevel = (event, buttonLabel) => {
-    const isLabelInCategories = PRODUCT_CATEGORIES?.find((item) => buttonLabel === item.label) ? buttonLabel : null;
-    if (firstLevelAnimationComplete && isLabelInCategories) {
-      setIsExpandedSecondLevel(true);
-      setActiveButton(isLabelInCategories);
-      console.log(buttonLabel);
-    }
+  const handleMouseLeaveSecondLevel = () => {
+    setIsExpandedSecondLevel(false);
+    // Не сбрасываем activeButton здесь, чтобы он оставался активным, пока курсор находится внутри side-menu-2
   };
 
   // const handleMouseLeaveSecondLevel = () => {
@@ -93,20 +89,36 @@ const SideMenu = () => {
   //   setActiveButton(null);
   // };
 
-  const handleMouseLeaveFirstLevel = (e) => {
-    // Проверяем, куда переместился курсор. Если он внутри side-menu-2, не закрываем меню
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  // const handleMouseLeaveFirstLevel = (e) => {
+  //   // Проверяем, куда переместился курсор. Если он внутри side-menu-2, не закрываем меню
+  //   if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  //     setIsExpandedFirstLevel(false);
+  //     setIsExpandedSecondLevel(false);
+  //     setActiveButton(null);
+  //   }
+  // };
+
+  const handleMouseLeaveFirstLevel = () => {
+    if (!isExpandedSecondLevel) {
+      // Добавляем проверку, чтобы не сбрасывать activeButton при наличии раскрытого второго уровня
       setIsExpandedFirstLevel(false);
-      setIsExpandedSecondLevel(false);
       setActiveButton(null);
     }
   };
 
-  const handleMouseLeaveSecondLevel = (e) => {
-    // Проверяем, куда переместился курсор. Если он не вернулся в side-menu, закрываем меню
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
-      setIsExpandedSecondLevel(false);
-      setActiveButton(null);
+  // const handleMouseLeaveSecondLevel = (e) => {
+  //   // Проверяем, куда переместился курсор. Если он не вернулся в side-menu, закрываем меню
+  //   if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  //     setIsExpandedSecondLevel(false);
+  //     setActiveButton(null);
+  //   }
+  // };
+
+  const handleMouseEnterSecondLevel = (event, buttonLabel) => {
+    const isLabelInCategories = PRODUCT_CATEGORIES?.find((item) => buttonLabel === item.label) ? buttonLabel : null;
+    if (firstLevelAnimationComplete && isLabelInCategories) {
+      setIsExpandedSecondLevel(true);
+      setActiveButton(isLabelInCategories);
     }
   };
 
@@ -116,6 +128,8 @@ const SideMenu = () => {
         category: PRODUCT_CATEGORIES?.find((item) => activeButton === item.label)?.value,
       }))
     : [];
+
+  console.table({ activeButton, listSubcategories });
 
   return (
     <Fragment>

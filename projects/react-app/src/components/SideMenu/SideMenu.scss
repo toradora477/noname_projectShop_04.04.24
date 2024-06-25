@@ -60,22 +60,20 @@
 .side-menu-2 {
   border-left: 1px solid $light_primary;
   left: 200px;
-  width: 1px; // Начальная ширина 1px
+  width: 1px;
   opacity: 0;
   transition:
     width 0.3s ease,
-    left 0.3s ease;
+    left 0.3s ease,
+    opacity 0.3s ease;
 
   &.second-level-expanded {
     width: 200px;
     opacity: 1;
 
-    .btn-second .text {
-      opacity: 1; // Показываем текст при расширении меню
-    }
-
+    .btn-second .text,
     .btn-first .text {
-      opacity: 1; // Показываем текст при расширении меню
+      opacity: 1;
     }
   }
 }
