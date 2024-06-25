@@ -15,8 +15,8 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
         pathname: pathnameLink ?? ROUTES.SHOP,
         ...(pathnameLink ? {} : { search: `?category=${item?.value}` }),
       }}
-      onMouseEnter={handleMouseEnterSecondLevel || (() => {})}
-      onMouseLeave={handleMouseLeaveSecondLevel || (() => {})}
+      onMouseEnter={(e) => handleMouseEnterSecondLevel(e, text ?? item?.label)}
+      onMouseLeave={(e) => handleMouseLeaveSecondLevel(e)}
     >
       <button style={{ marginLeft: ml }} className="btn-first">
         <img src={src ?? item?.img} alt="btn menu" />
@@ -36,6 +36,7 @@ const SideMenu = () => {
   const [isExpandedFirstLevel, setIsExpandedFirstLevel] = useState(false);
   const [isExpandedSecondLevel, setIsExpandedSecondLevel] = useState(false);
   const [firstLevelAnimationComplete, setFirstLevelAnimationComplete] = useState(false);
+  const [activeButton, setActiveButton] = useState(null);
 
   useEffect(() => {
     if (isExpandedFirstLevel) {
@@ -57,16 +58,19 @@ const SideMenu = () => {
   const handleMouseLeaveFirstLevel = () => {
     setIsExpandedFirstLevel(false);
     setIsExpandedSecondLevel(false);
+    setActiveButton(null);
   };
 
-  const handleMouseEnterSecondLevel = () => {
+  const handleMouseEnterSecondLevel = (event, buttonLabel) => {
     if (firstLevelAnimationComplete) {
       setIsExpandedSecondLevel(true);
+      setActiveButton(buttonLabel);
     }
   };
 
   const handleMouseLeaveSecondLevel = () => {
     setIsExpandedSecondLevel(false);
+    setActiveButton(null);
   };
 
   return (
@@ -83,8 +87,23 @@ const SideMenu = () => {
       >
         <div className="container">
           <br />
-          <ButtonWithIcon pathnameLink={ROUTES.HOME_DASHBOARD} ml={0} src={Icon_menu_sidemenu} text="Меню" isExpanded={isExpandedFirstLevel} />
-          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_bag_96} text="Магазин" isExpanded={isExpandedFirstLevel} />
+          <ButtonWithIcon
+            pathnameLink={ROUTES.HOME_DASHBOARD}
+            ml={0}
+            src={Icon_menu_sidemenu}
+            text="Меню"
+            isExpanded={isExpandedFirstLevel}
+            handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
+            handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+          />
+          <ButtonWithIcon
+            pathnameLink={ROUTES.SHOP}
+            src={icons8_bag_96}
+            text="Магазин"
+            isExpanded={isExpandedFirstLevel}
+            handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
+            handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+          />
           {PRODUCT_CATEGORIES.map((item, index) => (
             <ButtonWithIcon
               item={item}
@@ -94,7 +113,14 @@ const SideMenu = () => {
               handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
             />
           ))}
-          <ButtonWithIcon pathnameLink={ROUTES.SHOP} src={icons8_like_96} text="Лідери продажів" isExpanded={isExpandedFirstLevel} />
+          <ButtonWithIcon
+            pathnameLink={ROUTES.SHOP}
+            src={icons8_like_96}
+            text="Лідери продажів"
+            isExpanded={isExpandedFirstLevel}
+            handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
+            handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+          />
         </div>
 
         <nav
@@ -106,6 +132,8 @@ const SideMenu = () => {
         >
           <div className="container">
             <br />
+            {/* Здесь можно использовать activeButton для отображения дополнительной информации */}
+            {activeButton && <div>Активная кнопка: {activeButton}</div>}
           </div>
         </nav>
       </nav>
