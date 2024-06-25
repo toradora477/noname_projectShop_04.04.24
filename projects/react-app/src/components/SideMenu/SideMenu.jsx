@@ -5,6 +5,7 @@ import { icons8_like_96, icons8_bag_96, Icon_menu_sidemenu } from '../../images'
 import { PRODUCT_CATEGORIES } from '../../common_constants/business';
 import clsx from 'clsx';
 import { ROUTES } from '../../common_constants/routes';
+import { Typography } from '../';
 import './SideMenu.scss';
 
 const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, handleMouseEnterSecondLevel, handleMouseLeaveSecondLevel }) => {
@@ -30,25 +31,24 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
   );
 };
 
-const ButtonSecond = ({ src, text, item, ml = 10, pathnameLink }) => {
+const ButtonSecond = ({ item }) => {
+  const [TItle, Text] = [
+    ({ children, mt }) => <Typography children={children} mt={mt} mb={30} ml={10} sz={16} fw={400} />,
+    ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} color="dark_gray" />,
+  ];
+
   return (
     <Fragment>
-      {item.titleTopGroup && (
-        <span className="text" style={{ fontWeight: 700, fontSize: '16px' }}>
-          {text ?? item?.label}
-        </span>
-      )}
+      {item.titleTopGroup && <TItle children={item?.titleTopGroup ?? ''} />}
       <Link
         style={{ textDecoration: 'none' }}
         to={{
-          pathname: pathnameLink ?? ROUTES.SHOP,
-          ...(pathnameLink ? {} : { search: `?category=${item?.category}&subcategory=${item.value}` }),
+          pathname: ROUTES.SHOP,
+          search: `?category=${item?.category}&subcategory=${item.value}`,
         }}
       >
-        <button style={{ marginLeft: ml }} className="btn-first">
-          <span className="text" style={{ fontWeight: 400, fontSize: '16px' }}>
-            {text ?? item?.label}
-          </span>
+        <button style={{ marginLeft: 10 }} className="btn-first">
+          <Text children={item?.label ?? ''} />
         </button>
       </Link>
     </Fragment>
