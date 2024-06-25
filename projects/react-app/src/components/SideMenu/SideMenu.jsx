@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { icons8_like_96, icons8_bag_96, Icon_menu_sidemenu } from '../../images';
@@ -35,6 +35,18 @@ const SideMenu = () => {
 
   const [isExpandedFirstLevel, setIsExpandedFirstLevel] = useState(false);
   const [isExpandedSecondLevel, setIsExpandedSecondLevel] = useState(false);
+  const [firstLevelAnimationComplete, setFirstLevelAnimationComplete] = useState(false);
+
+  useEffect(() => {
+    if (isExpandedFirstLevel) {
+      const timer = setTimeout(() => {
+        setFirstLevelAnimationComplete(true);
+      }, 300); // 300ms - это время анимации для первого уровня
+      return () => clearTimeout(timer);
+    } else {
+      setFirstLevelAnimationComplete(false);
+    }
+  }, [isExpandedFirstLevel]);
 
   if (isTabletScreen || isMobileScreen) return null;
 
@@ -44,18 +56,18 @@ const SideMenu = () => {
 
   const handleMouseLeaveFirstLevel = () => {
     setIsExpandedFirstLevel(false);
-    //  setIsExpandedFirstLevel(true); // ? тестовий
+    setIsExpandedSecondLevel(false);
   };
 
   const handleMouseEnterSecondLevel = () => {
-    setIsExpandedSecondLevel(true);
+    if (firstLevelAnimationComplete) {
+      setIsExpandedSecondLevel(true);
+    }
   };
 
   const handleMouseLeaveSecondLevel = () => {
     setIsExpandedSecondLevel(false);
-    // setIsExpandedSecondLevel(false); // ? тестовий
   };
-  // console.table({ isExpandedFirstLevel, isExpandedSecondLevel });
 
   return (
     <Fragment>
@@ -67,7 +79,7 @@ const SideMenu = () => {
           'first-level-expanded': isExpandedFirstLevel,
         })}
         onMouseEnter={handleMouseEnterFirstLevel}
-        // onMouseLeave={handleMouseLeaveFirstLevel}
+        onMouseLeave={handleMouseLeaveFirstLevel}
       >
         <div className="container">
           <br />
@@ -89,8 +101,8 @@ const SideMenu = () => {
           className={clsx('side-menu-2', {
             'second-level-expanded': isExpandedSecondLevel,
           })}
-          onMouseEnter={handleMouseEnterFirstLevel}
-          onMouseLeave={handleMouseLeaveFirstLevel}
+          onMouseEnter={handleMouseEnterSecondLevel}
+          onMouseLeave={handleMouseLeaveSecondLevel}
         >
           <div className="container">
             <br />
