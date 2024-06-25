@@ -8,7 +8,17 @@ import { ROUTES } from '../../common_constants/routes';
 import { Typography } from '../';
 import './SideMenu.scss';
 
-const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, handleMouseEnterSecondLevel, handleMouseLeaveSecondLevel }) => {
+const ButtonWithIcon = ({
+  src,
+  text,
+  isExpanded,
+  item,
+  ml = 10,
+  pathnameLink,
+  handleMouseEnterSecondLevel,
+  handleMouseLeaveSecondLevel,
+  onClick,
+}) => {
   return (
     <Link
       style={{ textDecoration: 'none' }}
@@ -19,7 +29,7 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
       onMouseEnter={(e) => handleMouseEnterSecondLevel(e, text ?? item?.label)}
       onMouseLeave={(e) => handleMouseLeaveSecondLevel(e)}
     >
-      <button style={{ marginLeft: ml }} className="btn-first">
+      <button onClick={onClick} style={{ marginLeft: ml }} className="btn-first">
         <img src={src ?? item?.img} alt="btn menu" />
         {isExpanded && (
           <span className="text" style={{ fontWeight: 700, fontSize: '16px' }}>
@@ -31,7 +41,7 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
   );
 };
 
-const ButtonSecond = ({ item }) => {
+const ButtonSecond = ({ item, onClick }) => {
   const [TItle, Text] = [
     ({ children, mt }) => <Typography children={children} mt={mt} mb={30} ml={10} sz={16} fw={400} />,
     ({ children, mt }) => <Typography children={children} mt={mt} sz={16} fw={400} color="dark_gray" />,
@@ -47,7 +57,7 @@ const ButtonSecond = ({ item }) => {
           search: `?category=${item?.category}&subcategory=${item.value}`,
         }}
       >
-        <button style={{ marginLeft: 10 }} className="btn-first">
+        <button onClick={onClick} style={{ marginLeft: 10 }} className="btn-first">
           <Text children={item?.label ?? ''} />
         </button>
       </Link>
@@ -106,10 +116,17 @@ const SideMenu = () => {
       }))
     : [];
 
+  const resetMenuState = () => {
+    setIsExpandedFirstLevel(false);
+    setIsExpandedSecondLevel(false);
+    setFirstLevelAnimationComplete(false);
+    setActiveButton(null);
+  };
+
   return (
     <Fragment>
       <div className="side-block" />
-      <div className={clsx('side-screen-dim', { visible: isExpandedFirstLevel })} />
+      <div onMouseEnter={resetMenuState} className={clsx('side-screen-dim', { visible: isExpandedFirstLevel })} />
 
       <nav
         className={clsx('side-menu', {
@@ -128,6 +145,7 @@ const SideMenu = () => {
             isExpanded={isExpandedFirstLevel}
             handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
             handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+            onClick={resetMenuState}
           />
           <ButtonWithIcon
             pathnameLink={ROUTES.SHOP}
@@ -136,6 +154,7 @@ const SideMenu = () => {
             isExpanded={isExpandedFirstLevel}
             handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
             handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+            onClick={resetMenuState}
           />
           {PRODUCT_CATEGORIES.map((item, index) => (
             <ButtonWithIcon
@@ -144,6 +163,7 @@ const SideMenu = () => {
               isExpanded={isExpandedFirstLevel}
               handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
               handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+              onClick={resetMenuState}
             />
           ))}
           <ButtonWithIcon
@@ -153,6 +173,7 @@ const SideMenu = () => {
             isExpanded={isExpandedFirstLevel}
             handleMouseEnterSecondLevel={handleMouseEnterSecondLevel}
             handleMouseLeaveSecondLevel={handleMouseLeaveSecondLevel}
+            onClick={resetMenuState}
           />
         </div>
 
@@ -164,7 +185,9 @@ const SideMenu = () => {
           onMouseLeave={handleMouseLeaveSecondLevel}
         >
           <div style={{ marginTop: '49px' }} className="container">
-            {activeButton && listSubcategories && listSubcategories.map((item, index) => <ButtonSecond item={item} key={index} />)}
+            {activeButton &&
+              listSubcategories &&
+              listSubcategories.map((item, index) => <ButtonSecond onClick={resetMenuState} item={item} key={index} />)}
           </div>
         </nav>
       </nav>
