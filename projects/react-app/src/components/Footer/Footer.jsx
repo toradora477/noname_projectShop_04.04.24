@@ -1,9 +1,10 @@
 import React from 'react';
 import dayjs from 'dayjs';
-import './Footer.scss';
+
 import { COMPANY_NAME, WORKING_HOURS, WORKING_DAYS } from '../../common_constants/business';
 import { icon_instagram, icon_telegram, icon_tictoc } from '../../images';
 import { Typography, FlexBox } from '../';
+import './Footer.scss';
 
 const Footer = () => {
   const currentYear = dayjs().format('YYYY');
@@ -27,7 +28,6 @@ const Footer = () => {
             {WORKING_DAYS.START_WEEK} - {WORKING_DAYS.END_WEEK} {WORKING_HOURS.START_DAY} до {WORKING_HOURS.END_DAY}
           </Text>
         </div>
-
         <div className="footer__section">
           <TItle>Інформація</TItle>
 
@@ -37,7 +37,6 @@ const Footer = () => {
           <Text>Поширені запитання</Text>
           <Text>Політика конфіденційності</Text>
         </div>
-
         <div className="footer__section">
           <TItle>Оплата</TItle>
 

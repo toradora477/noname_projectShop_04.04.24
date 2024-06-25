@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ROUTES } from '../../common_constants/routes';
 import { addFavoriteProduct, addBasket, removeBasket, removeFavoriteProduct, setModal } from '../../store/commonReducer';
 import './CardProduct.scss';
-import { Card, Typography, FlexBox, PrimaryButton, Spin, QuantitySelector, SelectSquare } from '../../components';
+import { Card, Typography, FlexBox, Box, PrimaryButton, Spin, QuantitySelector, SelectSquare } from '../../components';
 import { ACTION, TEXT_LINK_STEP } from '../../common_constants/business';
 import GroupImage from './GroupImage';
 import { request, retrieveCategoryAndSubcategoryLabels } from '../../tools';
@@ -22,6 +22,7 @@ const CardProduct = () => {
   const { isClient } = useSelector((state) => state.common.accessRoles);
   const basket = useSelector((state) => state.common.basket) ?? [];
   const products = useSelector((state) => state.common.products) ?? [];
+  const { isDesktopScreen } = useSelector((state) => state.screenSize.deviceType);
 
   const item = products.find((item) => item._id === productId);
 
@@ -121,53 +122,49 @@ const CardProduct = () => {
     return counts;
   }, {});
 
-  return (
-    <div className="card-product">
-      <FlexBox>
-        <GroupImage />
-        <Card ml={20} pl={35}>
-          {linkTypeText}
-          {nameProduct}
-          {priceProduct}
+  const componentContent = (
+    <Fragment>
+      <GroupImage />
+      <Card ml={20} pl={35}>
+        {linkTypeText}
+        {nameProduct}
+        {priceProduct}
+        <FlexBox mt={8}>
+          <Label>Розмір:&nbsp;</Label>
+          <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
+        </FlexBox>
+        <FlexBox mt={8}>
+          <Label>Колір:&nbsp;</Label>
+          <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
+        </FlexBox>
+        <Spin spinning={loadingAddBasket}>
           <FlexBox mt={8}>
-            <Label>Розмір:&nbsp;</Label>
-            <SelectSquare mr={8} optionsText={sizesProduct} onSelect={onSelectSize} />
+            <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
+            <PrimaryButton style={{ width: 190 }} ml={14} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
           </FlexBox>
-          <FlexBox mt={8}>
-            <Label>Колір:&nbsp;</Label>
-            <SelectSquare mr={8} optionsColor={colorsProduct} onSelect={onSelectColor} />
-          </FlexBox>
-          <Spin spinning={loadingAddBasket}>
+        </Spin>
+        <Spin spinning={loadingBuyNow}>
+          <PrimaryButton style={{ width: 264 }} className="primary" mt={8} children={<BtnText children="Купити зараз" />} onClick={onClickAddOrder} />
+        </Spin>
+
+        {isClient && (
+          <Spin spinning={loadingPutWishList}>
             <FlexBox mt={8}>
-              <QuantitySelector quantity={productCounts[item._id] ?? 0} onDecrease={onDelInBasket} onIncrease={onPutInBasket} />
-              <PrimaryButton style={{ width: 190 }} ml={14} children={<BtnText children="Додати в кошик" />} onClick={onPutBasket} />
+              <img src={item.isFavorite ? icon_heart_empty_red : icon_heart_empty_black} alt="btn-like" />
+              &nbsp;
+              <button className="btn-no-border" onClick={onPutWishList}>
+                <BtnText>Додати до списку бажань </BtnText>
+              </button>
             </FlexBox>
           </Spin>
-          <Spin spinning={loadingBuyNow}>
-            <PrimaryButton
-              style={{ width: 264 }}
-              className="primary"
-              mt={8}
-              children={<BtnText children="Купити зараз" />}
-              onClick={onClickAddOrder}
-            />
-          </Spin>
-
-          {isClient && (
-            <Spin spinning={loadingPutWishList}>
-              <FlexBox mt={8}>
-                <img src={item.isFavorite ? icon_heart_empty_red : icon_heart_empty_black} alt="btn-like" />
-                &nbsp;
-                <button className="btn-no-border" onClick={onPutWishList}>
-                  <BtnText>Додати до списку бажань </BtnText>
-                </button>
-              </FlexBox>
-            </Spin>
-          )}
-        </Card>
-      </FlexBox>
-    </div>
+        )}
+      </Card>
+    </Fragment>
   );
+
+  const contentForMobile = !isDesktopScreen ? <Box children={componentContent} /> : <FlexBox children={componentContent} />;
+
+  return <div className="card-product" children={contentForMobile} />;
 };
 
 export default CardProduct;

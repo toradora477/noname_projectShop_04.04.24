@@ -1,6 +1,7 @@
 @import '../../common_constants/styles/colors.scss';
 
-.side-menu {
+.side-menu,
+.side-menu-2 {
   left: 0;
   top: 0;
   bottom: 0;
@@ -16,7 +17,7 @@
   background-color: $white;
 
   .container {
-    margin: 20px 10px;
+    margin: 20px 0px 20px 10px;
     display: flex;
     flex-direction: column;
 
@@ -47,11 +48,32 @@
     }
   }
 
-  &.expanded {
+  &.first-level-expanded {
     width: 200px;
 
     .btn-first .text {
       opacity: 1; // Показываем текст при расширении меню
+    }
+  }
+}
+
+.side-menu-2 {
+  border-left: 1px solid $light_primary;
+  left: 200px;
+  width: 1px;
+  opacity: 0;
+  transition:
+    width 0.3s ease,
+    left 0.3s ease,
+    opacity 0.3s ease;
+
+  &.second-level-expanded {
+    width: 200px;
+    opacity: 1;
+
+    .btn-second .text,
+    .btn-first .text {
+      opacity: 1;
     }
   }
 }

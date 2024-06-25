@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReactPaginate from 'react-paginate';
+import clsx from 'clsx';
 import { Product, Empty } from '../../components';
 import { PRODUCT_CATEGORIES } from '../../common_constants/business';
 import { billboard_subcategory } from '../../images';
@@ -10,6 +11,7 @@ import './Shop.scss';
 const Shop = () => {
   const location = useLocation();
   const products = useSelector((state) => state.common.products) ?? [];
+  const { isDesktopScreen } = useSelector((state) => state.screenSize.deviceType);
 
   const titleBillboardStandart = 'МАГАЗИН';
   const productsPerPage = 15;
@@ -70,13 +72,13 @@ const Shop = () => {
   return (
     <div className="shop-page">
       <div className="billboard-container">
-        <div className="billboard-label">{titleBillboard}</div>
+        <div className={clsx({ 'billboard-label': isDesktopScreen, 'billboard-label-mob': !isDesktopScreen })}>{titleBillboard}</div>
         <img src={billboard_subcategory} alt="billboard" className="billboard-image" />
       </div>
 
       {filteredProducts?.length > 0 ? (
         <Fragment>
-          <div className="product-list">
+          <div className={clsx({ 'product-list': isDesktopScreen, 'product-list-mob': !isDesktopScreen })}>
             {currentPageData.map((item) => (
               <Product key={item._id} item={item} />
             ))}
