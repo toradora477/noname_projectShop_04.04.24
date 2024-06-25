@@ -30,6 +30,24 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
   );
 };
 
+const ButtonSecond = ({ src, text, item, ml = 10, pathnameLink }) => {
+  return (
+    <Link
+      style={{ textDecoration: 'none' }}
+      to={{
+        pathname: pathnameLink ?? ROUTES.SHOP,
+        ...(pathnameLink ? {} : { search: `?category=${item?.value}` }),
+      }}
+    >
+      <button style={{ marginLeft: ml }} className="btn-first">
+        <span className="text" style={{ fontWeight: 700, fontSize: '16px' }}>
+          {text ?? item?.label}
+        </span>
+      </button>
+    </Link>
+  );
+};
+
 const SideMenu = () => {
   const { isMobileScreen, isTabletScreen } = useSelector((state) => state.screenSize.deviceType);
 
@@ -55,23 +73,49 @@ const SideMenu = () => {
     setIsExpandedFirstLevel(true);
   };
 
-  const handleMouseLeaveFirstLevel = () => {
-    setIsExpandedFirstLevel(false);
-    setIsExpandedSecondLevel(false);
-    setActiveButton(null);
-  };
+  // const handleMouseLeaveFirstLevel = () => {
+  //   setIsExpandedFirstLevel(false);
+  //   setIsExpandedSecondLevel(false);
+  //   setActiveButton(null);
+  // };
 
   const handleMouseEnterSecondLevel = (event, buttonLabel) => {
-    if (firstLevelAnimationComplete) {
+    const isLabelInCategories = PRODUCT_CATEGORIES?.find((item) => buttonLabel === item.label) ? buttonLabel : null;
+    if (firstLevelAnimationComplete && isLabelInCategories) {
       setIsExpandedSecondLevel(true);
-      setActiveButton(buttonLabel);
+      setActiveButton(isLabelInCategories);
+      console.log(buttonLabel);
     }
   };
 
-  const handleMouseLeaveSecondLevel = () => {
-    setIsExpandedSecondLevel(false);
-    setActiveButton(null);
+  // const handleMouseLeaveSecondLevel = () => {
+  //   setIsExpandedSecondLevel(false);
+  //   setActiveButton(null);
+  // };
+
+  const handleMouseLeaveFirstLevel = (e) => {
+    // Проверяем, куда переместился курсор. Если он внутри side-menu-2, не закрываем меню
+    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+      setIsExpandedFirstLevel(false);
+      setIsExpandedSecondLevel(false);
+      setActiveButton(null);
+    }
   };
+
+  const handleMouseLeaveSecondLevel = (e) => {
+    // Проверяем, куда переместился курсор. Если он не вернулся в side-menu, закрываем меню
+    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+      setIsExpandedSecondLevel(false);
+      setActiveButton(null);
+    }
+  };
+
+  const listSubcategories = activeButton
+    ? PRODUCT_CATEGORIES?.find((item) => activeButton === item.label)?.subcategories?.map((sub) => ({
+        ...sub,
+        category: PRODUCT_CATEGORIES?.find((item) => activeButton === item.label)?.value,
+      }))
+    : [];
 
   return (
     <Fragment>
@@ -127,13 +171,12 @@ const SideMenu = () => {
           className={clsx('side-menu-2', {
             'second-level-expanded': isExpandedSecondLevel,
           })}
-          onMouseEnter={handleMouseEnterSecondLevel}
+          onMouseEnter={() => setIsExpandedSecondLevel(true)}
           onMouseLeave={handleMouseLeaveSecondLevel}
         >
           <div className="container">
-            <br />
-            {/* Здесь можно использовать activeButton для отображения дополнительной информации */}
-            {activeButton && <div>Активная кнопка: {activeButton}</div>}
+            {/* <br /> */}
+            {activeButton && listSubcategories && listSubcategories.map((item, index) => <ButtonSecond item={item} key={index} />)}
           </div>
         </nav>
       </nav>
