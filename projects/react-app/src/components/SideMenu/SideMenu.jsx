@@ -32,19 +32,26 @@ const ButtonWithIcon = ({ src, text, isExpanded, item, ml = 10, pathnameLink, ha
 
 const ButtonSecond = ({ src, text, item, ml = 10, pathnameLink }) => {
   return (
-    <Link
-      style={{ textDecoration: 'none' }}
-      to={{
-        pathname: pathnameLink ?? ROUTES.SHOP,
-        ...(pathnameLink ? {} : { search: `?category=${item?.category}&subcategory=${item.value}` }),
-      }}
-    >
-      <button style={{ marginLeft: ml }} className="btn-first">
+    <Fragment>
+      {item.titleTopGroup && (
         <span className="text" style={{ fontWeight: 700, fontSize: '16px' }}>
           {text ?? item?.label}
         </span>
-      </button>
-    </Link>
+      )}
+      <Link
+        style={{ textDecoration: 'none' }}
+        to={{
+          pathname: pathnameLink ?? ROUTES.SHOP,
+          ...(pathnameLink ? {} : { search: `?category=${item?.category}&subcategory=${item.value}` }),
+        }}
+      >
+        <button style={{ marginLeft: ml }} className="btn-first">
+          <span className="text" style={{ fontWeight: 400, fontSize: '16px' }}>
+            {text ?? item?.label}
+          </span>
+        </button>
+      </Link>
+    </Fragment>
   );
 };
 
@@ -73,46 +80,16 @@ const SideMenu = () => {
     setIsExpandedFirstLevel(true);
   };
 
-  // const handleMouseLeaveFirstLevel = () => {
-  //   setIsExpandedFirstLevel(false);
-  //   setIsExpandedSecondLevel(false);
-  //   setActiveButton(null);
-  // };
-
   const handleMouseLeaveSecondLevel = () => {
     setIsExpandedSecondLevel(false);
-    // Не сбрасываем activeButton здесь, чтобы он оставался активным, пока курсор находится внутри side-menu-2
-  };
-
-  // const handleMouseLeaveSecondLevel = () => {
-  //   setIsExpandedSecondLevel(false);
-  //   setActiveButton(null);
-  // };
-
-  // const handleMouseLeaveFirstLevel = (e) => {
-  //   // Проверяем, куда переместился курсор. Если он внутри side-menu-2, не закрываем меню
-  //   if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
-  //     setIsExpandedFirstLevel(false);
-  //     setIsExpandedSecondLevel(false);
-  //     setActiveButton(null);
-  //   }
-  // };
+  }; // Не сбрасываем activeButton здесь, чтобы он оставался активным, пока курсор находится внутри side-menu-2
 
   const handleMouseLeaveFirstLevel = () => {
     if (!isExpandedSecondLevel) {
-      // Добавляем проверку, чтобы не сбрасывать activeButton при наличии раскрытого второго уровня
       setIsExpandedFirstLevel(false);
       setActiveButton(null);
     }
-  };
-
-  // const handleMouseLeaveSecondLevel = (e) => {
-  //   // Проверяем, куда переместился курсор. Если он не вернулся в side-menu, закрываем меню
-  //   if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
-  //     setIsExpandedSecondLevel(false);
-  //     setActiveButton(null);
-  //   }
-  // };
+  }; // Добавляем проверку, чтобы не сбрасывать activeButton при наличии раскрытого второго уровня
 
   const handleMouseEnterSecondLevel = (event, buttonLabel) => {
     const isLabelInCategories = PRODUCT_CATEGORIES?.find((item) => buttonLabel === item.label) ? buttonLabel : null;
@@ -128,8 +105,6 @@ const SideMenu = () => {
         category: PRODUCT_CATEGORIES?.find((item) => activeButton === item.label)?.value,
       }))
     : [];
-
-  console.table({ activeButton, listSubcategories });
 
   return (
     <Fragment>
@@ -188,8 +163,7 @@ const SideMenu = () => {
           onMouseEnter={() => setIsExpandedSecondLevel(true)}
           onMouseLeave={handleMouseLeaveSecondLevel}
         >
-          <div className="container">
-            {/* <br /> */}
+          <div style={{ marginTop: '49px' }} className="container">
             {activeButton && listSubcategories && listSubcategories.map((item, index) => <ButtonSecond item={item} key={index} />)}
           </div>
         </nav>

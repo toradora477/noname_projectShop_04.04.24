@@ -37,15 +37,13 @@ const PRODUCT_CATEGORIES = [
     label: 'Верхній одяг',
     img: IMAGES.icons8_t_shirt_96,
     subcategories: [
-      // ТЕПЛИЙ ОДЯГ
-      { value: 0, label: 'Куртки', img: IMAGES.subcategory_bags },
+      { value: 0, label: 'Куртки', img: IMAGES.subcategory_bags, titleTopGroup: 'ТЕПЛИЙ ОДЯГ' },
       { value: 1, label: 'Зимові куртки', img: IMAGES.subcategory_jackets },
       { value: 2, label: 'Худі', img: IMAGES.subcategory_hoodies },
       { value: 3, label: 'Светри', img: IMAGES.subcategory_sweaters },
       { value: 4, label: 'Світшоти', img: IMAGES.subcategory_sweatshirts },
       { value: 5, label: 'Кардигани', img: IMAGES.subcategory_cardigans },
-      // ЛЕГКИЙ ОДЯГ
-      { value: 6, label: 'Футболки', img: IMAGES.subcategory_t_shirts },
+      { value: 6, label: 'Футболки', img: IMAGES.subcategory_t_shirts, titleTopGroup: 'ЛЕГКИЙ ОДЯГ' },
       { value: 7, label: 'Сорочки', img: IMAGES.subcategory_pants },
     ],
   },
@@ -54,11 +52,9 @@ const PRODUCT_CATEGORIES = [
     label: 'Нижній одяг',
     img: IMAGES.icons8_pants_96,
     subcategories: [
-      // ПОВСЯКДЕННИЙ ОДЯГ
-      { value: 0, label: 'Штани', img: IMAGES.subcategory_bucket_hats },
+      { value: 0, label: 'Штани', img: IMAGES.subcategory_bucket_hats, titleTopGroup: 'ПОВСЯКДЕННИЙ ОДЯГ' },
       { value: 1, label: 'Джинси', img: IMAGES.subcategory_jeans },
-      // ЛЕГКИЙ ЛІТНІЙ ОДЯГ
-      { value: 2, label: 'Шорти', img: IMAGES.subcategory_shorts },
+      { value: 2, label: 'Шорти', img: IMAGES.subcategory_shorts, titleTopGroup: 'ЛЕГКИЙ ЛІТНІЙ ОДЯГ' },
     ],
   },
   {
@@ -66,11 +62,9 @@ const PRODUCT_CATEGORIES = [
     label: 'Взуття',
     img: IMAGES.icons8_shoes_96,
     subcategories: [
-      // ВЗУТТЯ
-      { value: 0, label: 'Кросівки', img: IMAGES.subcategory_sneakers },
+      { value: 0, label: 'Кросівки', img: IMAGES.subcategory_sneakers, titleTopGroup: 'ВЗУТТЯ' },
       { value: 1, label: 'Кеди', img: IMAGES.subcategory_slippers },
-      // ЛІТНЄ ВЗУТТЯ
-      { value: 2, label: 'Тапки', img: IMAGES.subcategory_sunglasses },
+      { value: 2, label: 'Тапки', img: IMAGES.subcategory_sunglasses, titleTopGroup: 'ЛІТНЄ ВЗУТТЯ' },
     ],
   },
   {
@@ -78,14 +72,11 @@ const PRODUCT_CATEGORIES = [
     label: 'Аксесуари',
     img: IMAGES.icons8_cap_96,
     subcategories: [
-      // ГОЛОВНІ УБОРИ
-      { value: 0, label: 'Кепки', img: IMAGES.subcategory_caps },
+      { value: 0, label: 'Кепки', img: IMAGES.subcategory_caps, titleTopGroup: 'ГОЛОВНІ УБОРИ' },
       { value: 1, label: 'Панами', img: IMAGES.subcategory_bucket_hats },
       { value: 2, label: 'Шапки', img: IMAGES.subcategory_hats },
-      // ОКУЛЯРИ
-      { value: 3, label: 'Сонцезахисні окуляри', img: IMAGES.subcategory_bags },
-      // СУМКИ
-      { value: 4, label: 'Сумки', img: IMAGES.subcategory_bags },
+      { value: 3, label: 'Сонцезахисні окуляри', img: IMAGES.subcategory_bags, titleTopGroup: 'ОКУЛЯРИ' },
+      { value: 4, label: 'Сумки', img: IMAGES.subcategory_bags, titleTopGroup: 'СУМКИ' },
     ],
   },
 ];
