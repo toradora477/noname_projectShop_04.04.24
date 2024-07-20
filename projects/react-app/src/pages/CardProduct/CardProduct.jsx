@@ -27,7 +27,7 @@ const CardProduct = () => {
   const item = products.find((item) => item._id === productId);
 
   if (!item) {
-    history.push(ROUTES.ERROR404);
+    history.push(ROUTES.HOME_DASHBOARD);
     return null;
   }
 
