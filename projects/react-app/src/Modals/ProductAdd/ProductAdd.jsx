@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { addProduct, setModal } from '../../store/commonReducer';
+import { addProduct, editProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
 import { Modal, ColorPicker, Box, Typography } from '../../components';
 import { PRODUCT_CATEGORIES, SIZE_OPTIONS } from '../../common_constants/business';
@@ -105,7 +105,6 @@ const ProductAdd = () => {
     });
 
     request.post('/products/addProduct', body, (res) => {
-      console.log('Товар успішно додано', res);
       if (res?.data) dispatch(addProduct(res.data));
       dispatch(setModal());
     });
@@ -119,12 +118,11 @@ const ProductAdd = () => {
       return;
     }
 
-    const bodyTransaction = formData;
+    const bodyTransaction = { ...formData, _id: editData._id };
 
-    request.post('/products/editProduct', bodyTransaction, (res) => {
-      console.log('Товар успішно редагували', res);
-      // if (res?.data) dispatch(addProduct(res.data));
-      // dispatch(setModal());
+    request.patch('/products/editProduct', bodyTransaction, (res) => {
+      if (res?.data) dispatch(editProduct(res.data));
+      dispatch(setModal());
     });
   };
 

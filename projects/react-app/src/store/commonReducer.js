@@ -87,6 +87,10 @@ const groupProducts = {
     if (state.accessRoles?.isNotAdmin) return;
     (state.products ?? []).unshift(action.payload);
   },
+  editProduct: (state, action) => {
+    if (state.accessRoles?.isNotAdmin) return;
+    state.products = (state.products ?? []).map((item) => (item._id === action.payload._id ? { ...item, ...action.payload } : item));
+  },
   deleteProduct: (state, action) => {
     if (state.accessRoles?.isNotAdmin) return;
     state.products = (state.products ?? []).filter((item) => item._id !== action.payload);
@@ -164,6 +168,7 @@ export const {
   updateUserAuth,
   setProducts,
   addProduct,
+  editProduct,
   deleteProduct,
   addBasket,
   removeBasket,
