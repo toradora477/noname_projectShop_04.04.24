@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { addProduct, setModal } from '../../store/commonReducer';
 import { request } from '../../tools';
@@ -9,12 +9,17 @@ import './ProductAdd.scss';
 
 const ProductAdd = () => {
   const dispatch = useDispatch();
+
+  const { data } = useSelector((state) => state.common.modal);
+  const editData = data?.item; // is edit modal
+  console.log('data', editData);
+
   const [formData, setFormData] = useState({
-    productName: '',
-    description: '',
-    price: '',
-    category: '',
-    subcategory: '',
+    productName: editData?.n ?? '',
+    description: editData?.d ?? '',
+    price: editData?.p ?? '',
+    category: editData?.c?.[0] ?? '',
+    subcategory: editData?.c?.[1] ?? '',
     colors: [{ images: [] }],
     sizes: [],
   });

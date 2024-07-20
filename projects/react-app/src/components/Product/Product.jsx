@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { addFavoriteProduct, addBasket, removeFavoriteProduct, deleteProduct, removeBasket, setModal } from '../../store/commonReducer';
 
-import { AUTH } from '../../common_constants/modals';
+import { AUTH, PRODUCT_ADD } from '../../common_constants/modals';
 import { ROUTES } from '../../common_constants/routes';
 import { ACTION, NAME_SELECT } from '../../common_constants/business';
 
@@ -49,6 +49,14 @@ const Product = ({ item, selectedCard }) => {
     setLoading(false);
   };
 
+  const onBtnClickEditProduct = async () => {
+    setLoading(true);
+
+    dispatch(setModal({ name: PRODUCT_ADD, data: { item } }));
+
+    setLoading(false);
+  };
+
   const onBtnClickAuth = () => {
     dispatch(setModal({ name: AUTH }));
   };
@@ -77,7 +85,8 @@ const Product = ({ item, selectedCard }) => {
 
   const productEditing = (
     <Fragment>
-      <PrimaryButton mt={8} className="danger" children="Видалити" onClick={onBtnClickRemoveProduct} />
+      <PrimaryButton mt={8} className="orange" children="Редагувати" onClick={onBtnClickEditProduct} />
+      <PrimaryButton mt={8} className="red" children="Видалити" onClick={onBtnClickRemoveProduct} />
     </Fragment>
   );
 

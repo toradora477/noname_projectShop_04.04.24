@@ -55,6 +55,12 @@
     color: $red;
   }
 
+  &.warn {
+    background: transparent;
+    border: 2px solid $orange;
+    color: $orange;
+  }
+
   &.disabled {
     background: $gray30;
     color: $gray100;
