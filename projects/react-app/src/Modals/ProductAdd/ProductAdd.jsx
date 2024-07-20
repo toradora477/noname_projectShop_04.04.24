@@ -13,7 +13,6 @@ const ProductAdd = () => {
   const { data } = useSelector((state) => state.common.modal);
   const editData = data?.item; // is edit modal
   const isNewProduct = !editData;
-  console.log('data', editData);
 
   const [formData, setFormData] = useState({
     productName: editData?.n ?? '',
