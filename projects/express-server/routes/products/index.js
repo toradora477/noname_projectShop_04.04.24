@@ -132,6 +132,122 @@ router.post('/addProduct', adminJWT, multer({ dest: path.join(__dirname, './') }
   }
 });
 
+// router.patch('/changeFavorites', authenticateJWT, async (req, res, next) => {
+//   try {
+//     const { productId, action } = req.body;
+
+//     const userID = req.user?._id ?? null;
+
+//     if (![productId, action, userID].every(Boolean))
+//       throw new ExtendedError({
+//         messageLog: 'One or more values are empty.',
+//         messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+//         code: 400,
+//       });
+
+//     const clients = req.app.locals.client.db(DB).collection(COLLECTIONS.CLIENTS);
+
+//     const findDB = { _id: new ObjectId(userID) };
+
+//     let updateOperation;
+//     if (action === ACTION.ADD) {
+//       updateOperation = { $addToSet: { fav: productId } };
+//     } else if (action === ACTION.REMOVE) {
+//       updateOperation = { $pull: { fav: productId } };
+//     } else {
+//       throw new ExtendedError({
+//         messageLog: 'Invalid action specified.',
+//         messageJson: 'Помилка клієнта. Невірна дія.',
+//         code: 400,
+//       });
+//     }
+
+//     const result = await clients.updateOne(findDB, updateOperation, { upsert: true });
+
+//     if (result.matchedCount === 0 && result.upsertedCount === 0) {
+//       throw new ExtendedError({
+//         messageLog: 'Failed to update favorites.',
+//         messageJson: 'Помилка сервера. Не вдалося оновити список обраних.',
+//         code: 500,
+//       });
+//     }
+
+//     const transportationData = {
+//       status: true,
+//       data: result,
+//     };
+
+//     req.setLoggingData({
+//       log: `${action} favorites product`,
+//       operation: 'update for collection CLIENTS',
+//       result: result ?? null,
+//     });
+//     res.status(200).json(transportationData);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
+router.post('/editProduct', adminJWT, async (req, res, next) => {
+  try {
+    const { productName, description, price, category, subcategory, sizes } = req.body;
+    console.log('editProduct', req.body);
+    const { _id: userID } = req.user;
+
+    if (![userID, productName, price, sizes, category, subcategory, description].every(Boolean)) {
+      throw new ExtendedError({
+        messageLog: 'One or more values are empty.',
+        messageJson: 'Помилка клієнта. Одне чи кілька значень пусті.',
+        code: 400,
+      });
+    }
+
+    const [collection, commonParams] = [
+      req.app.locals.client.db(DB).collection(COLLECTIONS.PRODUCTS),
+      req.app.locals.client.db(DB).collection(COLLECTIONS.COMMON_PARAMS),
+    ];
+
+    // const parsedSizes = JSON.parse(sizes);
+
+    // const newBodyProduct = {
+    //   ...(productName ? { n: productName } : {}),
+    //   ...(price ? { p: price } : {}),
+    //   ...(description ? { d: description } : {}),
+    //   а: new ObjectId(userID),
+    //   t: new Date(),
+    //   i: await getNextSequenceValue('productNextSequenceValue', commonParams),
+    //   f: fileIdAndColorArray,
+    //   s: parsedSizes,
+    //   c: [category, subcategory],
+    // };
+
+    // const resultInsertOne = await collection.insertOne(newBodyProduct);
+
+    // if (!resultInsertOne?.insertedId) {
+    //   throw new ExtendedError({
+    //     messageLog: 'Poor collection insertOne result.',
+    //     messageJson: 'Помилка сервера. Не вдалося завантажити новий продукт.',
+    //   });
+    // }
+
+    const transportationData = {
+      status: true,
+      // data: { ...newBodyProduct, _id: resultInsertOne.insertedId },
+    };
+
+    req.setLoggingData({
+      log: 'Edit product',
+      operation: 'updateOne for collection PRODUCTS',
+      'req.body': req.body,
+      // result: transportationData.data,
+    });
+
+    res.status(200).json(transportationData);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete('/:id', adminJWT, async (req, res, next) => {
   try {
     const { id } = req.params;

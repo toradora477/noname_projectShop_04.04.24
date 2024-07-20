@@ -12,6 +12,7 @@ const ProductAdd = () => {
 
   const { data } = useSelector((state) => state.common.modal);
   const editData = data?.item; // is edit modal
+  const isNewProduct = !editData;
   console.log('data', editData);
 
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ const ProductAdd = () => {
     category: editData?.c?.[0] ?? '',
     subcategory: editData?.c?.[1] ?? '',
     colors: [{ images: [] }],
-    sizes: [],
+    sizes: editData?.s ?? [],
   });
   const [formError, setFormError] = useState('');
 
@@ -74,8 +75,8 @@ const ProductAdd = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmitAddProduct = (event) => {
+    event.preventDefault();
 
     if (formData.sizes.length === 0) {
       setFormError('Будь ласка, оберіть хоча б один розмір.');
@@ -110,15 +111,40 @@ const ProductAdd = () => {
     });
   };
 
+  const handleSubmitEditProduct = (event) => {
+    event.preventDefault();
+
+    if (formData.sizes.length === 0) {
+      setFormError('Будь ласка, оберіть хоча б один розмір.');
+      return;
+    }
+
+    const bodyTransaction = formData;
+
+    request.post('/products/editProduct', bodyTransaction, (res) => {
+      console.log('Товар успішно редагували', res);
+      // if (res?.data) dispatch(addProduct(res.data));
+      // dispatch(setModal());
+    });
+  };
+
   const selectedCategory = PRODUCT_CATEGORIES.find((cat) => cat.value === parseInt(formData.category));
 
   return (
     <Modal position="center">
-      <Title>Додавання товару</Title>
-      <form onSubmit={handleSubmit} className="product-form-add">
+      <Title>{isNewProduct ? 'Додавання' : 'Редагування'} товару</Title>
+      <form onSubmit={isNewProduct ? handleSubmitAddProduct : handleSubmitEditProduct} className="product-form-add">
         <label className="form-label">
           <Label> Назва товару:</Label>
-          <input type="text" name="productName" value={formData.productName} onChange={(e) => handleChange(e)} className="form-input" required />
+          <input
+            aria-label="write name"
+            type="text"
+            name="productName"
+            value={formData.productName}
+            onChange={(e) => handleChange(e)}
+            className="form-input"
+            required
+          />
         </label>
         <label className="form-label">
           <Label> Опис:</Label>
@@ -176,31 +202,34 @@ const ProductAdd = () => {
           </div>
           {formError && <p className="form-error">{formError}</p>}
         </label>
-        {formData.colors.map((color, index) => (
-          <div key={index} className="color-group">
-            <label className="form-label">
-              <Label>Колір товару:</Label>
-              <ColorPicker initialColor={color.color || '#000000'} onChange={(newColor) => handleColorChange(newColor, index)} />
-            </label>
-            <label className="form-label">
-              <Label> Зображення товару для цього кольору:</Label>
-              <input
-                type="file"
-                name="colorImage"
-                onChange={(e) => handleChange(e, index)}
-                multiple
-                accept="image/*"
-                className="form-input"
-                required
-              />
-            </label>
-          </div>
-        ))}
-        <button type="button" onClick={handleAddColor} className="form-button">
-          Додати новий колір
-        </button>
-        <button type="submit" className="form-button">
-          Завершити створення товару
+        {isNewProduct &&
+          formData.colors.map((color, index) => (
+            <div key={index} className="color-group">
+              <label className="form-label">
+                <Label>Колір товару:</Label>
+                <ColorPicker initialColor={color.color || '#000000'} onChange={(newColor) => handleColorChange(newColor, index)} />
+              </label>
+              <label className="form-label">
+                <Label> Зображення товару для цього кольору:</Label>
+                <input
+                  type="file"
+                  name="colorImage"
+                  onChange={(e) => handleChange(e, index)}
+                  multiple
+                  accept="image/*"
+                  className="form-input"
+                  required
+                />
+              </label>
+            </div>
+          ))}
+        {isNewProduct && (
+          <button type="button" onClick={handleAddColor} className="form-button">
+            Додати новий колір
+          </button>
+        )}
+        <button type="submit" className={isNewProduct ? 'form-button' : 'form-edit-btn'}>
+          Завершити {isNewProduct ? 'створення' : 'редагування'} товару
         </button>
       </form>
     </Modal>
