@@ -1,10 +1,11 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('../firebase-adminsdk.json');
 const { Readable } = require('stream');
 const mime = require('mime-types');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
-const { ExtendedError } = require('../tools');
+
+const serviceAccount = require('../firebase-adminsdk.json');
+const { ExtendedError, log } = require('../tools');
 
 const initializeFirebase = () => {
   admin.initializeApp({
@@ -53,12 +54,13 @@ const uploadFileToStorage = async (folder, file) => {
 
     try {
       fs.unlinkSync(file.path);
-      console.log('Файл успішно видалений.');
+
+      log.info('File successfully add from Firebase Storage.');
     } catch (error) {
-      console.error('Помилка при видаленні файлу:', error);
+      log.error('Error deleting file', error);
     }
 
-    console.log('Файл успішно завантажений в Firebase Storage.');
+    log.info('File successfully download from Firebase Storage.');
     return _fileId;
   } catch (error) {
     throw error;
@@ -123,7 +125,11 @@ const deleteFileFromStorage = async (folder, fileId) => {
 
     const file = files.find((file) => {
       const id = file.metadata.id;
-      return id === fileId;
+      const ileIdArr = fileId.files;
+
+      const retval = ileIdArr.includes(id);
+
+      return retval;
     });
 
     if (!file) {
@@ -136,7 +142,7 @@ const deleteFileFromStorage = async (folder, fileId) => {
 
     await file.delete();
 
-    console.log('Файл успішно видалений з Firebase Storage.');
+    log.info('File successfully deleted from Firebase Storage.');
 
     return true;
   } catch (error) {
